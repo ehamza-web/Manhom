@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>تهانينا! أنت شخصية اليوم في "من هم؟"</title>
-    <!-- تضمين الخطوط لضمان أفضل عرض ممكن -->
+    <title>ملفكم ينّور كل صفحات من هم اليوم</title>
+    <!-- تضمين الخطوط لضمان أفضل عرض ممكن في جيميل -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* تنسيقات خاصة لتحسين العرض في Gmail وتقليص المساحات */
         body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
         table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
         img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
@@ -25,182 +24,150 @@
 
         .container { 
             max-width: 600px; 
-            margin: 10px auto; /* تقليل المارجن العلوي */
+            margin: 10px auto; 
             background-color: #ffffff; 
             border-radius: 12px; 
             overflow: hidden; 
             border: 1px solid #e1e8ed; 
         }
         
-        /* Header - Compressed padding */
-        .header { background-color: #a4e1ff; padding: 20px 25px; text-align: center; }
+        /* Header Section */
+        .header { background-color: #a4e1ff; padding: 25px; text-align: center; }
         .logo { width: 120px; max-width: 120px; height: auto; display: inline-block; }
-        .header-tagline { color: #0d6efd; font-size: 13px; margin-top: 8px; font-weight: 600; }
+        
+        .header-tagline-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+            color: #1e293b;
+            font-size: 18px;
+            font-weight: 700;
+        }
 
-        /* Banner - Compressed margin and padding */
+        .verified-badge {
+            width: 20px;
+            height: 20px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        /* Banner Section */
         .banner { 
             background-color: #f0f9ff; 
-            padding: 10px; 
+            padding: 12px; 
             text-align: center; 
             color: #0d6efd; 
             font-size: 18px; 
             font-weight: bold; 
-            margin: 15px 20px 10px 20px; 
+            margin: 20px; 
             border-radius: 8px; 
             border: 1px solid #bae6fd; 
         }
 
-        /* Content - Reduced padding */
-        .content { padding: 15px 30px; text-align: center; color: #333333; line-height: 1.5; }
+        /* Content Section */
+        .content { padding: 10px 30px 30px 30px; text-align: center; color: #333333; line-height: 1.6; }
         
-        /* Profile Card - Tighter margins and smaller profile pic */
-        .user-profile { 
-            margin: 15px 0; 
-            background-color: #ffffff; 
-            border: 1px solid #e5e7eb; 
-            border-radius: 16px; 
-            padding: 15px; 
-            text-align: center;
-        }
-
-        .user-image { 
-            width: 110px; 
-            height: 130px; 
-            border-radius: 10px; 
-            object-fit: cover; 
-            border: 3px solid #a4e1ff; 
-            margin-bottom: 10px; 
-        }
-        
-        .badge { 
-            background-color: #facc15; 
-            color: #854d0e; 
-            padding: 4px 14px; 
-            border-radius: 20px; 
-            font-size: 13px; 
-            font-weight: bold; 
-            display: inline-block; 
-            margin-bottom: 8px; 
-        }
-
-        .user-name { font-size: 20px; color: #0d6efd; margin: 3px 0; font-weight: 800; }
-        .user-title { font-size: 15px; color: #64748b; margin-bottom: 15px; }
+        .greeting { font-size: 20px; color: #0d6efd; font-weight: 700; margin-bottom: 15px; }
+        .main-text { font-size: 16px; margin-bottom: 15px; }
+        .feature-box { background-color: #f8fafc; border-right: 4px solid #facc15; padding: 15px; margin: 20px 0; text-align: right; font-size: 15px; color: #475569; }
         
         .cta-button { 
             background-color: #0d6efd; 
             color: #ffffff !important; 
-            padding: 10px 30px; 
+            padding: 12px 35px; 
             text-decoration: none; 
             border-radius: 8px; 
             font-weight: bold; 
             display: inline-block; 
-            font-size: 15px; 
+            font-size: 16px; 
+            margin-top: 10px;
         }
         
-        /* Footer - Tighter spacing */
+        /* Footer Section */
         .footer-wrapper {
-            padding: 20px;
+            padding: 25px 20px;
             text-align: center;
             background-color: #ffffff;
+            border-top: 1px solid #f1f5f9;
         }
 
-        .footer-intro {
-            font-weight: 700;
-            font-size: 16px;
-            color: #1e293b;
-            margin-bottom: 4px;
-        }
-
-        .footer-team {
-            font-weight: 400;
-            font-size: 14px;
-            color: #475569;
-            margin-bottom: 15px;
-        }
+        .footer-intro { font-weight: 700; font-size: 16px; color: #1e293b; margin-bottom: 4px; }
+        .footer-team { font-weight: 400; font-size: 14px; color: #475569; margin-bottom: 20px; }
 
         .address-box {
             background-color: #f4f9ff;
             border-radius: 12px;
-            padding: 15px 20px;
-            max-width: 520px;
+            padding: 20px;
+            max-width: 500px;
             margin: 0 auto;
             text-align: center;
         }
 
-        .address-title {
-            font-weight: 700;
-            font-size: 15px;
-            color: #1e293b;
-            margin-bottom: 5px;
-        }
-
-        .address-text {
-            font-weight: 700;
-            font-size: 14px;
-            color: #334155;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .copyright-text {
-            font-weight: 400;
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 10px;
-        }
+        .address-title { font-weight: 700; font-size: 15px; color: #1e293b; margin-bottom: 5px; }
+        .address-text { font-weight: 700; font-size: 14px; color: #334155; margin-bottom: 10px; }
+        .copyright-text { font-weight: 400; font-size: 12px; color: #64748b; }
         
-        /* التحسين للشاشات الصغيرة */
         @media only screen and (max-width: 600px) {
             .container { width: 100% !important; margin: 0 !important; border-radius: 0 !important; }
-            .content { padding: 15px !important; }
-            .address-box { width: 95% !important; padding: 15px !important; }
+            .content { padding: 20px !important; }
         }
     </style>
 </head>
 <body>
     <center>
         <div class="container">
-            <!-- الهيدر - مضغوط -->
+            <!-- الهيدر المحدث -->
             <div class="header">
                 <a href="https://manhom.com" target="_blank">
                     <img src="https://manhom.com/asset/img/webp/logo.webp" alt="من هم؟" class="logo">
                 </a>
-                <div class="header-tagline">التحديث اليومي لمنصة "من هم؟"</div>
-            </div>
-
-            <!-- بانر التهنئة - مضغوط -->
-            <div class="banner">
-                 مبروك! لقد تم اختيارك "شخصية اليوم" 🎉
-            </div>
-
-            <!-- المحتوى الأساسي - تقليل المسافات البينية -->
-            <div class="content">
-                <p style="font-size: 18px; color: #0d6efd; font-weight: 700; margin-bottom: 5px;">أهلاً بك، سيد عمار!</p>
-                <p style="margin: 5px 0;">يسرنا إبلاغك بأنه تم تسليط الضوء على ملفك المهني ليكون <strong>شخصية اليوم</strong> على منصة <strong>من هم؟</strong>.</p>
-
-                <!-- بطاقة الشخصية - ملمومة أكثر -->
-                <div class="user-profile">
-                    <div class="badge">شخصية اليوم</div>
-                    <br>
-                    <img src="https://media.majarracdn.cloud/manhom/mgmt/images/108460/1758726954/%D8%B9%D9%85%D8%A7%D8%B1-%D9%87%D9%8A%D9%83%D9%84_174_201.webp" alt="عمار هيكل" class="user-image">
-                    <h2 class="user-name">عمار هيكل</h2>
-                    <p class="user-title">الرئيس التنفيذي • مجرة</p>
-                    <a href="https://manhom.com" class="cta-button" target="_blank">عرض ملفك</a>
+                <div class="header-tagline-container">
+                    <svg class="verified-badge" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.5 12L20.35 9.55L20.62 6.3L17.44 5.58L15.81 2.8L12.5 4.22L9.19 2.8L7.56 5.58L4.38 6.3L4.65 9.55L2.5 12L4.65 14.45L4.38 17.7L7.56 18.42L9.19 21.2L12.5 19.78L15.81 21.2L17.44 18.42L20.62 17.7L20.35 14.45L22.5 12Z" fill="#3B82F6"/>
+                        <path d="M10 12L12 14L16 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>منصة الحضور العربي الموثق</span>
                 </div>
             </div>
 
-            <!-- الفوتر - مضغوط لتقليل طول الإيميل -->
+            <!-- العنوان الجديد -->
+            <div class="banner">
+                ملفكم ينّور كل صفحات من هم اليوم ✨
+            </div>
+
+            <!-- المحتوى النصي المحدث -->
+            <div class="content">
+                <p class="greeting">أهلاً بكم،</p>
+                
+                <p class="main-text">
+                    يسرنا إعلامكم بأنه قد تم اختيار ملفكم الشخصي ليظهر ضمن <strong>"شخصية اليوم"</strong> لكل زوار من هم داخل المملكة العربية السعودية.
+                </p>
+
+                <div class="feature-box">
+                    هذه الميزة الحصرية هي جزء من مزايا عضويتكم الموثقة لدينا، لتعزيز ظهوركم أمام مجتمع من هم الواسع.
+                </div>
+
+                <p class="main-text" style="font-size: 14px; color: #64748b;">
+                    إذا كنتم ترغبون في تحديث بيانات ملفكم أو لديكم أي استفسار، يسعدنا تواصلكم معنا عبر البريد الإلكتروني التالي.
+                </p>
+
+                <br>
+                <a href="https://manhom.com" class="cta-button" target="_blank">لتصفح ملفكم الشخصي</a>
+            </div>
+
+            <!-- الفوتر -->
             <div class="footer-wrapper">
-                <div class="footer-intro">لأي استفسار تواصل معنا</div>
+                <div class="footer-intro">نحن هنا لخدمتكم</div>
                 <div class="footer-team">فريق عمل من هم</div>
 
                 <div class="address-box">
                     <div class="address-title">عنواننا:</div>
                     <div class="address-text">
-                        101، بناء 3، شارع الحلاوي، أبوظبي، الإمارات
+                        المملكة العربية السعودية
                     </div>
                     <div class="copyright-text">
-                        © 2025. جميع الحقوق محفوظة.
+                        © 2025 من هم؟ جميع الحقوق محفوظة.
                     </div>
                 </div>
             </div>
