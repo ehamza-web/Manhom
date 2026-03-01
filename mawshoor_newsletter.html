@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نشرة موشور - منصة من هم</title>
+    <!-- تضمين خط IBM Plex Sans Arabic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- تضمين Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"IBM Plex Sans Arabic"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#4169E1',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: #FDFDFD;
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        
+        /* لإخفاء وإظهار الأقسام */
+        .view-hidden { display: none; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-900 flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-[#96e3ff] border-b shadow-md sticky top-0 w-full z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-[78px]">
+                <div class="flex items-center">
+                    <a href="#" onclick="showView('landing')" class="flex items-center gap-2">
+                        <img src="https://manhom.com/asset/img/logo.webp" alt="Manhom Logo" width="82" height="31">
+                    </a>
+                </div>
+                <nav class="hidden lg:flex items-center gap-6">
+                    <a href="#" class="text-sm font-medium hover:text-blue-700">التصنيفات</a>
+                    <a href="#" class="text-sm font-medium hover:text-blue-700">قائمة المتصدرين</a>
+                    <a href="#" onclick="showView('landing')" class="text-sm font-bold text-blue-700 border-b-2 border-blue-700">نشرة موشور</a>
+                    <a href="#" class="text-sm font-medium hover:text-blue-700">أضف شخصية</a>
+                    <a href="#" class="text-sm font-medium hover:text-blue-700">أضف شركة</a>
+                </nav>
+                <div class="flex items-center gap-4">
+                    <button class="bg-white/20 hover:bg-white/30 p-2 rounded-full lg:hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-bold hidden md:block">تسجيل الدخول</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Landing Page View -->
+        <div id="landing-view">
+            <!-- Hero Section -->
+            <section class="relative pt-24 pb-8 overflow-hidden">
+                <div class="absolute inset-0 z-0 pointer-events-none">
+                    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-100/30 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
+                    <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2"></div>
+                </div>
+
+                <div class="container relative z-10 mx-auto px-4 text-center">
+                    <div class="pt-8"></div>
+                    <h1 class="text-4xl md:text-[52px] font-black text-slate-900 mb-8 leading-[1.2] max-w-5xl mx-auto animate-fade-in-up">
+                        التغييرات الإدارية تجلب <span class="text-blue-600">الفرص</span>، وعدم متابعتها يخسرك فرص.
+                    </h1>
+                    <p class="text-lg md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-12 animate-fade-in-up delay-200">
+                        نشرة أسبوعية ذكية تصلك مع بداية كل أسبوع، ترصد لك كافة التعيينات والتغييرات الإدارية في كبرى الشركات والمؤسسات الحكومية السعودية، لتفتح لك أبواب الفرص قبل الآخرين.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-300">
+                        <button onclick="scrollToPricing()" class="rounded-full px-12 py-6 text-xl font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-2xl shadow-blue-200 transition-all duration-300 transform hover:-translate-y-1">
+                            اشترك الآن مجاناً لمدة شهر
+                        </button>
+                        <div class="flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-slate-100 shadow-sm text-slate-500 font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                            <span>تصلك في بريدك كل أحد صباحاً</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="py-12 bg-white border-y border-slate-50">
+                <div class="container mx-auto px-4">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">لماذا موشور؟</h2>
+                        <div class="w-20 h-1.5 bg-blue-600 mx-auto rounded-full"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        <div class="group p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                            <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 group-hover:text-white"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">بيانات موثوقة</h3>
+                            <p class="text-slate-600 leading-relaxed">مصدرنا منصة "من هم"، المرجع الأكبر للشخصيات والشركات.</p>
+                        </div>
+                        <div class="group p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                            <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 group-hover:text-white"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">وفّر وقتك</h3>
+                            <p class="text-slate-600 leading-relaxed">بدلاً من متابعة عشرات المواقع والمنصات، نأتيك بالخلاصة في إيميل واحد.</p>
+                        </div>
+                        <div class="group p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                            <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 group-hover:text-white"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">فرص تجارية</h3>
+                            <p class="text-slate-600 leading-relaxed">كل تعيين جديد هو فرصة لبناء علاقة عمل جديدة.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing Section -->
+            <section id="pricing-section" class="py-12 relative scroll-mt-24">
+                <div class="container mx-auto px-4">
+                    <div class="text-center mb-12">
+                        <span class="inline-block mb-4 bg-slate-900 text-white rounded-full px-4 py-1 text-sm font-bold">الباقات</span>
+                        <h2 class="text-4xl font-bold text-slate-900">باقات الاشتراك</h2>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
+                        <!-- Personal Plan -->
+                        <div class="flex flex-col bg-white rounded-[32px] overflow-hidden border border-slate-200 shadow-lg hover:border-blue-300 hover:shadow-xl transition-all duration-300">
+                            <div class="p-10 text-center">
+                                <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-6 bg-slate-100 text-slate-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-slate-900">الاشتراك الشخصي</h3>
+                                <div class="mt-4">
+                                    <span class="text-4xl font-black text-slate-900">2,000 <span class="text-lg font-normal text-slate-500">ريال</span></span>
+                                    <p class="text-sm text-slate-500 mt-1">سنوياً</p>
+                                </div>
+                            </div>
+                            <div class="px-10 pb-10 flex-grow text-center">
+                                <p class="text-slate-600 leading-relaxed">(مستخدم واحد)</p>
+                            </div>
+                            <div class="p-10 pt-0">
+                                <button onclick="showView('subscribe')" class="block w-full text-center rounded-full py-5 text-lg font-bold bg-blue-600 text-white shadow-md hover:bg-blue-700 transition-all duration-300">اشترك الآن</button>
+                            </div>
+                        </div>
+
+                        <!-- Business Plan -->
+                        <div class="flex flex-col bg-white rounded-[32px] overflow-hidden border border-slate-200 shadow-lg hover:border-blue-300 hover:shadow-xl transition-all duration-300">
+                            <div class="p-10 text-center">
+                                <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-6 bg-slate-100 text-slate-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-slate-900">اشتراك الشركات</h3>
+                                <div class="mt-4">
+                                    <span class="text-4xl font-black text-slate-900">5,000 <span class="text-lg font-normal text-slate-500">ريال</span></span>
+                                    <p class="text-sm text-slate-500 mt-1">سنوياً</p>
+                                </div>
+                            </div>
+                            <div class="px-10 pb-10 flex-grow text-center">
+                                <p class="text-slate-600 leading-relaxed">(حتى 5 مستخدمين) - مثالي لاستخدام أكثر من قسم (المبيعات والتسويق وعلاقات المساهمين والإدارة العليا).</p>
+                            </div>
+                            <div class="p-10 pt-0">
+                                <button onclick="showView('subscribe')" class="block w-full text-center rounded-full py-5 text-lg font-bold bg-blue-600 text-white shadow-md hover:bg-blue-700 transition-all duration-300">اشترك الآن</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Subscribe Form View -->
+        <div id="subscribe-view" class="view-hidden">
+            <section class="py-12 md:py-20 px-4 bg-slate-50 min-h-[600px]">
+                <div class="max-w-3xl mx-auto space-y-10">
+                    <div class="text-center space-y-4">
+                        <button onclick="showView('landing')" class="inline-flex items-center gap-2 text-blue-600 font-bold hover:gap-3 transition-all duration-300 group mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform group-hover:translate-x-1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 19 12 12 5"></polyline></svg>
+                            العودة لصفحة النشرة
+                        </button>
+                        <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">ابدأ رحلتك مع موشور</h1>
+                        <p class="text-slate-500 text-lg max-w-xl mx-auto">أكمل البيانات التالية لتفعيل اشتراكك واستقبال أهم التغييرات الإدارية أسبوعياً.</p>
+                    </div>
+
+                    <div class="bg-white shadow-2xl border-none rounded-[40px] overflow-hidden">
+                        <form id="subscribeForm" onsubmit="handleFormSubmit(event)">
+                            <div class="p-8 md:p-12 space-y-8">
+                                <div class="grid gap-8">
+                                    <div class="space-y-3">
+                                        <label class="text-slate-700 font-bold block">الاسم الكامل <span class="text-red-500">*</span></label>
+                                        <input type="text" required placeholder="أدخل اسمك الثلاثي" class="w-full h-14 px-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-blue-600 bg-slate-50/50 outline-none">
+                                    </div>
+                                    <div class="grid md:grid-cols-2 gap-8">
+                                        <div class="space-y-3">
+                                            <label class="text-slate-700 font-bold block">الشركة / المؤسسة <span class="text-red-500">*</span></label>
+                                            <input type="text" required placeholder="اسم جهة العمل" class="w-full h-14 px-4 rounded-2xl border border-slate-200 bg-slate-50/50 outline-none">
+                                        </div>
+                                        <div class="space-y-3">
+                                            <label class="text-slate-700 font-bold block">المنصب الوظيفي <span class="text-red-500">*</span></label>
+                                            <input type="text" required placeholder="مثال: مدير تنفيذي" class="w-full h-14 px-4 rounded-2xl border border-slate-200 bg-slate-50/50 outline-none">
+                                        </div>
+                                    </div>
+                                    <div class="grid md:grid-cols-2 gap-8">
+                                        <div class="space-y-3">
+                                            <label class="text-slate-700 font-bold block">رقم الهاتف <span class="text-red-500">*</span></label>
+                                            <input type="tel" required placeholder="+966 xxxxxxxxx" class="w-full h-14 px-4 rounded-2xl border border-slate-200 bg-slate-50/50 outline-none dir-ltr text-right">
+                                        </div>
+                                        <div class="space-y-3">
+                                            <label class="text-slate-700 font-bold block">البريد الإلكتروني <span class="text-red-500">*</span></label>
+                                            <input type="email" required placeholder="name@company.com" class="w-full h-14 px-4 rounded-2xl border border-slate-200 bg-slate-50/50 outline-none dir-ltr text-right">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 pt-4 p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                                    <input type="checkbox" required id="terms" class="mt-1.5 w-5 h-5 rounded border-slate-300 text-blue-600 focus:ring-blue-600">
+                                    <label for="terms" class="text-sm text-slate-600 leading-relaxed cursor-pointer font-medium">أوافق على شروط وأحكام استخدام الخدمة وسياسة الخصوصية الخاصة بنشرة موشور من منصة "من هم".</label>
+                                </div>
+                            </div>
+                            <div class="p-8 md:p-12 pt-0 flex flex-col items-center">
+                                <button type="submit" class="w-full rounded-full py-8 text-xl font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-100 hover:shadow-blue-200 transition-all duration-300">
+                                    تفعيل الاشتراك الآن
+                                </button>
+                                <div class="flex items-center gap-2 mt-6 text-slate-400 text-sm font-medium">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    <span>بياناتك محمية ومشفرة بالكامل طبقاً لأعلى معايير الخصوصية</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Success Message View -->
+        <div id="success-view" class="view-hidden">
+            <section class="min-h-[600px] bg-[#FDFDFD] flex items-center justify-center p-4">
+                <div class="max-w-md w-full text-center p-10 shadow-2xl border-none rounded-[32px] bg-white">
+                    <div class="mx-auto bg-green-100 w-24 h-24 rounded-3xl flex items-center justify-center mb-8 rotate-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">أهلاً بك في موشور!</h2>
+                    <p class="text-lg leading-relaxed text-slate-600 mb-8">
+                        تم تسجيل اشتراكك بنجاح. ستصلك أول نشرة في يوم الأحد القادم صباحاً. ترقب رسالة التأكيد في بريدك الآن.
+                    </p>
+                    <button onclick="showView('landing')" class="rounded-full px-10 py-4 font-bold bg-slate-900 text-white hover:bg-slate-800 shadow-xl transition-all">
+                        العودة للرئيسية
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-50 text-slate-900 border-t mt-12">
+        <div class="container mx-auto px-4 py-8 md:py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div class="lg:col-span-2">
+                    <a href="#" class="inline-block mb-4">
+                        <img src="https://manhom.com/asset/img/logo.webp" alt="Manhom Logo" width="130" height="49">
+                    </a>
+                    <p class="text-slate-500 text-sm max-w-sm">
+                        من هم، منصة الحضور العربي الموثق للأفراد والمؤسسات. إحدى منصات مجرة.
+                    </p>
+                    <div class="mt-6">
+                        <p class="font-bold mb-2">تابعنا على</p>
+                        <div class="flex space-x-4 space-x-reverse">
+                            <a href="#" class="text-slate-400 hover:text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+                            <a href="#" class="text-slate-400 hover:text-blue-400"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-4">حول من هم</h3>
+                    <ul class="space-y-2 text-slate-500 text-sm">
+                        <li><a href="#" class="hover:text-blue-600">التصنيفات</a></li>
+                        <li><a href="#" class="hover:text-blue-600">عن من هم</a></li>
+                        <li><a href="#" class="hover:text-blue-600">سياسة الخصوصية</a></li>
+                        <li><a href="#" class="hover:text-blue-600">شروط الاستخدام</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-4">مواقع مجرة</h3>
+                    <ul class="space-y-2 text-slate-500 text-sm">
+                        <li><a href="#" class="hover:text-blue-600">هارفارد بزنس ريفيو</a></li>
+                        <li><a href="#" class="hover:text-blue-600">إم آي تي تكنولوجي ريفيو</a></li>
+                        <li><a href="#" class="hover:text-blue-600">نفسيتي</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t pt-6 text-center text-slate-400 text-sm">
+                <p>جميع الحقوق محفوظة ل من هم 2025</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function scrollToPricing() {
+            const element = document.getElementById('pricing-section');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function showView(viewId) {
+            const views = ['landing', 'subscribe', 'success'];
+            views.forEach(v => {
+                const element = document.getElementById(v + '-view');
+                if (element) {
+                    if (v === viewId) {
+                        element.classList.remove('view-hidden');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                        element.classList.add('view-hidden');
+                    }
+                }
+            });
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            // هنا يتم إرسال البيانات (في حال وجود سيرفر)
+            showView('success');
+        }
+    </script>
+</body>
+</html>
