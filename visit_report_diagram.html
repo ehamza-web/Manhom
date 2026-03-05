@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UML Activity Diagram - Character Recommendation System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        
+        .uml-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            gap: 0;
+        }
+
+        /* UML Core Elements */
+        .start-node {
+            width: 28px;
+            height: 28px;
+            background: #1e293b;
+            border-radius: 50%;
+            margin-bottom: 0;
+        }
+
+        .end-node {
+            width: 30px;
+            height: 30px;
+            background: #1e293b;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 2px #1e293b;
+        }
+
+        .action-node {
+            background: white;
+            border: 1.5px solid #3b82f6;
+            border-radius: 8px;
+            padding: 12px 18px;
+            min-width: 180px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .decision-node {
+            width: 120px;
+            height: 70px;
+            background: white;
+            border: 2px solid #6366f1;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-align: center;
+            padding: 10px;
+            z-index: 10;
+        }
+
+        /* Flow Indicators */
+        .fork-join {
+            width: 90%;
+            height: 8px;
+            background: #334155;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .arrow-v {
+            width: 2px;
+            height: 30px;
+            background: #94a3b8;
+            position: relative;
+        }
+        .arrow-v::after {
+            content: '▼';
+            position: absolute;
+            bottom: -8px;
+            left: -5.5px;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .swimlane-header {
+            width: 100%;
+            background: #f1f5f9;
+            border-right: 6px solid #1e293b;
+            padding: 10px 20px;
+            margin: 20px 0;
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .condition-tag {
+            font-size: 0.7rem;
+            color: #475569;
+            font-weight: bold;
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .parallel-tracks {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 1000px;
+            padding: 10px 0;
+        }
+
+        .track {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sql-box {
+            background: #1e293b;
+            color: #38bdf8;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.65rem;
+            margin-top: 5px;
+            display: inline-block;
+            direction: ltr;
+        }
+
+        .restricted-badge {
+            background: #fee2e2;
+            color: #b91c1c;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            display: inline-block;
+            border: 1px solid #fecaca;
+        }
+
+        .fallback-step {
+            position: relative;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            margin-bottom: 10px;
+            width: 100%;
+            font-size: 11px;
+        }
+        .fallback-number {
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #3b82f6;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 10px;
+            border: 2px solid white;
+        }
+
+        .global-filter {
+            border: 2px dashed #10b981;
+            background: #f0fdf4;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            max-width: 500px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="p-6 text-right">
+
+    <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden">
+        <div class="bg-slate-900 p-8 text-center">
+            <h1 class="text-3xl font-black text-white">UML Activity Diagram</h1>
+        </div>
+
+        <div class="uml-container">
+            <!-- Start -->
+            <div class="start-node"></div>
+            <div class="arrow-v"></div>
+
+            <!-- Stage 1 -->
+            <div class="swimlane-header">
+                <i class="fas fa-layer-group text-blue-500"></i>
+                المرحلة الأولى: هندسة الخزانات (السبت 11:00 PM)
+            </div>
+            
+            <!-- Global Requirement Filter -->
+            <div class="global-filter">
+                <div class="font-bold text-emerald-800 mb-2"><i class="fas fa-check-circle"></i> معايير الاختيار الذهبية (3شخصيات)</div>
+                <div class="text-[11px] text-emerald-700 leading-relaxed text-center px-4">
+                   موثقة + فعالة (خلال 90 يوم) | استبعاد Blue No Promotion |  الأولوية للجدد (NULL First)
+                </div>
+            </div>
+
+            <div class="arrow-v"></div>
+            
+            <div class="fork-join"></div>
+            
+            <div class="parallel-tracks">
+                <!-- Saudi Track -->
+                <div class="track">
+                    <div class="arrow-v"></div>
+                    <div class="action-node text-[10px] border-emerald-400">
+                        <i class="fas fa-flag-checkered text-blue-600 mb-1"></i><br>
+                        خزان السعودية (3)<br>
+                        <span class="text-emerald-600 font-bold italic">last_featured_country</span>
+                    </div>
+                </div>
+                <!-- Countries Track -->
+                <div class="track">
+                    <div class="arrow-v"></div>
+                    <div class="restricted-badge">شرط الـ 30 يوم</div>
+                    <div class="restricted-badge">Diff(last_featured_date-Now)>30</div>
+
+                    <div class="action-node text-[10px] border-emerald-400">
+                        <i class="fas fa-globe text-blue-600 mb-1"></i><br>
+                        خزان البلدان (3)<br>
+                        <span class="block text-emerald-600 font-bold italic">last_featured_country</span>
+                    </div>
+                </div>
+                <!-- Category Track -->
+                <div class="track">
+                    <div class="arrow-v"></div>
+                    <div class="restricted-badge">شرط الـ 30 يوم</div>
+                     <div class="restricted-badge">Diff(last_featured_date-Now)>30</div>
+
+                    <div class="action-node text-[10px] border-orange-400">
+                        <i class="fas fa-tag text-blue-600 mb-1"></i><br>
+                        خزان التصنيف (3)<br>
+                        <span class="block text-orange-600 font-bold italic">last_featured_global</span>
+                    </div>
+                </div>
+                <!-- Global Track -->
+                <div class="track">
+                    <div class="arrow-v"></div>
+                    <div class="action-node text-[10px] border-slate-400">
+                        <i class="fas fa-star text-blue-600 mb-1"></i><br>
+                        خزان الغلوبال (3)<br>
+                        <span class="text-slate-600 font-bold italic">last_featured_global</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fork-join"></div>
+            <div class="arrow-v"></div>
+            <div class="action-node bg-slate-50 border-slate-800">تخزين النتائج في Redis/Cache (التجهيز المسبق)</div>
+
+            <!-- Stage 2 -->
+            <div class="swimlane-header">
+                <i class="fas fa-paper-plane text-blue-600"></i>
+                المرحلة الثانية: جوب الإرسال (الأحد صباحاً)
+            </div>
+            
+            <div class="decision-node">نوع المستهدف؟</div>
+            
+            <div class="grid grid-cols-2 gap-16 mt-8 w-full">
+                <!-- Saudi Path -->
+                <div class="flex flex-col items-center border-l border-slate-200 pl-4">
+                    <div class="condition-tag mb-4">للمستهدف السعودي(جنسية أو بلد دائم أو مكان إقامة حالي)</div>
+                    <div class="arrow-v"></div>
+                    <div class="action-node border-emerald-500 bg-emerald-50 shadow-md">
+                        <i class="fas fa-bolt text-emerald-600 mb-1"></i><br>
+                        سحب مباشر من خزان السعودية
+                    </div>
+                    <div class="arrow-v h-20"></div>
+                    <div class="action-node bg-slate-900 text-white text-[10px] border-none">
+                        Update: last_featured_country = NOW
+                    </div>
+                </div>
+
+                <!-- Non-Saudi Path (Matching requested logic) -->
+                <div class="flex flex-col items-center pr-4">
+                    <div class="condition-tag mb-4">للمستهدف غير السعودي (الجنسية =! السعودية)</div>
+                    <div class="arrow-v"></div>
+                    
+                    <div class="w-full max-w-xs space-y-4">
+                        <div class="fallback-step border-blue-500 bg-blue-50">
+                            <div class="fallback-number">1</div>
+                            <b>السحب من خزان بلده</b><br>
+                            <span class="text-[9px] text-slate-500">(تطابق جنسية المستهدف مع الشخصية)</span><br>
+                             <b> Update: last_featured_country = NOW</b><br>
+
+                        </div>
+                        
+                        <div class="text-center text-red-500 text-[10px] font-bold">Fallback ↓ (إذا لم يتوفر خزان بلد)</div>
+                        
+                        <div class="fallback-step border-orange-400 bg-orange-50">
+                            <div class="fallback-number">2</div>
+                            <b>السحب من خزان تصنيفه</b><br>
+                            <span class="text-[9px] text-slate-500">(تطابق تخصص المستهدف مع الشخصية)</span><br>
+                            <b> Update: last_featured_global = NOW</b><br>
+
+                        </div>
+
+                        <div class="text-center text-red-500 text-[10px] font-bold">Fallback ↓ (إذا لم يتوفر تصنيف)</div>
+
+                        <div class="fallback-step border-slate-400 bg-slate-100">
+                            <div class="fallback-number">3</div>
+                            <b>السحب من خزان الغلوبال العام</b><br>
+                            <b> Update: last_featured_global = NOW</b><br>
+
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="arrow-v mt-10"></div>
+            
+            <div class="grid grid-cols-2 gap-4 w-full max-w-2xl">
+                <div class="action-node border-rose-400 text-[11px]"><i class="fas fa-file-invoice text-rose-500"></i> توثيق التقرير النهائي</div>
+                <div class="action-node border-rose-400 text-[11px]"><i class="fas fa-user-check text-rose-500"></i> تحديث sent_to_ids</div>
+            </div>
+
+            <div class="swimlane-header">
+                <i class="fas fa-bell text-orange-500"></i>
+                المرحلة الثالثة: الإشعارات
+            </div>
+            
+            <div class="action-node border-orange-500 bg-orange-50 w-full max-w-md">
+                إرسال إيميل الأحد الأسبوعي لكل مدير (Email Notification)
+            </div>
+
+            <div class="arrow-v h-10"></div>
+            <div class="end-node"></div>
+        </div>
+
+        <div class="bg-slate-50 p-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-[12px]">
+            <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-r-blue-500">
+                <h5 class="font-bold text-blue-700 mb-2 underline"><i class="fas fa-shield-alt"></i> استقلالية المسارات (من الصور):</h5>
+                <ul class="list-disc list-inside space-y-1 text-slate-600">
+                    <li><b>التدوير الزمني:</b> في حال ظهور الجميع مسبقاً، يتم اختيار <b>الأقدم تاريخاً</b> لضمان العدالة.</li>
+                    <li><b>الاستقلالية:</b> فصل تدوير "البلد" عن "العالمي" لمنح الشخصية فرص ظهور متعددة في سياقات مختلفة.</li>
+                </ul>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-r-emerald-500">
+                <h5 class="font-bold text-emerald-700 mb-2 underline"><i class="fas fa-cogs"></i> التجهيز المسبق:</h5>
+                <p class="text-slate-600">
+                    يتم حصر أفضل 3 مرشحين لكل فئة في الكاش (Redis) لتفادي تكرار الاستعلامات الثقيلة أثناء عملية الإرسال الضخمة.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
