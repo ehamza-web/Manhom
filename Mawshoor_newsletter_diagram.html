@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مخططات نظام نشرة موشور</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f1f5f9;
+        }
+        .diagram-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            padding: 2.5rem;
+            border: 1px solid #e2e8f0;
+        }
+        .section-title {
+            color: #1e40af;
+            border-right: 4px solid #3b82f6;
+            padding-right: 1rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-12">
+
+    <header class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-slate-900 mb-4">المخططات الهندسية لنظام نشرة موشور</h1>
+        <p class="text-lg text-slate-600">تحليل فني لتدفق البيانات، حالات الاستخدام، والتكامل مع الأنظمة الخارجية</p>
+    </header>
+
+    <main class="max-w-6xl mx-auto">
+        
+        <!-- 1. Context Diagram -->
+        <section class="diagram-container">
+            <h2 class="text-2xl font-bold section-title">1. مخطط سياق النظام (Context Diagram)</h2>
+            <p class="mb-6 text-slate-700">يوضح هذا المخطط نظام "من هم" كمركز للعمليات وكيفية تواصله مع المستخدمين والمنصات الخارجية (Octopus, n8n, Neverbounce).</p>
+            <div class="mermaid flex justify-center">
+                graph LR
+                    subgraph External_Systems [الأنظمة الخارجية]
+                        Octopus[منصة Octopus]
+                        n8n[أداة n8n الأتمتة]
+                        Neverbounce[خدمة التحقق Neverbounce]
+                    end
+
+                    User((المستخدم / الزائر)) -- طلب اشتراك --> System[**نظام من هم - نشرة موشور**]
+                    Admin((مدير النظام)) -- عرض وفلترة المشتركين --> System
+                    
+                    System -- التحقق من البريد --> Neverbounce
+                    System -- Create/Update Contact --> Octopus
+                    n8n -- التحقق اليومي 12 AM --> System
+                    n8n -- Unsubscribe = true --> Octopus
+                    
+                    style System fill:#eff6ff,stroke:#3b82f6,stroke-width:3px
+            </div>
+        </section>
+
+        <!-- 2. Use Case Diagram -->
+        <section class="diagram-container">
+            <h2 class="text-2xl font-bold section-title">2. مخطط حالات الاستخدام (Use Case Diagram)</h2>
+            <div class="mermaid flex justify-center">
+                graph TD
+                    Admin((مدير النظام)) --- UC1(عرض جدول المشتركين)
+                    User((المستخدم/الزائر)) --- UC2(الاشتراك في النشرة)
+                    n8n((أداة n8n)) --- UC3(إنهاء الاشتراك التلقائي)
+                    
+                    subgraph Operations [العمليات]
+                        UC1
+                        UC2
+                        UC3
+                    end
+                    
+                    UC1 -.-> Search(البحث بالبريد)
+                    UC1 -.-> Filter(الفلترة بالتاريخ والنوع)
+                    UC2 -.-> Validation(التحقق من البيانات و Neverbounce)
+                    
+                    style Operations fill:#fff,stroke:#94a3b8
+            </div>
+        </section>
+
+        <!-- 3. Subscription Flowchart -->
+        <section class="diagram-container">
+            <h2 class="text-2xl font-bold section-title">3. سير عمل الاشتراك (Subscription Process)</h2>
+            <div class="mermaid flex justify-center">
+                flowchart TD
+                    Start([بداية طلب الاشتراك]) --> Input[إدخال البيانات: الاسم، الشركة، المنصب، الهاتف، البريد]
+                    Input --> Terms{الموافقة على الشروط؟}
+                    Terms -- لا --> EndFail([توقف])
+                    Terms -- نعم --> Validate{صيغة البريد و Neverbounce؟}
+                    
+                    Validate -- غير صحيح --> ErrorMsg[عرض رسالة خطأ: البريد غير صحيح]
+                    ErrorMsg --> Input
+                    
+                    Validate -- صحيح --> OctopusSync[استدعاء خدمة Octopus: Create/Update Contact]
+                    
+                    OctopusSync --> CheckSync{نجاح المزامنة؟}
+                    CheckSync -- فشل --> FailMsg[رسالة: فشل تقديم الطلب، يرجى المحاولة لاحقاً]
+                    CheckSync -- نجاح --> DB[حفظ البيانات في قاعدة بيانات من هم]
+                    
+                    DB --> SetDates[تحديد تاريخ البداية والنهاية +30 يوم]
+                    SetDates --> Success([تم الاشتراك بنجاح])
+                    
+                    style OctopusSync fill:#fef3c7,stroke:#d97706
+                    style CheckSync fill:#fef3c7,stroke:#d97706
+            </div>
+        </section>
+
+        <!-- 4. Unsubscribe Flowchart -->
+        <section class="diagram-container">
+            <h2 class="text-2xl font-bold section-title">4. عملية إنهاء الاشتراك التلقائي (n8n Automation)</h2>
+            <div class="mermaid flex justify-center">
+                flowchart TD
+                    Time([الساعة 12:00 AM يومياً]) --> Fetch[جلب المستخدمين الذين تاريخ نهايتهم = اليوم]
+                    Fetch --> Loop{لكل مستخدم مستحق؟}
+                    Loop -- نعم --> UpdateOctopus[تغيير Unsubscribe إلى True في Octopus]
+                    UpdateOctopus --> Loop
+                    Loop -- لا يوجد المزيد --> Finish([نهاية العملية])
+                    
+                    style UpdateOctopus fill:#fee2e2,stroke:#ef4444
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center pb-12 text-slate-500 text-sm">
+        نظام نشرة موشور - تحليل هندسي تم إنشاؤه بناءً على وثيقة متطلبات النظام.
+    </footer>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'neutral',
+            fontFamily: 'Tajawal',
+            flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+            securityLevel: 'loose'
+        });
+    </script>
+</body>
+</html>
