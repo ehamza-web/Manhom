@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة من هم - قدرات سعودية</title>
+    <!-- تضمين خط IBM Plex Sans Arabic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- تضمين Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"IBM Plex Sans Arabic"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#4169E1',
+                        saudi: '#006C35',
+                        brandBlue: '#96E3FF',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .view-hidden { display: none; }
+        .hero-section { background-color: #96E3FF; }
+        .dir-ltr { direction: ltr; }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .nav-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: #1e293b;
+            padding: 0 4px;
+            white-space: nowrap;
+        }
+        .nav-link:hover { color: #4169E1; }
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 4px 12px;
+        }
+        .user-email { font-size: 12px; font-weight: 700; color: #1e293b; }
+        .user-plan { font-size: 10px; background: #dfe7ff; color: #4169E1; padding: 1px 8px; border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen text-slate-900 flex flex-col">
+
+    <!-- Header (Matching Manhom Layout: Logo Right, User Left) -->
+    <header class="bg-[#96e3ff] border-b shadow-sm sticky top-0 w-full z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-[78px] gap-2">
+                
+                <!-- Right: Logo -->
+                <div class="flex items-center">
+                    <a href="#" onclick="showView('home')" class="flex items-center">
+                        <img src="https://manhom.com/asset/img/logo.webp" alt="Manhom Logo" width="82" height="31">
+                    </a>
+                </div>
+
+                <!-- Center: Navigation Links -->
+                <nav class="hidden xl:flex items-center gap-4">
+                    <a href="#" class="nav-link">قوائم من هم</a>
+                    <a href="#" class="nav-link">باقة الرؤساء التنفيذيين</a>
+                    <a href="#" class="nav-link flex items-center gap-1">
+                        وثق ملفك 
+                        <img src="https://manhom.com/asset/svg/verified.svg" width="14" height="14">
+                    </a>
+                    <a href="#" class="nav-link">أضف شركة</a>
+                    <a href="#" onclick="showView('nominate')" class="nav-link cursor-pointer">أضف شخصية</a>
+                    <a href="#" class="nav-link">نشرة موشور</a>
+                    <a href="#" onclick="showView('leaderboard')" id="nav-leaderboard" class="nav-link cursor-pointer">قائمة المتصدرين</a>
+                    <a href="#" class="nav-link">التصنيفات</a>
+                </nav>
+
+                <!-- Left: User Info & Country -->
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-1 cursor-pointer">
+                        <img src="https://manhom.com/asset/img/flags/ae.svg" width="24" height="18" alt="Flag">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600"><path d="m6 9 6 6 6-6"/></svg>
+                    </div>
+                    <div class="flex items-center gap-2 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 ml-1"><path d="m6 9 6 6 6-6"/></svg>
+                        <div class="flex flex-col items-end">
+                            <span class="user-email">etabb@majarrastg.com</span>
+                            <span class="user-plan">الخطة المجانية</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center border-2 border-white overflow-hidden">
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-gray-400 mt-2"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- 1. Home View -->
+        <div id="home-view" class="space-y-12">
+            <!-- Hero Section -->
+            <section class="text-center py-12 md:py-20 hero-section">
+                <div class="container mx-auto px-4">
+                    <h1 class="text-2xl md:text-5xl font-bold tracking-tight mb-4 text-gray-900 flex flex-col sm:flex-row items-center justify-center gap-2">
+                        منصة الحضور العربي الموثق
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" class="h-8 w-8 sm:h-12 sm:w-12">
+                            <path d="M45.9922 24L41.1122 18.42L41.7922 11.04L34.5722 9.4L30.7922 3L23.9922 5.92L17.1922 3L13.4122 9.38L6.19219 11L6.87219 18.4L1.99219 24L6.87219 29.58L6.19219 36.98L13.4122 38.62L17.1922 45L23.9922 42.06L30.7922 44.98L34.5722 38.6L41.7922 36.96L41.1122 29.58L45.9922 24ZM20.1722 33.44L12.5722 25.82L15.5322 22.86L20.1722 27.52L31.8722 15.78L34.8322 18.74L20.1722 33.44Z" fill="#4169E3"></path>
+                        </svg>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-700 mb-8">تحكم بما يعرفه الناس عنك</p>
+                    <div class="max-w-xl mx-auto relative">
+                        <input type="text" placeholder="ابحث ضمن 321,485 شخصية ومؤسسة" class="w-full h-14 md:h-16 px-8 rounded-full shadow-lg border-none text-lg">
+                        <button class="absolute left-2 top-2 h-10 md:h-12 bg-blue-600 text-white px-8 rounded-full font-bold">ابحث</button>
+                    </div>
+                </div>
+            </section>
+
+            <div class="container mx-auto px-4 -mt-10 space-y-16">
+                <!-- Mawshoor Feed -->
+                <section class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-slate-100">
+                    <h2 class="text-2xl font-bold mb-6">آخر تحركات موشور</h2>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 p-3 hover:bg-slate-50 rounded-xl transition-colors">
+                                <div class="text-center shrink-0">
+                                    <p class="text-xl font-bold text-green-600">07</p>
+                                    <p class="text-xs text-slate-400">أكتوبر</p>
+                                </div>
+                                <p class="text-sm leading-relaxed"><span class="font-bold text-blue-600">نورة القحطاني</span> أصبحت رئيسة تنفيذية للابتكار في <span class="font-bold">سدايا</span></p>
+                            </div>
+                            <div class="flex items-start gap-4 p-3 hover:bg-slate-50 rounded-xl transition-colors">
+                                <div class="text-center shrink-0">
+                                    <p class="text-xl font-bold text-amber-600">06</p>
+                                    <p class="text-xs text-slate-400">أكتوبر</p>
+                                </div>
+                                <p class="text-sm leading-relaxed"><span class="font-bold text-blue-600">محمد العتيبي</span> حصل على جائزة أفضل قائد رقمي لعام 2025</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4 p-3 hover:bg-slate-50 rounded-xl transition-colors">
+                                <div class="text-center shrink-0">
+                                    <p class="text-xl font-bold text-green-600">06</p>
+                                    <p class="text-xs text-slate-400">أكتوبر</p>
+                                </div>
+                                <p class="text-sm leading-relaxed"><span class="font-bold text-blue-600">سعيد الكعبي</span> أصبح نائب أول للرئيس التنفيذي في <span class="font-bold">اتصالات</span></p>
+                            </div>
+                            <div class="flex items-start gap-4 p-3 hover:bg-slate-50 rounded-xl transition-colors">
+                                <div class="text-center shrink-0">
+                                    <p class="text-xl font-bold text-red-600">05</p>
+                                    <p class="text-xs text-slate-400">أكتوبر</p>
+                                </div>
+                                <p class="text-sm leading-relaxed"><span class="font-bold text-blue-600">عبدالله الحارثي</span> غادر منصبه كمدير عام للاستثمار</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Saudi Capabilities Banner -->
+                <section class="bg-gradient-to-tr from-green-50 to-emerald-100 p-8 rounded-2xl shadow-lg text-center border border-green-100">
+                    <h2 class="text-3xl font-bold text-green-900">قائمة قدرات سعودية</h2>
+                    <p class="max-w-2xl mx-auto mt-3 text-lg text-green-800">ساهم في إبراز الكفاءات السعودية المتميزة عبر ترشيح من تراه مناسباً للانضمام إلى القائمة.</p>
+                    <div class="mt-6 flex justify-center gap-4">
+                        <button onclick="showView('nominate')" class="bg-green-700 hover:bg-green-800 text-white px-8 py-3 rounded-full font-bold shadow-md transition-transform hover:-translate-y-1">رشح من تريد</button>
+                        <button onclick="showView('leaderboard')" class="bg-white text-green-700 border-2 border-green-700 px-8 py-3 rounded-full font-bold hover:bg-green-50">المتصدرون</button>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold mb-8 text-center">الشخصيات الأكثر زيارة الآن</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                        <div onclick="showView('profile')" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all cursor-pointer group border border-slate-100">
+                            <img src="https://picsum.photos/seed/p1/300/350" class="w-full h-48 object-cover">
+                            <div class="p-4 text-center">
+                                <h3 class="font-bold group-hover:text-primary transition-colors">عبدالعزيز بن جعفر</h3>
+                                <p class="text-xs text-slate-500 mt-1">رئيس تنفيذي</p>
+                            </div>
+                        </div>
+                        <div onclick="showView('profile')" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all cursor-pointer group border border-slate-100">
+                            <img src="https://picsum.photos/seed/p2/300/350" class="w-full h-48 object-cover">
+                            <div class="p-4 text-center">
+                                <h3 class="font-bold group-hover:text-primary transition-colors">نورة القحطاني</h3>
+                                <p class="text-xs text-slate-500 mt-1">عالمة أبحاث</p>
+                            </div>
+                        </div>
+                        <div onclick="showView('profile')" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all cursor-pointer group border border-slate-100">
+                            <img src="https://picsum.photos/seed/p3/300/350" class="w-full h-48 object-cover">
+                            <div class="p-4 text-center">
+                                <h3 class="font-bold group-hover:text-primary transition-colors">محمد العتيبي</h3>
+                                <p class="text-xs text-slate-500 mt-1">قائد رقمي</p>
+                            </div>
+                        </div>
+                        <div onclick="showView('profile')" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all cursor-pointer group border border-slate-100">
+                            <img src="https://picsum.photos/seed/p4/300/350" class="w-full h-48 object-cover">
+                            <div class="p-4 text-center">
+                                <h3 class="font-bold group-hover:text-primary transition-colors">سارة الشامسي</h3>
+                                <p class="text-xs text-slate-500 mt-1">خبير طاقة</p>
+                            </div>
+                        </div>
+                        <div onclick="showView('profile')" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all cursor-pointer group border border-slate-100">
+                            <img src="https://picsum.photos/seed/p5/300/350" class="w-full h-48 object-cover">
+                            <div class="p-4 text-center">
+                                <h3 class="font-bold group-hover:text-primary transition-colors">سعيد الكعبي</h3>
+                                <p class="text-xs text-slate-500 mt-1">رائد أعمال</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- 2. Profile View -->
+        <div id="profile-view" class="view-hidden pb-12">
+            <div class="bg-[#FFF9E4] border-b-[3px] border-[#E0D29E] py-12">
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-col md:flex-row gap-8 items-center md:items-start text-right">
+                        <div class="relative shrink-0">
+                            <img src="https://picsum.photos/seed/p1/300/350" class="w-48 h-56 object-cover rounded-3xl shadow-2xl border-4 border-white">
+                            <div class="absolute -bottom-3 -right-3 bg-blue-600 text-white p-2 rounded-full shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <h1 class="text-3xl font-black mb-2 flex items-center justify-center md:justify-start gap-2">
+                                عبدالعزيز بن جعفر
+                                <img src="https://manhom.com/asset/svg/Characters.svg" width="22" height="22">
+                            </h1>
+                            <p class="text-lg text-slate-600 mb-6">رئيس تنفيذي لشركة التقنيات المتقدمة</p>
+                            
+                            <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+                                <button onclick="handleNominate(this)" class="bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-full font-bold shadow-xl transition-all flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    رشح لقائمة قدرات سعودية
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Nominate View -->
+        <div id="nominate-view" class="view-hidden pb-12 min-h-screen" style="background: linear-gradient(180deg, rgba(213, 233, 222, 0) 0%, rgba(204, 229, 216, 0.5) 100%), #F8FAFC;">
+            <div class="py-12 md:py-16 text-center bg-no-repeat bg-bottom bg-contain" style="background-image: url('https://manhom.com/asset/img/saudi-pattern.svg');">
+                <div class="container mx-auto px-4">
+                    <img src="https://i.postimg.cc/gkvKKbNp/saudi-(1).webp" alt="Saudi heritage" width="200" height="200" class="mx-auto rounded-lg shadow-md mb-8">
+                    <h1 class="text-4xl font-bold tracking-tight text-green-900">رشح شخصية لقائمة قدرات سعودية</h1>
+                    <div class="relative my-6 max-w-4xl mx-auto">
+                        <svg class="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="ابحث بالاسم عن شخصية سعودية لترشيحها أو أضف شخصية جديدة..." class="w-full h-14 md:h-16 px-12 rounded-full shadow-lg border-white text-lg outline-none focus:ring-2 focus:ring-green-600">
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 pb-8 md:pb-12">
+                <div class="max-w-7xl mx-auto">
+                    <h2 class="text-2xl font-bold text-center text-green-800 pt-4 mb-8">أبرز المرشحين الحاليين</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                        <!-- Horizontal Cards Template -->
+                        <div onclick="showView('profile')" class="w-full flex items-center p-4 bg-white rounded-xl shadow-sm border border-slate-100 transition-shadow hover:shadow-md cursor-pointer">
+                            <img src="https://picsum.photos/seed/p1/100/100" class="h-20 w-20 rounded-lg object-cover">
+                            <div class="flex-grow text-right mx-4 overflow-hidden">
+                                <h3 class="font-semibold text-lg hover:text-primary flex items-center gap-2 truncate">
+                                    عبدالعزيز بن جعفر
+                                    <svg class="h-4 w-4 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                </h3>
+                                <p class="text-sm text-muted-foreground mt-1 line-clamp-2">رئيس تنفيذي لشركة التقنيات المتقدمة</p>
+                            </div>
+                            <div class="w-32 shrink-0">
+                                <button onclick="handleNominateInline(event, this)" class="w-full py-2 bg-green-600 text-white rounded-full font-bold text-sm hover:bg-green-700 transition-colors flex items-center justify-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    رشح الآن
+                                </button>
+                            </div>
+                        </div>
+                        <div onclick="showView('profile')" class="w-full flex items-center p-4 bg-white rounded-xl shadow-sm border border-slate-100 transition-shadow hover:shadow-md cursor-pointer">
+                            <img src="https://picsum.photos/seed/p2/100/100" class="h-20 w-20 rounded-lg object-cover">
+                            <div class="flex-grow text-right mx-4 overflow-hidden">
+                                <h3 class="font-semibold text-lg hover:text-primary flex items-center gap-2 truncate">نورة القحطاني <svg class="h-4 w-4 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></h3>
+                                <p class="text-sm text-muted-foreground mt-1 line-clamp-2">عالمة أبحاث في الذكاء الاصطناعي</p>
+                            </div>
+                            <div class="w-32 shrink-0"><button onclick="handleNominateInline(event, this)" class="w-full py-2 bg-green-600 text-white rounded-full font-bold text-sm hover:bg-green-700 transition-colors">رشح الآن</button></div>
+                        </div>
+                        <div onclick="showView('profile')" class="w-full flex items-center p-4 bg-white rounded-xl shadow-sm border border-slate-100 transition-shadow hover:shadow-md cursor-pointer">
+                            <img src="https://picsum.photos/seed/p3/100/100" class="h-20 w-20 rounded-lg object-cover">
+                            <div class="flex-grow text-right mx-4 overflow-hidden">
+                                <h3 class="font-semibold text-lg hover:text-primary truncate">محمد العتيبي</h3>
+                                <p class="text-sm text-muted-foreground mt-1 line-clamp-2">قائد في التحول الرقمي</p>
+                            </div>
+                            <div class="w-32 shrink-0"><button onclick="handleNominateInline(event, this)" class="w-full py-2 bg-green-600 text-white rounded-full font-bold text-sm hover:bg-green-700 transition-colors">رشح الآن</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Leaderboard View -->
+        <div id="leaderboard-view" class="view-hidden pb-12">
+            <header class="relative text-center py-16 md:py-24 overflow-hidden min-h-[450px] flex items-center justify-center">
+                <!-- Background Image -->
+                <div class="absolute inset-0 z-0">
+                    <img src="https://i.postimg.cc/rF89gYbY/saudi2_(1).png" class="w-full h-full object-cover opacity-30">
+                    <div class="absolute inset-0 bg-gradient-to-b from-white/60 via-white/40 to-transparent"></div>
+                </div>
+                
+                <div class="relative z-10 container mx-auto px-4 flex flex-col items-center">
+                    <!-- Top Badge -->
+                    <div class="w-24 h-24 bg-white rounded-2xl shadow-xl p-1 mb-8 overflow-hidden border border-slate-100">
+                        <img src="https://i.postimg.cc/gkvKKbNp/saudi-(1).webp" class="w-full h-full object-cover rounded-xl" alt="Saudi Icon">
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-[56px] font-black text-slate-800 mb-4 tracking-tight">
+                        قائمة المتصدرين - قدرات سعودية
+                    </h1>
+                    <p class="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto font-medium mb-8">
+                        اكتشف الشخصيات السعودية الأكثر ترشيحاً وتأثيراً في مختلف المجالات.
+                    </p>
+                    
+                    <button class="bg-white/80 hover:bg-white text-slate-700 px-8 py-3 rounded-full font-bold shadow-sm border border-slate-200 flex items-center gap-2 transition-all backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                        شارك القائمة
+                    </button>
+                </div>
+            </header>
+
+            <div class="container mx-auto px-4 -mt-12">
+                <div class="max-w-5xl mx-auto space-y-4">
+                    <!-- Item 1 -->
+                    <div class="bg-white/95 backdrop-blur-sm p-4 rounded-2xl shadow-md border border-slate-100 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-6 flex-grow">
+                            <div class="w-10 h-10 flex items-center justify-center font-black text-2xl text-slate-800">1</div>
+                            <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm shrink-0">
+                                <img src="https://picsum.photos/seed/jaafar/100/100" class="w-full h-full object-cover">
+                            </div>
+                            <div class="text-right">
+                                <h3 class="font-bold text-xl text-slate-900">جعفر عبدالكريم</h3>
+                                <p class="text-sm text-slate-400 mt-1">إعلامي وصحفي سعودي معروف ببرامجه الحوارية الجريئة.</p>
+                            </div>
+                        </div>
+                        <div class="shrink-0">
+                            <button onclick="handleNominateInline(event, this)" class="bg-[#16a34a] hover:bg-[#15803d] text-white px-8 py-2 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg shadow-green-500/20 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                رشح
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="bg-white/95 backdrop-blur-sm p-4 rounded-2xl shadow-md border border-slate-100 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-6 flex-grow">
+                            <div class="w-10 h-10 flex items-center justify-center font-black text-2xl text-slate-800">2</div>
+                            <div class="w-16 h-16 rounded-full overflow-hidden shadow-sm shrink-0 bg-slate-100 flex items-center justify-center font-bold text-slate-400 text-xl">ب</div>
+                            <div class="text-right">
+                                <h3 class="font-bold text-xl text-slate-900">بدر جعفر</h3>
+                                <p class="text-sm text-slate-400 mt-1">رائد أعمال سعودي، يشغل منصب الرئيس التنفيذي لشركة "الهلال للمشاريع".</p>
+                            </div>
+                        </div>
+                        <div class="shrink-0">
+                            <button onclick="handleNominateInline(event, this)" class="bg-[#16a34a] hover:bg-[#15803d] text-white px-8 py-2 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg shadow-green-500/20 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                رشح
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-50 border-t py-12 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <img src="https://manhom.com/asset/img/logo.webp" alt="Manhom Logo" width="100" class="mx-auto mb-6">
+            <p class="text-slate-500 text-sm mb-6">من هم، منصة الحضور العربي الموثق للأفراد والمؤسسات. إحدى منصات مجرة.</p>
+            <div class="flex justify-center gap-6 text-slate-400 text-sm">
+                <a href="#" class="hover:text-blue-600">التصنيفات</a>
+                <a href="#" class="hover:text-blue-600">عن من هم</a>
+                <a href="#" class="hover:text-blue-600">سياسة الخصوصية</a>
+            </div>
+            <p class="text-slate-300 text-xs mt-8 font-sans">جميع الحقوق محفوظة لـ من هم 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        function showView(viewId) {
+            const views = ['home', 'profile', 'nominate', 'leaderboard'];
+            views.forEach(v => {
+                const element = document.getElementById(v + '-view');
+                if (element) {
+                    if (v === viewId) {
+                        element.classList.remove('view-hidden');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                        element.classList.add('view-hidden');
+                    }
+                }
+            });
+
+            // Update nav active state
+            const leaderboardNav = document.getElementById('nav-leaderboard');
+            if (viewId === 'leaderboard') {
+                leaderboardNav.classList.add('active');
+            } else {
+                leaderboardNav.classList.remove('active');
+            }
+        }
+
+        function handleNominate(button) {
+            button.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                تم الترشيح بنجاح
+            `;
+            button.classList.remove('bg-green-600');
+            button.classList.add('bg-green-800');
+            button.disabled = true;
+            alert('تم تسجيل ترشيحك بنجاح في قائمة قدرات سعودية!');
+        }
+
+        function handleNominateInline(event, button) {
+            event.stopPropagation();
+            button.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="ml-1"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                تم
+            `;
+            button.classList.remove('bg-green-600');
+            button.classList.add('bg-green-800');
+            button.disabled = true;
+            alert('تم الترشيح بنجاح!');
+        }
+    </script>
+</body>
+</html>
