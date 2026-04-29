@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GAM Evaluation System</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+@font-face {
+  font-family: '29LT Zarid Sans';
+  src: url('https://evaluation.majarra.cloud/fonts/ZaridSans-Regular.woff2') format('woff2');
+  font-weight: 400; font-display: swap;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --sw: 200px; --hh: 55px;
+  --sb: #fff; --sbb: #c8ced3; --sbt: #23282c; --sbm: #73818f;
+  --sbh: #f0f3f5; --sba: #23282c; --sbat: #fff; --sbsub: #f8f9fa;
+  --bg: #e4e5e6; --th: #2f353a;
+  --bd: #c8ced3; --tx: #23282c; --mu: #73818f;
+  --rt: #e83e3e; --gr: #4dbd74; --bl: #20a8d8; --rd: #f86c6b; --ye: #ffc107;
+}
+body { font-family:'29LT Zarid Sans','Segoe UI',Helvetica,Arial,sans-serif; background:var(--bg); color:var(--tx); font-size:15px; display:flex; min-height:100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar { width:var(--sw); background:var(--sb); border-right:1px solid var(--sbb); min-height:100vh; position:fixed; top:0; left:0; bottom:0; z-index:200; display:flex; flex-direction:column; overflow-y:auto; }
+.sb-brand { display:flex; align-items:center; gap:8px; padding:0 12px; height:var(--hh); border-bottom:1px solid var(--sbb); border-top:3px solid var(--rt); flex-shrink:0; }
+.sb-brand img { height:34px; width:auto; object-fit:contain; flex-shrink:0; }
+.sb-brand-txt { font-size:12.5px; font-weight:600; color:var(--tx); line-height:1.3; }
+.nav-list { list-style:none; padding:4px 0; }
+.nav-item { position:relative; }
+.nl { display:flex; align-items:center; padding:9px 14px; color:var(--sbt); font-size:13.5px; text-decoration:none; cursor:pointer; border:0; background:transparent; width:100%; text-align:left; font-family:inherit; transition:background .12s; white-space:nowrap; }
+.nl:hover { background:var(--sbh); }
+.nl.active { background:var(--sba); color:var(--sbat); }
+.nl.active .ni { color:#fff; }
+.ni { width:30px; font-size:13px; text-align:center; color:var(--sbm); flex-shrink:0; }
+.nl:hover .ni { color:var(--tx); }
+.na { margin-left:auto; font-size:11px; color:var(--mu); transition:transform .2s; }
+.nav-dropdown.open > .nl > .na { transform:rotate(-180deg); }
+.nav-sub { display:none; background:var(--sbsub); border-top:1px solid var(--sbb); border-bottom:1px solid var(--sbb); list-style:none; }
+.nav-dropdown.open > .nav-sub { display:block; }
+.nav-sub .nl { padding:7px 14px 7px 44px; font-size:13px; color:var(--mu); }
+.nav-sub .nl:hover { color:var(--tx); background:#eaecee; }
+.nav-sub .nl.active { background:var(--sba); color:#fff; }
+.nav-sub .nl.active .ni { color:#fff; }
+.nav-sub .ni { width:22px; font-size:12px; }
+.nav-divider { height:1px; background:var(--sbb); margin:4px 0; }
+
+/* ── HEADER ── */
+.app-hdr { position:fixed; top:0; left:var(--sw); right:0; height:var(--hh); background:#fff; border-bottom:1px solid var(--bd); border-top:3px solid var(--rt); display:flex; align-items:center; padding:0 14px; z-index:100; gap:8px; }
+.hdr-tog { background:transparent; border:1px solid var(--bd); border-radius:3px; padding:4px 9px; font-size:15px; color:var(--mu); cursor:pointer; display:flex; align-items:center; }
+.hdr-tog:hover { background:#f0f3f5; }
+.hdr-bc { display:flex; align-items:center; gap:5px; font-size:13px; color:var(--mu); list-style:none; }
+.hdr-bc .sep { color:#adb5bd; }
+.hdr-bc .curr { color:var(--tx); }
+.hdr-bc a { color:var(--mu); text-decoration:none; }
+.hdr-right { margin-left:auto; display:flex; align-items:center; }
+.hdr-usr { display:flex; align-items:center; gap:7px; font-size:13px; color:var(--tx); cursor:pointer; padding:0 6px; height:var(--hh); position:relative; }
+.hdr-usr:hover { background:#f0f3f5; }
+.hdr-av { width:32px; height:32px; border-radius:50%; background:#c8ced3; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.hdr-av img { width:100%; height:100%; object-fit:cover; }
+.hdr-dd { display:none; position:absolute; top:calc(100% + 1px); right:0; background:#fff; border:1px solid var(--bd); border-radius:3px; min-width:150px; box-shadow:0 3px 10px rgba(0,0,0,.12); z-index:400; }
+.hdr-dd.open { display:block; }
+.hdr-dd a { display:flex; align-items:center; gap:8px; padding:7px 14px; font-size:13px; color:var(--tx); text-decoration:none; }
+.hdr-dd a:hover { background:#f0f3f5; }
+.dd-div { height:1px; background:var(--bd); margin:3px 0; }
+
+/* ── MAIN ── */
+.app-main { margin-left:var(--sw); margin-top:var(--hh); padding:0; flex:1; background:var(--bg); }
+.page-hdr { background:#fff; padding:16px 0 16px 32px; border-bottom:1px solid var(--bd); display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.page-hdr h1 { font-size:18px; font-weight:400; color:#23282c; margin:0; }
+.ai-badge { display:inline-flex; align-items:center; gap:5px; background:#eef6ff; color:#1a6ec2; font-size:11.5px; font-weight:600; padding:3px 10px; border-radius:20px; border:1px solid #b8d9f8; }
+.raw-badge { display:inline-flex; align-items:center; gap:5px; background:#f0fdf4; color:#15803d; font-size:11.5px; font-weight:600; padding:3px 10px; border-radius:20px; border:1px solid #86efac; }
+.cwrap { padding:24px; }
+
+/* ── CARD ── */
+.card { background:#fff; border:1px solid var(--bd); border-radius:8px; overflow:hidden; box-shadow:0 1px 5px rgba(0,0,0,.06); margin-bottom:20px; }
+
+/* ── STATS ── */
+.sgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px; background:var(--bd); border-bottom:1px solid var(--bd); }
+.scell { background:#fff; padding:14px 18px; display:flex; flex-direction:column; gap:3px; }
+.slbl { font-size:11px; color:var(--mu); text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
+.sval { font-size:22px; font-weight:300; color:var(--tx); }
+.ssub { font-size:11.5px; color:var(--mu); }
+
+/* ── CHIPS ── */
+.col-bar { padding:9px 16px; border-bottom:1px solid var(--bd); background:#f8f9fa; display:flex; align-items:center; flex-wrap:wrap; gap:5px; }
+.col-lbl { font-size:11px; font-weight:600; color:var(--mu); text-transform:uppercase; letter-spacing:.05em; margin-right:4px; }
+.chip { padding:2px 9px; border-radius:3px; border:1px solid var(--bd); background:#fff; color:var(--mu); cursor:pointer; user-select:none; font-size:12px; font-family:inherit; transition:all .12s; }
+.chip.on { background:var(--th); color:#fff; border-color:var(--th); }
+
+/* ── CAT TABS ── */
+.cat-bar { padding:12px 16px; border-bottom:1px solid var(--bd); display:flex; flex-wrap:wrap; gap:0; }
+.cat-btn { padding:5px 16px; font-size:13.5px; border:1px solid var(--bd); background:#fff; color:var(--tx); cursor:pointer; font-family:inherit; margin-right:-1px; position:relative; z-index:1; }
+.cat-btn:first-child { border-radius:3px 0 0 3px; }
+.cat-btn:last-child  { border-radius:0 3px 3px 0; margin-right:0; }
+.cat-btn:hover { background:#e8eaeb; z-index:2; }
+.cat-btn.active { background:var(--th); color:#fff; border-color:var(--th); z-index:3; }
+
+/* ── TABLE CONTROLS ── */
+.tbl-ctrl { display:flex; align-items:center; gap:8px; padding:10px 16px; border-bottom:1px solid var(--bd); font-size:13px; color:var(--mu); flex-wrap:wrap; }
+.tbl-search { margin-left:auto; display:flex; align-items:center; gap:8px; }
+select, input[type=text] { padding:4px 8px; border:1px solid var(--bd); border-radius:3px; font-size:13px; font-family:inherit; background:#fff; color:var(--tx); outline:none; }
+select:focus, input[type=text]:focus { border-color:#8ad4ee; }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:separate; border-spacing:0; font-size:13.5px; }
+thead tr { background:var(--th); }
+thead th { padding:10px 12px; text-align:left; color:rgba(255,255,255,.88); font-size:12.5px; font-weight:500; white-space:nowrap; cursor:pointer; user-select:none; border-right:1px solid rgba(255,255,255,.07); }
+thead th:last-child { border-right:none; }
+thead th.center { text-align:center; }
+thead th:hover { background:rgba(255,255,255,.07); }
+.th-in { display:inline-flex; align-items:center; gap:5px; }
+.th-arr { display:flex; flex-direction:column; opacity:.5; }
+.th-arr span { font-size:7px; line-height:1.1; }
+tbody tr { border-bottom:1px solid #e4e7ea; }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:hover { background:#f5f6f7; }
+tbody td { padding:9px 12px; vertical-align:middle; }
+tbody td.center { text-align:center; }
+
+/* ── BADGES ── */
+.pill { display:inline-block; padding:2px 9px; border-radius:20px; font-size:11.5px; font-weight:500; white-space:nowrap; }
+.p-field { background:#e8f4fd; color:#1a6ec2; }
+.p-nat   { background:#f0f3f5; color:#4a5568; border:1px solid #dde; }
+.ai-lbl  { display:inline-flex; align-items:center; gap:3px; font-size:10px; color:#7c3aed; font-weight:600; opacity:.8; }
+.cbadge  { display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:24px; padding:0 6px; border-radius:12px; font-size:12px; font-weight:600; }
+.cb-a { background:#fff3cd; color:#856404; }
+.cb-w { background:#d1ecf1; color:#0c5460; }
+.cb-e { background:#e2e3e5; color:#383d41; }
+
+/* ── SCORE BAR ── */
+
+/* ── RAW TAGS ── */
+.rtag { display:inline-block; padding:1px 7px; border-radius:3px; font-size:11.5px; font-weight:500; margin:2px 2px 2px 0; background:#f0f3f5; color:#2d3748; border:1px solid #dde; }
+.rtag.award   { background:#fff8e1; color:#7b5800; border-color:#f0d060; }
+.rtag.work    { background:#e8f4fd; color:#1a4a7a; border-color:#b8d9f8; }
+.rtag.deg     { background:#e8f5e9; color:#1b5e20; border-color:#a5d6a7; }
+.rtag.contact { background:#fce4ec; color:#880e4f; border-color:#f48fb1; }
+.rtag.src     { background:#ede7f6; color:#4527a0; border-color:#b39ddb; text-decoration:none; }
+
+/* ── EXPANDABLE ── */
+.expandable { cursor:pointer; }
+.expandable > .preview { color:var(--mu); font-size:12px; }
+.expandable.expanded > .preview { display:none; }
+.expandable > .full { display:none; font-size:12.5px; line-height:1.7; }
+.expandable.expanded > .full { display:block; }
+.full ul { padding-left:16px; }
+.full ul li { margin-bottom:3px; }
+.expandable > .preview .fa-chevron-down { transition:transform .2s; display:inline-block; }
+.expandable.expanded > .preview .fa-chevron-down { transform:rotate(180deg); }
+
+/* ── PAGINATION ── */
+.pag-row { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-top:1px solid var(--bd); font-size:13px; color:var(--mu); flex-wrap:wrap; gap:8px; }
+.pag { display:flex; gap:2px; list-style:none; }
+.pag li button { padding:3px 9px; border:1px solid var(--bd); border-radius:3px; background:#fff; color:var(--tx); font-size:12.5px; cursor:pointer; font-family:inherit; }
+.pag li button:hover { background:#e8eaeb; }
+.pag li.active button { background:var(--th); color:#fff; border-color:var(--th); }
+.pag li.disabled button { opacity:.45; pointer-events:none; }
+
+/* ── HIDDEN PANEL ── */
+.report-panel { display:none; }
+.report-panel.active { display:block; }
+
+/* -- TOOLTIP on th -- */
+.th-tip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.th-tip > .fa-circle-info {
+  font-size: 11px;
+  color: rgba(255,255,255,.5);
+  transition: color .15s;
+}
+.th-tip:hover > .fa-circle-info { color: #fff; }
+.tip-box {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2330;
+  color: #e2e8f0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 8px 12px;
+  border-radius: 5px;
+  white-space: normal;
+  width: 220px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.35);
+  z-index: 999;
+  pointer-events: none;
+  text-align: left;
+}
+.tip-box::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: #1e2330;
+}
+.th-tip:hover .tip-box { display: block; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <img src="https://evaluation.majarra.cloud/images/logo.png" alt="GAM" onerror="this.style.display='none'"/>
+    <span class="sb-brand-txt">GAM Evaluation System</span>
+  </div>
+  <nav><ul class="nav-list">
+
+    <li class="nav-item nav-dropdown open" id="dd-cand">
+      <button class="nl" onclick="toggleDD('dd-cand')">
+        <i class="ni fa fa-address-card"></i>Candidates
+        <i class="na fa fa-chevron-down"></i>
+      </button>
+      <ul class="nav-sub">
+        <li><a href="#" class="nl"><i class="ni fa fa-user-plus"></i>Add Candidate</a></li>
+        <li><a href="#" class="nl"><i class="ni fa fa-address-card"></i>Candidates</a></li>
+      </ul>
+    </li>
+
+    <li class="nav-item"><a href="#" class="nl"><i class="ni fa fa-list"></i>GAM List</a></li>
+
+    <li class="nav-item nav-dropdown open" id="dd-cand-rep">
+      <button class="nl" onclick="toggleDD('dd-cand-rep')">
+        <i class="ni fa fa-file-alt"></i>Candidates Reports
+        <i class="na fa fa-chevron-down"></i>
+      </button>
+      <ul class="nav-sub">
+        <li>
+          <a href="#" id="nav-raw" class="nl" onclick="showReport('raw',this)">
+            <i class="ni fa fa-file-text"></i>Basic Information
+          </a>
+        </li>
+        <li>
+          <a href="#" id="nav-comp" class="nl" onclick="showReport('comp',this)">
+            <i class="ni fa fa-robot"></i>Computed Information
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item nav-dropdown" id="dd-rep">
+      <button class="nl" onclick="toggleDD('dd-rep')">
+        <i class="ni fa fa-file"></i>Reports
+        <i class="na fa fa-chevron-down"></i>
+      </button>
+      <ul class="nav-sub">
+        <li><a href="#" class="nl"><i class="ni fa fa-file"></i>Full Report</a></li>
+        <li><a href="#" class="nl"><i class="ni fa fa-file"></i>Report Stage One</a></li>
+        <li><a href="#" class="nl"><i class="ni fa fa-file"></i>Report Stage Two</a></li>
+        <li><a href="#" class="nl"><i class="ni fa fa-file"></i>Report Stage Three</a></li>
+      </ul>
+    </li>
+
+    <li class="nav-item nav-dropdown" id="dd-usr">
+      <button class="nl" onclick="toggleDD('dd-usr')">
+        <i class="ni fa fa-users"></i>Users
+        <i class="na fa fa-chevron-down"></i>
+      </button>
+      <ul class="nav-sub">
+        <li><a href="#" class="nl"><i class="ni fa fa-user-plus"></i>Add User</a></li>
+        <li><a href="#" class="nl"><i class="ni fa fa-users"></i>Users</a></li>
+      </ul>
+    </li>
+
+    <li class="nav-item"><a href="#" class="nl"><i class="ni fa fa-file"></i>Eligibility Criteria</a></li>
+    <li class="nav-item"><a href="#" class="nl"><i class="ni fa fa-cog"></i>Settings</a></li>
+    <li class="nav-divider"></li>
+    <li class="nav-item"><a href="#" class="nl"><i class="ni fa fa-book"></i>User Manual</a></li>
+
+  </ul></nav>
+</aside>
+
+<!-- HEADER -->
+<header class="app-hdr">
+  <button class="hdr-tog" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+  <ol class="hdr-bc">
+    <li><a href="#">Dashboard</a></li>
+    <li><span class="sep">/</span></li>
+    <li><a href="#">Candidates Reports</a></li>
+    <li><span class="sep">/</span></li>
+    <li><span class="curr" id="bc-curr">Basic Information</span></li>
+  </ol>
+  <div class="hdr-right">
+    <div class="hdr-usr" id="hdr-usr" onclick="document.getElementById('hdr-dd').classList.toggle('open');event.stopPropagation()">
+      <div class="hdr-av">
+        <img src="https://evaluation.majarra.cloud/images/user.png" onerror="this.style.display='none'" alt=""/>
+      </div>
+      sys-admin <i class="fa fa-caret-down" style="font-size:10px;color:var(--mu)"></i>
+      <div class="hdr-dd" id="hdr-dd">
+        <a href="#"><i class="fa fa-user fa-fw"></i> Profile</a>
+        <div class="dd-div"></div>
+        <a href="#"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="app-main">
+
+  <!-- ══ REPORT: BASIC INFORMATION (RAW) ══ -->
+  <div class="report-panel active" id="panel-raw">
+    <div class="page-hdr">
+      <h1>Candidates — Basic Information Report</h1>
+      <span class="raw-badge"><i class="fa fa-file-text"></i> Directly extracted from PDF</span>
+    </div>
+    <div class="cwrap">
+      <div class="card">
+        <div class="col-bar" id="raw-col-bar"></div>
+        <div class="cat-bar" id="raw-cat-bar"></div>
+        <div class="tbl-ctrl">
+          Show <select id="raw-n" onchange="renderRaw()"><option>10</option><option>25</option><option>50</option></select> entries
+          <div class="tbl-search">Search: <input type="text" id="raw-q" oninput="filterRaw()"/></div>
+        </div>
+        <div class="tbl-wrap"><table><thead><tr id="raw-th"></tr></thead><tbody id="raw-tb"></tbody></table></div>
+        <div class="pag-row"><span id="raw-info"></span><ul class="pag" id="raw-pag"></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ REPORT: COMPUTED INFORMATION ══ -->
+  <div class="report-panel" id="panel-comp">
+    <div class="page-hdr">
+      <h1>Candidates — Computed Information Report</h1>
+      <span class="ai-badge"><i class="fa fa-robot"></i> AI-computed from extracted data</span>
+    </div>
+    <div class="cwrap">
+      <!-- Stats -->
+      <div class="card"><div class="sgrid" id="comp-stats"></div></div>
+      <!-- Table -->
+      <div class="card">
+        <div class="col-bar" id="comp-col-bar"></div>
+        <div class="cat-bar" id="comp-cat-bar"></div>
+        <div class="tbl-ctrl">
+          Show <select id="comp-n" onchange="renderComp()"><option>10</option><option>25</option><option>50</option></select> entries
+          <div class="tbl-search">Search: <input type="text" id="comp-q" oninput="filterComp()"/></div>
+        </div>
+        <div class="tbl-wrap"><table><thead><tr id="comp-th"></tr></thead><tbody id="comp-tb"></tbody></table></div>
+        <div class="pag-row"><span id="comp-info"></span><ul class="pag" id="comp-pag"></ul></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ══════════════════════════════════════════
+   DATA  -  extracted from PDFs:
+   728 Thabet_Abdeljawad, 745 Salwa_Mikdadi, 746 Hassan_Massoudy
+   ══════════════════════════════════════════ */
+const DATA = [
+  {
+    id: 728,
+    name: 'Professor Thabet Abdeljawad',
+    field: 'Natural Sciences - Mathematics',
+    nationality: 'Jordanian',
+    residence: 'Saudi Arabia',
+    birth_year: 'Unknown',
+    position: 'Research Professor',
+    org: 'Prince Sultan University, Riyadh',
+    h_index: '79',
+    phone: '+966 (11) 494 8523',
+    email: 'tabdeljawad@psu.edu.sa',
+    linkedin: 'Unknown',
+    education: [
+      { degree:'PhD', year:'2000', inst:'Middle East Technical University, Turkey', spec:'Mathematics' },
+      { degree:'MSc', year:'1996', inst:'Middle East Technical University, Turkey', spec:'Mathematics' },
+      { degree:'BSc', year:'1994', inst:'Yarmouk University',                       spec:'Mathematics' }
+    ],
+    professional: [
+      'Prince Sultan University, Riyadh - Research Professor (2019-Present)',
+      'Prince Sultan University, Riyadh - Professor (2015-2019)',
+      'Prince Sultan University, Riyadh - Associate Professor (2011-2015)',
+      'Cankaya University, Ankara - Associate Professor (2010-2013)',
+      'Cankaya University, Ankara - Assistant Professor (2001-2010)'
+    ],
+    awards: [
+      { name:'Top 1% of Mathematicians according to Stanford and Elsevier', year:null },
+      { name:'Best researcher award in Prince Sultan University', year:'2017' },
+      { name:'Top reviewer by Publons', year:'2016, 2017, 2018, 2019' }
+    ],
+    works: [
+      { title:'On conformable fractional calculus', role:'Author', year:'2015' },
+      { title:'On Riemann and Caputo fractional differences', role:'Author', year:'2011' },
+      { title:'Caputo-type modification of the Hadamard fractional derivatives', role:'Author', year:'2012' },
+      { title:'On a new class of fractional operators', role:'Author', year:'2017' },
+      { title:'Generalized fractional derivatives and Laplace transform', role:'Author', year:'2020' }
+    ],
+    sources: [
+      'https://www.psu.edu.sa/en/CHS/TAS-members',
+      'https://facultyportal.psu.edu.sa/ViewProfile.aspx?instructorID=296'
+    ]
+  },
+  {
+    id: 745,
+    name: 'Salwa Mikdadi',
+    field: 'Literature & Arts',
+    nationality: 'Kuwaiti',
+    residence: 'UAE',
+    birth_year: '1948',
+    position: 'Professor of Practice of Art History',
+    org: 'NYU Abu Dhabi',
+    h_index: null,
+    phone: 'Unknown',
+    email: 'sm5436@nyu.edu',
+    linkedin: 'Unknown',
+    education: [
+      { degree:'MA',  year:'2002', inst:'John F. Kennedy University, Berkeley, California', spec:'Museum Studies' },
+      { degree:'MSc', year:'1990', inst:'University of Bridgeport, Connecticut',            spec:'Biology - Nutritional Science' },
+      { degree:'BS',  year:'1971', inst:'American University of Beirut, Lebanon',           spec:'-' }
+    ],
+    professional: [
+      'Founder, Director and Principal Investigator of al Mawrid Arab Center for the Study of Art at NYU Abu Dhabi - first academic center focused on research and archive of art of the Arab World.',
+      'Professor in the Practice of Art History, NYU Abu Dhabi - 2014 to the Present.',
+      'Paris Sorbonne Abu Dhabi: Art of the Arab World (M.A. in History of Art and Museum Studies) - 2011-2014.',
+      'JF Kennedy University, Berkeley, California: Lecturer in Museum Studies - 2005, 2007, 2008.',
+      'Campus Art Dubai Workshops: Art History and Curatorial Studies - 2013-2014.',
+      'California College for the Arts, San Francisco: Guest Lecturer, Art and Curatorial Studies - April 2013.',
+      'UNESCO Training in Museums: course for museum and cultural centers professionals (in Arabic) - 2012, MOTA/oPt initiative.'
+    ],
+    awards: [
+      { name:'The Salwa Mikdadi Research Award (launched by AMCA)', year:null },
+      { name:'Shukran Cultural Appreciation Award, New York University Abu Dhabi', year:'2020' },
+      { name:'Arab Woman Award, The Arts, UAE', year:'2018' },
+      { name:'Listed among ten of the most influential female voices shaping the UAE art scene - The National', year:'2018' },
+      { name:'American Arab Anti-Discrimination Rose Nader Award', year:null },
+      { name:"Washington Publisher's Award for Forces of Change - Artists of the Arab World", year:'1994' }
+    ],
+    works: [
+      { title:'Elias Zayat: Cities and Legends',                               role:'Author',    year:'2017' },
+      { title:'New Visions: Arab Contemporary Art in the 21st Century',         role:'Co-editor', year:'2009' },
+      { title:'Palestine c/o Venice',                                           role:'Curator',   year:'2009' },
+      { title:'In/Visible: Contemporary Art by Arab Americans',                 role:'Editor',    year:'2005' },
+      { title:'Rhythm & Form: Reflections on Arabic Poetry',                    role:'Author',    year:'1997' }
+    ],
+    sources: [ 'https://nyuad.nyu.edu/en/academics/divisions/arts-and-humanities/faculty/salwa-mikdadi.html' ]
+  },
+  {
+    id: 746,
+    name: 'Hassan Massoudy',
+    field: 'Literature & Arts',
+    nationality: 'Iraqi',
+    residence: 'France',
+    birth_year: '1944',
+    position: 'Calligrapher / Painter',
+    org: 'N/A',
+    h_index: null,
+    phone: 'Unknown',
+    email: 'Unknown',
+    linkedin: 'Unknown',
+    education: [
+      { degree:'-', year:'1969', inst:'Ecole Nationale Superieure des Beaux-Arts, Paris', spec:'Figurative art' }
+    ],
+    professional: [
+      '1960s: Trained with traditional calligraphers in Baghdad, producing signage and mastering classical scripts.',
+      '1969: Moved to Paris to study figurative art at the Ecole des Beaux-Arts while working as a calligrapher for Arabic-language magazines.',
+      '1972-1985: Co-created the performance show Arabesque with actor Guy Jacquet and later musician Fawzy Al-Aiedy, merging calligraphy with poetry, music, and live projection across Europe.',
+      '1980-1990s: Participated in over 30 group exhibitions across France, Belgium, Netherlands, Morocco, Algeria, including at UNESCO and the British Museum.',
+      '2000-2010: Expanded internationally with exhibitions in UAE, USA, UK, and France; published Perfect Harmony: Sufi Poetry by Ibn Arabi and The Calligrapher\'s Garden.',
+      '2011-2020: Participated in Sharjah Biennials, Abu Dhabi Festival, and major solo and group shows in Geneva, New York, London, Kuwait, and Istanbul.'
+    ],
+    awards: [
+      { name:'UNESCO Palace Exhibition Participation', year:'1990' },
+      { name:'British Museum Group Exhibition: Word into Art', year:'2006' },
+      { name:'Sharjah Calligraphy Biennial (participant)', year:'2014' },
+      { name:'Abu Dhabi Festival: Publication of Gestures of Light', year:'2012' },
+      { name:'British Museum / Dubai: Word into Art - Artists of the Modern Middle East', year:'2008' },
+      { name:"Publication Recognition: The Calligrapher's Garden (translated into multiple languages)", year:'2010' }
+    ],
+    works: [
+      { title:'For the passage of time is like a dream in its hardship and grace...', role:'Artist', year:'2008' },
+      { title:'O Dove, Convey My Greetings of Peace!',                              role:'Artist', year:'1995' },
+      { title:'It Is Only With The Heart That One Can See Rightly.',                 role:'Artist', year:'1992' },
+      { title:'The perfect contemplator is ignorant of what he sees.',               role:'Artist', year:'1987' },
+      { title:'Speak Good or Remain Silent.',                                        role:'Artist', year:'1983' }
+    ],
+    sources: [
+      'https://www.ibrahimicollection.com/node/1784',
+      'https://www.massoudy.net/bio.htm'
+    ]
+  }
+];
+
+/* ══════════════════════════════════════════
+   COMPUTED SCORE
+   ══════════════════════════════════════════ */
+
+
+/* ══════════════════════════════════════════
+   SHARED HELPERS
+   ══════════════════════════════════════════ */
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function setPag(prefix, cur, pages, total, start, n) {
+  document.getElementById(prefix+'-info').textContent =
+    'Showing '+(total===0?0:start+1)+' to '+Math.min(start+n,total)+' of '+total+' entries';
+  let h = '<li class="'+(cur===1?'disabled':'')+'"><button onclick="goPage(\''+prefix+'\','+(cur-1)+')">Previous</button></li>';
+  for (let p=1;p<=pages;p++) h += '<li class="'+(p===cur?'active':'')+'"><button onclick="goPage(\''+prefix+'\','+p+')">'+p+'</button></li>';
+  h += '<li class="'+(cur===pages?'disabled':'')+'"><button onclick="goPage(\''+prefix+'\','+(cur+1)+')">Next</button></li>';
+  document.getElementById(prefix+'-pag').innerHTML = h;
+}
+
+function reapplyChips(barId) {
+  document.querySelectorAll('#'+barId+' .chip').forEach(chip => {
+    if (!chip.classList.contains('on'))
+      document.querySelectorAll('.'+chip.dataset.col).forEach(el => el.style.display='none');
+  });
+}
+
+function buildCatBar(barId, data, onClickFn) {
+  const fields = [...new Set(data.map(r => r.field))];
+  document.getElementById(barId).innerHTML =
+    ['', ...fields].map((f,i) =>
+      '<button class="cat-btn'+(i===0?' active':'')+'" onclick="'+onClickFn+'(this,\''+f+'\')">'+(f||'All')+'</button>'
+    ).join('');
+}
+
+/* ══════════════════════════════════════════
+   REPORT 1  -  BASIC INFORMATION (RAW)
+   ══════════════════════════════════════════ */
+const RAW_COLS = [
+  { id:'rc-id',    label:'ID',                   center:true },
+  { id:'rc-name',  label:'Name',                 center:false },
+  { id:'rc-field', label:'Field',                center:false },
+  { id:'rc-nat',   label:'Nationality',          center:false },
+  { id:'rc-res',   label:'Residence',            center:false },
+  { id:'rc-birth', label:'Birth Year',           center:true },
+  { id:'rc-pos',   label:'Current Position',     center:false },
+  { id:'rc-org',   label:'Organization',         center:false },
+  { id:'rc-edu',   label:'Education History',    center:false },
+  { id:'rc-pro',   label:'Professional History', center:false },
+  { id:'rc-awards',label:'Awards & Honours',     center:false },
+  { id:'rc-works', label:'Key Works',            center:false },
+  { id:'rc-contact',label:'Contact Info',        center:false },
+  { id:'rc-src',   label:'Sources',              center:false },
+];
+
+let rawFiltered = [...DATA], rawCat = '', rawPage = 1;
+
+function initRaw() {
+  // col chips
+  document.getElementById('raw-col-bar').innerHTML = '<span class="col-lbl">Columns:</span>' +
+    RAW_COLS.map(c => '<span class="chip on" data-col="'+c.id+'" onclick="toggleChip(this,\'raw-col-bar\')">'+c.label+'</span>').join('');
+  // thead
+  document.getElementById('raw-th').innerHTML = RAW_COLS.map(c =>
+    '<th class="'+(c.center?'center ':'')+c.id+'"><div class="th-in">'+c.label+
+    '<div class="th-arr"><span>&#9650;</span><span>&#9660;</span></div></div></th>'
+  ).join('');
+  buildCatBar('raw-cat-bar', DATA, 'setRawCat');
+  filterRaw();
+}
+
+function setRawCat(btn, cat) {
+  document.querySelectorAll('#raw-cat-bar .cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); rawCat = cat; rawPage = 1; filterRaw();
+}
+function filterRaw() {
+  const q = (document.getElementById('raw-q').value||'').toLowerCase();
+  rawFiltered = DATA.filter(r =>
+    (!rawCat || r.field === rawCat) &&
+    (!q || r.name.toLowerCase().includes(q) || (r.nationality||'').toLowerCase().includes(q) || (r.org||'').toLowerCase().includes(q))
+  );
+  rawPage = 1; renderRaw();
+}
+function renderRaw() {
+  const n = parseInt(document.getElementById('raw-n').value);
+  const total = rawFiltered.length, pages = Math.max(1,Math.ceil(total/n));
+  if (rawPage > pages) rawPage = 1;
+  const start = (rawPage-1)*n, slice = rawFiltered.slice(start, start+n);
+
+  document.getElementById('raw-tb').innerHTML = slice.length === 0
+    ? '<tr><td colspan="'+RAW_COLS.length+'" class="center" style="padding:24px;color:var(--mu)">No records found</td></tr>'
+    : slice.map(r => {
+        // Education: latest first, rest expandable
+        const eduSorted = [...r.education].sort((a,b) => (parseInt(b.year)||0)-(parseInt(a.year)||0));
+        const latest = eduSorted[0];
+        const rest   = eduSorted.slice(1);
+        const latestTag = '<span class="rtag deg"><strong>'+esc(latest.degree)+'</strong>'
+          +(latest.spec && latest.spec !== '-' ? ' - '+esc(latest.spec) : '')
+          +' <span style="opacity:.7;font-size:11px">'+esc(latest.inst)+' ('+esc(latest.year)+')</span></span>';
+        const eduHtml = rest.length === 0 ? latestTag
+          : '<div class="expandable" onclick="this.classList.toggle(\'expanded\')">'
+            + latestTag
+            + '<span class="preview" style="display:block;margin-top:4px"><i class="fa fa-chevron-down" style="font-size:9px;margin-right:3px"></i>'
+            + rest.length+' more degree'+(rest.length>1?'s':'')+' - click to expand</span>'
+            + '<div class="full" style="margin-top:4px">'
+            + rest.map(e => '<span class="rtag deg" style="display:block;margin-top:3px"><strong>'+esc(e.degree)+'</strong>'
+              +(e.spec && e.spec !== '-' ? ' - '+esc(e.spec) : '')
+              +' <span style="opacity:.7;font-size:11px">'+esc(e.inst)+' ('+esc(e.year)+')</span></span>').join('')
+            + '</div></div>';
+
+        const proHtml = '<div class="expandable" onclick="this.classList.toggle(\'expanded\')">'
+          + '<span class="preview"><i class="fa fa-chevron-down" style="font-size:9px;margin-right:3px"></i>'
+          + r.professional.length+' entries - click to expand</span>'
+          + '<ul class="full">'+r.professional.map(p => '<li>'+esc(p)+'</li>').join('')+'</ul>'
+          + '</div>';
+
+        const awardsHtml = '<div class="expandable" onclick="this.classList.toggle(\'expanded\')">'
+          + '<span class="preview"><i class="fa fa-chevron-down" style="font-size:9px;margin-right:3px"></i>'
+          + r.awards.length+' award'+(r.awards.length!==1?'s':'')+' - click to expand</span>'
+          + '<div class="full">'+r.awards.map(a =>
+            '<span class="rtag award">'+esc(a.name)+(a.year?' ('+esc(a.year)+')':'')+' </span>'
+          ).join('')+'</div>'
+          + '</div>';
+
+        const firstWork = r.works[0];
+        const restWorks = r.works.slice(1);
+        const firstWorkTag = firstWork
+          ? '<span class="rtag work">'+esc(firstWork.title)+(firstWork.role?' ['+esc(firstWork.role)+']':'')+(firstWork.year?' ('+esc(firstWork.year)+')':'')+'</span>'
+          : '-';
+        const worksHtml = restWorks.length === 0 ? firstWorkTag
+          : '<div class="expandable" onclick="this.classList.toggle(\'expanded\')">'
+            + firstWorkTag
+            + '<span class="preview" style="display:block;margin-top:4px">'
+            + '<i class="fa fa-chevron-down" style="font-size:9px;margin-right:3px"></i>'
+            + restWorks.length+' more work'+(restWorks.length>1?'s':'')+' - click to expand</span>'
+            + '<div class="full" style="margin-top:4px">'
+            + restWorks.map(w =>
+                '<span class="rtag work" style="display:block;margin-top:3px">'+esc(w.title)+(w.role?' ['+esc(w.role)+']':'')+(w.year?' ('+esc(w.year)+')':'')+'</span>'
+              ).join('')
+            + '</div></div>';
+
+        const contactHtml =
+          '<span class="rtag contact"><i class="fa fa-envelope" style="font-size:10px"></i> '+esc(r.email)+'</span> '
+          +'<span class="rtag contact"><i class="fa fa-phone" style="font-size:10px"></i> '+esc(r.phone)+'</span>';
+
+        const srcHtml = r.sources.map(s =>
+          '<a href="'+s+'" target="_blank" class="rtag src" style="font-size:11px">'
+          +esc(s.replace('https://','').split('/')[0])+'</a>'
+        ).join(' ');
+
+        return '<tr>'
+          +'<td class="rc-id center" style="color:var(--mu);font-size:13px">'+r.id+'</td>'
+          +'<td class="rc-name" style="font-weight:600;white-space:nowrap">'+esc(r.name)+'</td>'
+          +'<td class="rc-field"><span class="pill p-field">'+esc(r.field)+'</span></td>'
+          +'<td class="rc-nat"><span class="pill p-nat">'+esc(r.nationality)+'</span></td>'
+          +'<td class="rc-res"><span class="pill p-nat">'+esc(r.residence)+'</span></td>'
+          +'<td class="rc-birth center">'+esc(r.birth_year)+'</td>'
+          +'<td class="rc-pos" style="font-size:13px;min-width:160px">'+esc(r.position)+'</td>'
+          +'<td class="rc-org" style="font-size:13px">'+esc(r.org)+'</td>'
+          +'<td class="rc-edu" style="min-width:280px">'+eduHtml+'</td>'
+          +'<td class="rc-pro" style="min-width:220px">'+proHtml+'</td>'
+          +'<td class="rc-awards" style="min-width:220px">'+awardsHtml+'</td>'
+          +'<td class="rc-works" style="min-width:240px">'+worksHtml+'</td>'
+          +'<td class="rc-contact" style="min-width:160px">'+contactHtml+'</td>'
+          +'<td class="rc-src">'+srcHtml+'</td>'
+          +'</tr>';
+      }).join('');
+
+  setPag('raw', rawPage, pages, total, start, n);
+  reapplyChips('raw-col-bar');
+}
+
+/* ══════════════════════════════════════════
+   REPORT 2  -  COMPUTED INFORMATION
+   ══════════════════════════════════════════ */
+const COMP_COLS = [
+  { id:'cc-id',     label:'ID',             center:true,  tooltip:'Candidate ID number as registered in the system.' },
+  { id:'cc-name',   label:'Name',           center:false, tooltip:'Full name of the candidate as stated in the PDF profile.' },
+  { id:'cc-field',  label:'Field',          center:false, tooltip:'Area of specialization as stated in the PDF (e.g. Literature & Arts, Natural Sciences).' },
+  { id:'cc-nat',    label:'Nationality',    center:false, tooltip:'Nationality as explicitly stated in the candidate profile.' },
+  { id:'cc-res',    label:'Residence',      center:false, tooltip:'Country of current residence as stated in the PDF.' },
+  { id:'cc-birth',  label:'Birth Year',     center:true,  tooltip:'Year of birth as stated in the PDF. "Unknown" if not mentioned.' },
+  { id:'cc-pos',    label:'Position',       center:false, tooltip:'Current professional title as stated under "Current Position" in the PDF.' },
+  { id:'cc-org',    label:'Organization',   center:false, tooltip:'Current institution or employer as stated under "Current Organization" in the PDF.' },
+  { id:'cc-hi',     label:'H-Index',        center:true,  ai:true, tooltip:'H-Index value as explicitly stated in the PDF. Reflects academic citation impact. Not calculated  -  read directly from the document.' },
+  { id:'cc-deg',    label:'Degrees',        center:true,  ai:true, tooltip:'Count of academic degrees listed in the Education History section. Computed by counting rows in the education table. Hover the badge to see degree details.' },
+  { id:'cc-exp',    label:'Career Entries', center:true,  ai:true, tooltip:'Count of distinct positions or roles listed in the Professional History section. Each bullet point = 1 entry.' },
+  { id:'cc-awards', label:'Awards',         center:true,  ai:true, tooltip:'Count of awards and honours listed in the Awards & Honours section. Computed by counting listed items. Hover the badge to see all award names.' },
+  { id:'cc-works',  label:'Works',          center:true,  ai:true, tooltip:'Count of key works, publications, or top-cited papers listed in the PDF. Computed by counting items in Key Creative Works or Top Publications. Hover the badge to see titles.' },
+];
+
+let compFiltered = [...DATA], compCat = '', compPage = 1;
+
+function initComp() {
+  // stats
+  const totalAwards = DATA.reduce((a,r)=>a+r.awards.length,0);
+  const totalWorks  = DATA.reduce((a,r)=>a+r.works.length,0);
+  const fields = [...new Set(DATA.map(r=>r.field))];
+  document.getElementById('comp-stats').innerHTML = [
+    { label:'Candidates', val:DATA.length, sub:'from PDFs' },
+    { label:'Total Awards', val:totalAwards, sub:'across all profiles' },
+    { label:'Total Works', val:totalWorks, sub:'documented outputs' },
+    { label:'Fields', val:fields.length, sub:fields.join(', ') },
+  ].map(s=>'<div class="scell"><div class="slbl">'+s.label+'</div><div class="sval">'+s.val+'</div><div class="ssub">'+s.sub+'</div></div>').join('');
+
+  // col chips
+  document.getElementById('comp-col-bar').innerHTML = '<span class="col-lbl">Columns:</span>' +
+    COMP_COLS.map(c => '<span class="chip on" data-col="'+c.id+'" onclick="toggleChip(this,\'comp-col-bar\')">'+c.label+'</span>').join('');
+
+  // thead - with tooltip on each header
+  document.getElementById('comp-th').innerHTML = COMP_COLS.map(c => {
+    const tip = c.tooltip ? '<span class="th-tip"><i class="fa fa-circle-info"></i><span class="tip-box">'+c.tooltip+'</span></span>' : '';
+    return '<th class="'+(c.center?'center ':'')+c.id+'">'
+      +'<div class="th-in">'
+      +(c.ai ? '<span class="ai-lbl"><i class="fa fa-robot"></i></span>' : '')
+      +c.label
+      +tip
+      +'<div class="th-arr"><span>&#9650;</span><span>&#9660;</span></div>'
+      +'</div></th>';
+  }).join('');
+
+  buildCatBar('comp-cat-bar', DATA, 'setCompCat');
+  filterComp();
+}
+
+function setCompCat(btn, cat) {
+  document.querySelectorAll('#comp-cat-bar .cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); compCat = cat; compPage = 1; filterComp();
+}
+function filterComp() {
+  const q = (document.getElementById('comp-q').value||'').toLowerCase();
+  compFiltered = DATA.filter(r =>
+    (!compCat || r.field === compCat) &&
+    (!q || r.name.toLowerCase().includes(q) || (r.nationality||'').toLowerCase().includes(q) || (r.org||'').toLowerCase().includes(q))
+  );
+  compPage = 1; renderComp();
+}
+function renderComp() {
+  const n = parseInt(document.getElementById('comp-n').value);
+  const total = compFiltered.length, pages = Math.max(1,Math.ceil(total/n));
+  if (compPage > pages) compPage = 1;
+  const start = (compPage-1)*n, slice = compFiltered.slice(start, start+n);
+
+  document.getElementById('comp-tb').innerHTML = slice.length === 0
+    ? '<tr><td colspan="'+COMP_COLS.length+'" class="center" style="padding:24px;color:var(--mu)">No records found</td></tr>'
+    : slice.map(r => {
+        const awardTitles = r.awards.map(a=>a.name+(a.year?' ('+a.year+')':'')).join('\n');
+        const workTitles  = r.works.map(w=>w.title).join('\n');
+        const eduTitles   = r.education.map(e=>e.degree+' '+e.inst+' ('+e.year+')').join('\n');
+        return '<tr>'
+          +'<td class="cc-id center" style="color:var(--mu);font-size:13px">'+r.id+'</td>'
+          +'<td class="cc-name" style="font-weight:600;white-space:nowrap">'+esc(r.name)+'</td>'
+          +'<td class="cc-field"><span class="pill p-field">'+esc(r.field)+'</span></td>'
+          +'<td class="cc-nat"><span class="pill p-nat">'+esc(r.nationality)+'</span></td>'
+          +'<td class="cc-res"><span class="pill p-nat">'+esc(r.residence)+'</span></td>'
+          +'<td class="cc-birth center">'+esc(r.birth_year)+'</td>'
+          +'<td class="cc-pos" style="font-size:13px">'+esc(r.position)+'</td>'
+          +'<td class="cc-org" style="font-size:13px">'+esc(r.org)+'</td>'
+          +'<td class="cc-hi center"><span class="cbadge cb-e">'+(r.h_index||'-')+'</span></td>'
+          +'<td class="cc-deg center"><span class="cbadge cb-e" title="'+esc(eduTitles)+'">'+r.education.length+'</span></td>'
+          +'<td class="cc-exp center"><span class="cbadge cb-e">'+r.professional.length+'</span></td>'
+          +'<td class="cc-awards center"><span class="cbadge cb-a" title="'+esc(awardTitles)+'">'+r.awards.length+'</span></td>'
+          +'<td class="cc-works center"><span class="cbadge cb-w" title="'+esc(workTitles)+'">'+r.works.length+'</span></td>'
+          +'</tr>';
+      }).join('');
+
+  setPag('comp', compPage, pages, total, start, n);
+  reapplyChips('comp-col-bar');
+}
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+   ══════════════════════════════════════════ */
+function goPage(prefix, p) {
+  const n = parseInt(document.getElementById(prefix+'-n').value);
+  const src = prefix === 'raw' ? rawFiltered : compFiltered;
+  const pages = Math.max(1, Math.ceil(src.length/n));
+  if (p < 1 || p > pages) return;
+  if (prefix === 'raw') { rawPage  = p; renderRaw();  }
+  else                  { compPage = p; renderComp(); }
+}
+
+function toggleChip(chip, barId) {
+  chip.classList.toggle('on');
+  const vis = chip.classList.contains('on') ? '' : 'none';
+  document.querySelectorAll('.'+chip.dataset.col).forEach(el => el.style.display = vis);
+}
+
+function showReport(which, navEl) {
+  // Deactivate all sub-nav links
+  document.querySelectorAll('#dd-cand-rep .nav-sub .nl').forEach(a => a.classList.remove('active'));
+  navEl.classList.add('active');
+  // Switch panels
+  document.querySelectorAll('.report-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+which).classList.add('active');
+  // Update breadcrumb
+  const labels = { raw:'Basic Information', comp:'Computed Information' };
+  document.getElementById('bc-curr').textContent = labels[which] || which;
+}
+
+function toggleSidebar() {
+  const s = document.getElementById('sidebar');
+  s.style.display = s.style.display === 'none' ? '' : 'none';
+}
+function toggleDD(id) { document.getElementById(id).classList.toggle('open'); }
+
+document.addEventListener('click', e => {
+  if (!document.getElementById('hdr-usr').contains(e.target))
+    document.getElementById('hdr-dd').classList.remove('open');
+});
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function() {
+  initRaw();
+  initComp();
+  // Set Basic Information as default active nav item
+  document.getElementById('nav-raw').classList.add('active');
+});
+</script>
+</body>
+</html>
