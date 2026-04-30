@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>GAM Evaluation System</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
 <style>
 @font-face {
   font-family: '29LT Zarid Sans';
@@ -202,7 +203,104 @@ tbody td.center { text-align:center; }
   border-bottom-color: #1e2330;
 }
 .th-tip:hover .tip-box { display: block; }
+
+/* -- CHARTS SECTION -- */
+.charts-section {
+  margin: 0;
+  border-bottom: 1px solid var(--bd);
+  background: #fff;
+}
+.charts-toggle {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 24px; cursor: pointer;
+  user-select: none; border: none; background: transparent;
+  width: 100%; text-align: left; font-family: inherit;
+  border-bottom: 1px solid transparent;
+  transition: background .12s;
+}
+.charts-toggle:hover { background: #f8f9fa; }
+.charts-toggle.open { border-bottom-color: var(--bd); }
+.charts-toggle-title {
+  font-size: 14px; font-weight: 600; color: var(--tx);
+  display: flex; align-items: center; gap: 8px;
+}
+.charts-toggle-sub { font-size: 12px; color: var(--mu); margin-left: 4px; }
+.charts-toggle-arrow {
+  margin-left: auto; font-size: 12px; color: var(--mu);
+  transition: transform .2s;
+}
+.charts-toggle.open .charts-toggle-arrow { transform: rotate(180deg); }
+.charts-body {
+  display: none; padding: 20px 24px 24px;
+  background: #f8f9fa;
+  overflow-x: hidden;
+}
+.charts-body.open { display: block; }
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+.chart-card {
+  background: #fff; border: 1px solid var(--bd);
+  border-radius: 6px; padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.chart-card-title {
+  font-size: 12.5px; font-weight: 600; color: var(--mu);
+  text-transform: uppercase; letter-spacing: .05em;
+  margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+}
+.chart-card-title i { font-size: 11px; }
+canvas { width: 100% !important; }
+
+/* -- TIMELINE -- */
+.tl-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:12px; }
+.tl-label { width:200px; text-align:right; color:var(--mu); flex-shrink:0; font-size:11.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tl-bar-wrap { flex:1; background:#f0f3f5; border-radius:3px; height:20px; position:relative; }
+.tl-bar { height:100%; border-radius:3px; display:flex; align-items:center; padding-left:6px; font-size:10px; color:#fff; font-weight:600; white-space:nowrap; overflow:hidden; min-width:4px; }
+.tl-tooltip { position:absolute; background:#1e2330; color:#e2e8f0; font-size:11px; padding:5px 9px; border-radius:4px; white-space:nowrap; z-index:99; top:-32px; left:50%; transform:translateX(-50%); pointer-events:none; display:none; }
+.tl-bar-wrap:hover .tl-tooltip { display:block; }
+/* -- MAP -- */
+.map-country { cursor:default; transition:opacity .15s; }
+.map-country:hover { opacity:.75; }
+.map-legend { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:11px; color:var(--mu); }
+.map-legend span { display:flex; align-items:center; gap:4px; }
+.map-dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+/* -- SEL BUTTONS -- */
+.sel-btn { padding:3px 9px; border:1px solid var(--bd); border-radius:3px; background:#fff; color:var(--mu); cursor:pointer; font-size:11.5px; font-family:inherit; }
+.sel-btn.active { background:var(--th); color:#fff; border-color:var(--th); }
+
+/* Prevent horizontal scroll on charts */
+.charts-body { overflow-x: hidden !important; }
+.chart-card canvas { max-width: 100% !important; }
+#chart-map { overflow: hidden; }
+
+#charts-raw-body .chart-card { padding: 12px 14px; }
+#charts-raw-body .chart-card-title { margin-bottom: 8px; }
+
+/* -- CHART FILTER BAR -- */
+.chart-filter-bar {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+  padding: 10px 16px 14px;
+  border-bottom: 1px solid var(--bd);
+  background: #f8f9fa;
+}
+.chart-filter-bar .col-lbl {
+  font-size: 11px; font-weight: 600; color: var(--mu);
+  text-transform: uppercase; letter-spacing: .05em; margin-right: 2px;
+}
+.chart-filter-bar .cat-btn {
+  padding: 4px 12px; font-size: 12px;
+  border: 1px solid var(--bd); background: #fff; color: var(--tx);
+  cursor: pointer; font-family: inherit; border-radius: 3px;
+  transition: all .12s;
+}
+.chart-filter-bar .cat-btn:hover { background: #e8eaeb; }
+.chart-filter-bar .cat-btn.active { background: var(--th); color: #fff; border-color: var(--th); }
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -312,6 +410,53 @@ tbody td.center { text-align:center; }
       <h1>Candidates — Basic Information Report</h1>
       <span class="raw-badge"><i class="fa fa-file-text"></i> Directly extracted from PDF</span>
     </div>
+
+  <!-- CHARTS SECTION -->
+  <div class="charts-section" id="charts-raw">
+    <button class="charts-toggle" id="charts-raw-toggle" onclick="toggleCharts('raw')">
+      <span class="charts-toggle-title">
+        <i class="fa fa-chart-bar" style="color:var(--bl)"></i>
+        Visual Analytics
+        <span class="charts-toggle-sub">4 charts — Fields, Nationality, Education, Awards</span>
+      </span>
+      <i class="fa fa-chevron-down charts-toggle-arrow"></i>
+    </button>
+    <div class="charts-body" id="charts-raw-body">
+      <div class="chart-filter-bar" id="chart-raw-filter">
+        <span class="col-lbl">Filter:</span>
+        <button class="cat-btn active" onclick="setChartCat('raw',this,'')">All</button>
+      </div>
+      <div style="padding:16px 16px 0;display:flex;gap:16px;margin-bottom:16px">
+        <div class="chart-card" style="width:540px;flex-shrink:0">
+          <div class="chart-card-title"><i class="fa fa-tag"></i> Distribution by Field</div>
+          <div style="width:500px;height:500px;margin:0 auto">
+            <canvas id="chart-raw-field"></canvas>
+          </div>
+        </div>
+        <div class="chart-card" style="width:540px;flex-shrink:0">
+          <div class="chart-card-title"><i class="fa fa-globe"></i> Distribution by Nationality</div>
+          <div style="width:500px;height:500px;margin:0 auto">
+            <canvas id="chart-raw-nat"></canvas>
+          </div>
+        </div>
+      </div>
+      <div style="padding:0 16px 16px;display:flex;gap:16px">
+        <div class="chart-card" style="width:540px;flex-shrink:0">
+          <div class="chart-card-title"><i class="fa fa-graduation-cap"></i> Degrees per Candidate</div>
+          <div style="width:500px;height:500px;margin:0 auto">
+            <canvas id="chart-raw-deg"></canvas>
+          </div>
+        </div>
+        <div class="chart-card" style="width:540px;flex-shrink:0">
+          <div class="chart-card-title"><i class="fa fa-trophy"></i> Awards per Candidate</div>
+          <div style="width:500px;height:500px;margin:0 auto">
+            <canvas id="chart-raw-awards"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
     <div class="cwrap">
       <div class="card">
         <div class="col-bar" id="raw-col-bar"></div>
@@ -332,6 +477,79 @@ tbody td.center { text-align:center; }
       <h1>Candidates — Computed Information Report</h1>
       <span class="ai-badge"><i class="fa fa-robot"></i> AI-computed from extracted data</span>
     </div>
+
+  <!-- CHARTS SECTION -->
+  <div class="charts-section" id="charts-comp">
+    <button class="charts-toggle" id="charts-comp-toggle" onclick="toggleCharts('comp')">
+      <span class="charts-toggle-title">
+        <i class="fa fa-chart-bar" style="color:var(--bl)"></i>
+        Visual Analytics
+        <span class="charts-toggle-sub">6 charts — Radar, Bubble, Geographic, Timeline, Histogram, Stacked Bar</span>
+      </span>
+      <i class="fa fa-chevron-down charts-toggle-arrow"></i>
+    </button>
+    <div class="charts-body" id="charts-comp-body">
+      <div class="chart-filter-bar" id="chart-comp-filter">
+        <span class="col-lbl">Filter:</span>
+        <button class="cat-btn active" onclick="setChartCat('comp',this,'')">All</button>
+      </div>
+
+      <!-- Row 1 -->
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">
+        <!-- 1. Radar -->
+        <div class="chart-card">
+          <div class="chart-card-title"><i class="fa fa-circle-notch"></i> Radar — Profile Identity</div>
+          <div style="font-size:11px;color:var(--mu);margin-bottom:8px">All candidates shown together. Click names to hide/show. Wide area = broader excellence. Tooltip shows raw value + % of top performer.</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px" id="radar-selects"></div>
+          <canvas id="chart-radar" height="320"></canvas>
+        </div>
+        <!-- 2. Bubble -->
+        <div class="chart-card">
+          <div class="chart-card-title"><i class="fa fa-circle"></i> Bubble — Productivity vs Impact</div>
+          <div style="font-size:11px;color:var(--mu);margin-bottom:8px">X = Works, Y = H-Index, Size = Awards. Top-right + large bubble = ideal candidate.</div>
+          <canvas id="chart-bubble" height="280"></canvas>
+        </div>
+
+      </div>
+
+      <!-- Row 2 -->
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">
+        <!-- 3. Map -->
+        <div class="chart-card">
+          <div class="chart-card-title"><i class="fa fa-globe"></i> Geographic Distribution</div>
+          <div style="font-size:11px;color:var(--mu);margin-bottom:8px">Nationality (dark) vs Residence (light). Reveals diaspora patterns and geographic reach.</div>
+          <div id="chart-map" style="height:260px;position:relative;overflow:hidden;border-radius:4px;background:#f0f4f8"></div>
+        </div>
+        <!-- 4. Timeline -->
+        <div class="chart-card">
+          <div class="chart-card-title"><i class="fa fa-stream"></i> Professional Timeline</div>
+          <div style="font-size:11px;color:var(--mu);margin-bottom:8px">Career progression over time. Longer bars = longer tenure. Look for upward trajectory.</div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap" id="timeline-select"></div>
+          <div id="chart-timeline" style="overflow-y:auto;max-height:420px"></div>
+        </div>
+
+      </div>
+
+      <!-- Row 3 -->
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+        <!-- 5. Histogram -->
+        <div class="chart-card">
+          <div class="chart-card-title"><i class="fa fa-chart-bar"></i> Histogram — Contextual Ranking</div>
+          <div style="font-size:11px;color:var(--mu);margin-bottom:8px">Distribution of all candidates by selected metric. Red line = selected candidate's position.</div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap" id="histo-controls"></div>
+          <canvas id="chart-histo" height="220"></canvas>
+        </div>
+        <!-- 6. Stacked Bar -->
+        <div class="chart-card">
+          <div class="chart-card-title"><i class="fa fa-layer-group"></i> Stacked Bar — Academic Weight</div>
+          <div style="font-size:11px;color:var(--mu);margin-bottom:8px">Degree breakdown per candidate. PhD = dark, MSc/MA = medium, BSc/BA = light.</div>
+          <canvas id="chart-stacked" height="220"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
     <div class="cwrap">
       <!-- Table -->
       <div class="card">
@@ -484,6 +702,198 @@ const DATA = [
       'https://www.ibrahimicollection.com/node/1784',
       'https://www.massoudy.net/bio.htm'
     ]
+  }  ,
+  {
+    id: 727,
+    name: 'Professor Tayalati Yahya',
+    field: 'Natural Sciences - Physics',
+    nationality: 'Moroccan',
+    residence: 'Morocco',
+    birth_year: '1971',
+    position: 'Professor of Physics',
+    org: 'Universite Mohammed V de Rabat',
+    h_index: '231',
+    phone: '+212 701244410',
+    email: 'tayalati@cern.ch',
+    linkedin: '(28) Yahya Tayalati | LinkedIn',
+    education: [
+      { degree:'PhD', year:'2000', inst:'University Mohammed I', spec:'Theoretical and Particle Physics' },
+      { degree:'MSc', year:'1995', inst:'Mohammed V University', spec:'Mathematics and Physics' },
+      { degree:'BSc', year:'1994', inst:'Mohammed I University', spec:'Theoretical Physics' }
+    ],
+    professional: [
+      'Universite Mohammed V de Rabat - Full Professor (2015-Present)',
+      'Universite Mohammed V de Rabat - Accredited Professor (2009-2015)',
+      'Universite Mohammed V de Rabat - Executive Director of ESMAR (2017-2022)',
+      'UM6P School of Applied and Engineering Physics - Affiliated Professor (2023-Present)',
+      'University Mohammed I - Assistant Professor (2005-2009)',
+      'CERN ATLAS Project - Researcher'
+    ],
+    awards: [
+      { name:'Fellow of the World Academy of Sciences', year:'2022' },
+      { name:'TWAS-AREP Award in Physics, World Academy of Sciences', year:'2023' },
+      { name:'Fellow of the African Academy of Sciences (AAS)', year:'2021' },
+      { name:'Scopus Award in Physics and Astronomy, Elsevier', year:'2022' },
+      { name:'Honorary Fellow of the Islamic World Academy of Sciences', year:'2022' },
+      { name:'MUSTAFA Prize - Distinguished award for Science and Technology', year:'2021' },
+      { name:'ARAB FUND for Economic and Social Development - Distinguished scholar award', year:'2021' },
+      { name:'ERASMUS+ Fellow KA107 Teaching, Barcelona', year:'2018' },
+      { name:'Fulbright Fellow - US Department of State, Argonne National Laboratory, Chicago', year:'2011' },
+      { name:'Research Assistantship Award - Atomic Energy Commission, Saclay, France', year:'1998' }
+    ],
+    works: [
+      { title:'The ATLAS experiment at the CERN large hadron collider', role:'Author', year:'2008' },
+      { title:'The ATLAS simulation infrastructure', role:'Author', year:'2010' },
+      { title:'Jet energy measurement with the ATLAS detector in proton-proton collisions at sqrt(s)=7 TeV', role:'Author', year:'2011' },
+      { title:'Muon reconstruction performance of the ATLAS detector in proton-proton collision data at 13 TeV', role:'Author', year:'2016' },
+      { title:'Performance of the ATLAS trigger system in 2015', role:'Author', year:'2017' }
+    ],
+    sources: [
+      'https://n1.mustafaprize.org/uploads/Attachments/document/vx1HK1IlnY1e3XXJ1NiAyJGAgyYvJVxmrNw48Xgj.pdf'
+    ]
+  },
+  {
+    id: 740,
+    name: 'Samia Halaby',
+    field: 'Literature & Arts',
+    nationality: 'Palestinian',
+    residence: 'USA',
+    birth_year: '1936',
+    position: 'Artist',
+    org: 'N/A',
+    h_index: null,
+    phone: 'Unknown',
+    email: 'info@samiahalaby.com',
+    linkedin: 'Unknown',
+    education: [
+      { degree:'MFA', year:'1963', inst:'Indiana University', spec:'Painting' },
+      { degree:'MA',  year:'1960', inst:'Michigan State University', spec:'Painting' },
+      { degree:'BS',  year:'1959', inst:'University of Cincinnati', spec:'Design' }
+    ],
+    professional: [
+      'In 2023, solo exhibition at the Sharjah Art Museum showcasing six decades of abstract experimentation.',
+      'In 2017, exhibited at Birzeit University Museum portraying lifelong commitment to Palestinian visual culture.',
+      'In 2015, works presented at the Beirut Exhibition Center exploring evolution of geometric abstraction.',
+      'From the 1960s to late 1980s, taught at universities across the United States; became the first full-time female associate professor at the Yale School of Art where she served for a decade.',
+      'In 1964, while teaching at the Kansas City Art Institute, traveled through the Eastern Mediterranean on a faculty research grant studying Islamic geometry.',
+      'In 1970, her art entered leading collections including the Solomon R. Guggenheim Museum, Yale University Art Gallery, National Gallery of Art, Art Institute of Chicago, Institut du Monde Arabe, and the British Museum.'
+    ],
+    awards: [
+      { name:'MUNCH Award, Norway', year:'2025' },
+      { name:'Special Mention by the Jury of La Biennale di Venezia', year:'2024' },
+      { name:'Midwest Art History Society Award for Outstanding Monograph', year:'2024' },
+      { name:'Creative Prize, Palestine Book Awards', year:'2017' },
+      { name:"Madame Figaro's 20 Most Powerful Women in the Middle East", year:'2015' },
+      { name:"The World's 100 Most Powerful Arab Women, Arabian Business", year:'2014' }
+    ],
+    works: [
+      { title:'Written in White Air for Palestine', role:'Painter', year:'2020' },
+      { title:'Petra', role:'Painter', year:'2016' },
+      { title:'Shepherds of the Northern Fields, Killing in the Northern Fields, The Kafr Qasem Massacre of 1956', role:'Drawing', year:'2012' },
+      { title:'Bird Dog', role:'Digital art', year:'1987' },
+      { title:'Ebb Tide', role:'Digital art', year:'1987-1988' }
+    ],
+    sources: [
+      'https://www.ayyamgallery.com/artists/25-samia-halaby/biography/'
+    ]
+  }  ,
+  {
+    id: 729,
+    name: 'Professor Yarub Al-Douri',
+    field: 'Natural Sciences - Physics',
+    nationality: 'Iraqi',
+    residence: 'UAE',
+    birth_year: '1969',
+    position: 'Professor and Fellow',
+    org: 'European Academy of Sciences',
+    h_index: '67',
+    phone: '+964-7771978004',
+    email: 'yaldouri@yahoo.com',
+    linkedin: 'Unknown',
+    education: [
+      { degree:'PhD', year:'2000', inst:'University of Sidi-Bel-Abbes, Algeria', spec:'Materials Science' },
+      { degree:'MSc', year:'1995', inst:'University Sidi-Bel-Abbes, Algeria',    spec:'Physics' },
+      { degree:'BSc', year:'1987', inst:'Al-Mustansirya University, Baghdad',    spec:'Physics' }
+    ],
+    professional: [
+      'European Academy of Sciences, Brussels - Fellow (2023-Present)',
+      'University of Sharjah - Visiting Professor (2023-2024)',
+      'Imam Abdulrahman bin Faisal University - Professor (2022-2023)',
+      'American University of Iraq - Professor (2021-2022)',
+      'University of Malaya - Professor (2017-2021)',
+      'University Malaysia Perlis - Professor (2016)',
+      'University Malaysia Perlis - Associate Professor (2008-2016)',
+      'Sanaa University - Assistant Professor (2005-2006)',
+      'National University of Singapore - Research Fellow (2002-2003)',
+      'University of Sidi-Bel-Abbes - Assistant Professor (2000-2002)',
+      'University of Sidi-Bel-Abbes - Lecturer (1999-2000)'
+    ],
+    awards: [
+      { name:'Winner of the Khalifa International Award for Date Palm and Agricultural Innovation, UAE', year:'2024' },
+      { name:'Fellow of the European Academy of Sciences', year:'2023' },
+      { name:"World's Top 2% Scientists by Stanford University, USA", year:'2024' },
+      { name:"World's Top 2% Scientists by Stanford University, USA", year:'2023' },
+      { name:"World's Top 2% Scientists by Stanford University, USA", year:'2022' },
+      { name:"World's Top 2% Scientists by Stanford University, USA", year:'2021' },
+      { name:"World's Top 2% Scientists by Stanford University, USA", year:'2020' },
+      { name:'ICTP-Arab Fund Associateships, Abdus Salam International Centre for Theoretical Physics, Trieste, Italy', year:'2024-2026' },
+      { name:'OeAD Award, Austria', year:'2020' },
+      { name:'Japan Society for the Promotion of Science (JSPS) Invitational Fellowships Award for Research in Japan', year:'2019' },
+      { name:'Asian Universities Alliance (AUA) Scholars Award', year:'2019' },
+      { name:'Best Paper Award - GCESD2015, Global Conference on Energy and Sustainable Development', year:'2015' },
+      { name:'Gold Award - 24th International Invention, Innovation & Technology Exhibition ITEX 2013, Kuala Lumpur', year:'2013' }
+    ],
+    works: [
+      { title:'XPS and optical studies of different morphologies of ZnO nanostructures prepared by microwave methods', role:'Author', year:'2013' },
+      { title:'Structural, magnetic, electronic and mechanical properties of full-Heusler alloys Co2YAl (Y= Fe, Ti): first principles calculations', role:'Author', year:'2018' },
+      { title:'Challenges in improving the performance of eddy current testing', role:'Author', year:'2019' },
+      { title:'First-principles calculations to investigate magnetic and thermodynamic properties of new multifunctional full-Heusler alloy Co2TaGa', role:'Author', year:'2020' },
+      { title:'Electronic and thermoelectric properties of the layered BaFAgCh (Ch=S, Se and Te): first-principles study', role:'Author', year:'2018' }
+    ],
+    sources: [
+      'https://scholar.google.com.my/citations?user=e8RPO28AAAAJ&hl=en'
+    ]
+  },
+  {
+    id: 726,
+    name: 'Professor Taha Merghoub',
+    field: 'Natural Sciences - Biology',
+    nationality: 'Algerian',
+    residence: 'USA',
+    birth_year: 'Unknown',
+    position: 'Deputy Director of the Meyer Center',
+    org: 'Weill Cornell Medicine',
+    h_index: '88',
+    phone: '+1 646-962-6048',
+    email: 'tmerghoub@med.cornell.edu',
+    linkedin: 'Unknown',
+    education: [
+      { degree:'PhD', year:'-', inst:'University of Paris VII', spec:'Applied Biology and Genetics' },
+      { degree:'MSc', year:'-', inst:'University of Paris VII', spec:'Applied Biology and Genetics' },
+      { degree:'BA',  year:'-', inst:'University of Algiers',  spec:'-' }
+    ],
+    professional: [
+      'Weill Cornell Medicine - Deputy Director, Meyer Cancer Center (2022-Present)',
+      'Weill Cornell Medicine - Professor of Pharmacology, Professor of Immunology Research in Medicine (2022-Present)',
+      'Memorial Sloan Kettering Cancer Center - Professor of Immunology Research in Medicine (2018-2023)',
+      'Memorial Sloan Kettering Cancer Center - Attending as co-director of Ludwig Collaborative Lab (1998-2023)',
+      'Memorial Sloan Kettering Cancer Center - Assistant Attending Lab Member (2008-2011)'
+    ],
+    awards: [
+      { name:"The Westchester Women's Award, Breast Cancer Research Foundation Grant for Tumor Biology, Treatment", year:'2014' },
+      { name:'Memorial Sloan Kettering Society Research Grant', year:'2010' }
+    ],
+    works: [
+      { title:'Mutational landscape determines sensitivity to PD-1 blockade in non-small cell lung cancer', role:'Author', year:'2015' },
+      { title:'Genetic basis for clinical response to CTLA-4 blockade in melanoma', role:'Author', year:'2014' },
+      { title:'Clonal neoantigens elicit T cell immunoreactivity and sensitivity to immune checkpoint blockade', role:'Author', year:'2016' },
+      { title:'Neoadjuvant PD-1 blockade in resectable lung cancer', role:'Author', year:'2018' },
+      { title:'Inhibiting DNA methylation causes an interferon response in cancer via dsRNA including endogenous retroviruses', role:'Author', year:'2015' }
+    ],
+    sources: [
+      'https://www.parkerici.org/person/taha-merghoub-phd/',
+      'https://gradschool.weill.cornell.edu/faculty/taha-merghoub'
+    ]
   }
 ];
 
@@ -566,7 +976,11 @@ function filterRaw() {
     (!rawCat || r.field === rawCat) &&
     (!q || r.name.toLowerCase().includes(q) || (r.nationality||'').toLowerCase().includes(q) || (r.org||'').toLowerCase().includes(q))
   );
-  rawPage = 1; renderRaw();
+  rawPage = 1;
+  renderRaw();
+  if (document.getElementById('charts-raw-body').classList.contains('open')) {
+    buildRawCharts();
+  }
 }
 function renderRaw() {
   const n = parseInt(document.getElementById('raw-n').value);
@@ -709,7 +1123,11 @@ function filterComp() {
     (!compCat || r.field === compCat) &&
     (!q || r.name.toLowerCase().includes(q) || (r.nationality||'').toLowerCase().includes(q) || (r.org||'').toLowerCase().includes(q))
   );
-  compPage = 1; renderComp();
+  compPage = 1;
+  renderComp();
+  if (document.getElementById('charts-comp-body').classList.contains('open')) {
+    buildCompCharts();
+  }
 }
 function renderComp() {
   const n = parseInt(document.getElementById('comp-n').value);
@@ -792,6 +1210,589 @@ document.addEventListener('DOMContentLoaded', function() {
   // Set Basic Information as default active nav item
   document.getElementById('nav-raw').classList.add('active');
 });
+
+/* ================================================
+   CHARTS
+   ================================================ */
+const CHART_COLORS = ['#2f353a','#20a8d8','#4dbd74','#f86c6b','#ffc107','#63c2de','#6f42c1'];
+const chartInstances = {};
+
+function destroyChart(id) {
+  if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
+}
+
+function toggleCharts(which) {
+  const toggle = document.getElementById('charts-'+which+'-toggle');
+  const body   = document.getElementById('charts-'+which+'-body');
+  const isOpen = body.classList.contains('open');
+  toggle.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+  if (!isOpen) {
+    buildChartFilterBar(which);
+    buildCharts(which);
+  }
+}
+
+function buildCharts(which) {
+  if (which === 'raw') buildRawCharts();
+  else                 buildCompCharts();
+}
+
+/* -- RAW CHARTS -- */
+function buildRawCharts() {
+  const src = rawFiltered.length > 0 ? rawFiltered : DATA;
+  const names = src.map(r => r.name.split(' ').slice(-1)[0]);
+
+  function fixCanvas(id) {
+    const c = document.getElementById(id);
+    c.style.width  = '500px';
+    c.style.height = '500px';
+    c.width  = 500;
+    c.height = 500;
+    return c;
+  }
+
+  /* 1. Field distribution  -  Doughnut */
+  destroyChart('chart-raw-field');
+  const fieldCounts = {};
+  src.forEach(r => { fieldCounts[r.field] = (fieldCounts[r.field]||0) + 1; });
+  chartInstances['chart-raw-field'] = new Chart(
+    fixCanvas('chart-raw-field'),
+    { type:'doughnut',
+      data:{ labels:Object.keys(fieldCounts),
+             datasets:[{ data:Object.values(fieldCounts), backgroundColor:CHART_COLORS,
+                         borderWidth:2, borderColor:'#fff' }] },
+      options:{ plugins:{ legend:{ position:'bottom', labels:{ font:{size:11}, boxWidth:12 } } },
+                cutout:'60%', responsive:false, maintainAspectRatio:false } }
+  );
+
+  /* 2. Nationality  -  Horizontal bar */
+  destroyChart('chart-raw-nat');
+  chartInstances['chart-raw-nat'] = new Chart(
+    fixCanvas('chart-raw-nat'),
+    { type:'bar',
+      data:{ labels:src.map(r=>r.nationality),
+             datasets:[{ label:'Candidate', data:src.map(()=>1),
+                         backgroundColor:CHART_COLORS,
+                         borderRadius:4, borderSkipped:false }] },
+      options:{ indexAxis:'y', plugins:{ legend:{display:false} },
+                scales:{ x:{ ticks:{stepSize:1}, grid:{display:false} },
+                         y:{ grid:{display:false} } },
+                responsive:false, maintainAspectRatio:false } }
+  );
+
+  /* 3. Degrees per candidate  -  Bar */
+  destroyChart('chart-raw-deg');
+  chartInstances['chart-raw-deg'] = new Chart(
+    fixCanvas('chart-raw-deg'),
+    { type:'bar',
+      data:{ labels:names,
+             datasets:[{ label:'Degrees', data:src.map(r=>r.education.length),
+                         backgroundColor:'#20a8d8', borderRadius:4, borderSkipped:false }] },
+      options:{ plugins:{ legend:{display:false} },
+                scales:{ y:{ beginAtZero:true, ticks:{stepSize:1}, grid:{color:'#f0f0f0'} },
+                         x:{ grid:{display:false} } },
+                responsive:false, maintainAspectRatio:false } }
+  );
+
+  /* 4. Awards per candidate  -  Bar */
+  destroyChart('chart-raw-awards');
+  chartInstances['chart-raw-awards'] = new Chart(
+    fixCanvas('chart-raw-awards'),
+    { type:'bar',
+      data:{ labels:names,
+             datasets:[{ label:'Awards', data:src.map(r=>r.awards.length),
+                         backgroundColor:'#f59e0b', borderRadius:4, borderSkipped:false }] },
+      options:{ plugins:{ legend:{display:false} },
+                scales:{ y:{ beginAtZero:true, ticks:{stepSize:1}, grid:{color:'#f0f0f0'} },
+                         x:{ grid:{display:false} } },
+                responsive:false, maintainAspectRatio:false } }
+  );
+}
+
+/* -- COMPUTED CHARTS -- */
+
+/* -- COMPUTED CHARTS -- */
+function buildCompCharts() {
+  const src    = compFiltered.length > 0 ? compFiltered : DATA;
+  const names  = src.map(r => r.name.split(' ').slice(-1)[0]);
+  const colors = ['#2f353a','#20a8d8','#4dbd74','#f86c6b','#ffc107'];
+  const hi     = src.map(r => parseInt(r.h_index) || 0);
+  const awards = src.map(r => r.awards.length);
+  const works  = src.map(r => r.works.length);
+  const deg    = src.map(r => r.education.length);
+  const career = src.map(r => r.professional.length);
+
+  /* ── 1. RADAR ─────────────────────────────── */
+  destroyChart('chart-radar');
+  const radarDiv = document.getElementById('radar-selects');
+  const radarLabels = ['H-Index','Awards','Works','Degrees','Career'];
+
+  const maxVal = {
+    hi:     Math.max(...hi)     || 1,
+    awards: Math.max(...awards) || 1,
+    works:  Math.max(...works)  || 1,
+    deg:    Math.max(...deg)    || 1,
+    career: Math.max(...career) || 1
+  };
+
+  const radarData = src.map((r,i) => ({
+    label:    names[i],
+    fullName: r.name,
+    color:    colors[i % colors.length],
+    values: [
+      (parseInt(r.h_index)||0) / maxVal.hi,
+      r.awards.length          / maxVal.awards,
+      r.works.length           / maxVal.works,
+      r.education.length       / maxVal.deg,
+      r.professional.length    / maxVal.career
+    ],
+    raw: [
+      parseInt(r.h_index)||0,
+      r.awards.length,
+      r.works.length,
+      r.education.length,
+      r.professional.length
+    ]
+  }));
+
+  let radarVisible = DATA.map((_,i) => i);
+
+  function buildRadarSelects() {
+    radarDiv.innerHTML =
+      '<span style="font-size:11px;color:var(--mu);margin-right:4px">Hide/Show:</span>'
+      + DATA.map((r,i) =>
+          '<button class="sel-btn'+(radarVisible.includes(i)?' active':'')+'" onclick="toggleRadarSel('+i+')" '
+          +'style="border-color:'+colors[i%colors.length]+';'
+          +(radarVisible.includes(i) ? 'background:'+colors[i%colors.length]+';color:#fff;' : '')
+          +'">'+ names[i] +'</button>'
+        ).join('')
+      + '<button class="sel-btn" onclick="radarSelectAll()" style="margin-left:8px;font-size:11px">All</button>'
+      + '<button class="sel-btn" onclick="radarClearAll()" style="font-size:11px">None</button>';
+  }
+
+  window.toggleRadarSel = function(i) {
+    if (radarVisible.includes(i)) {
+      if (radarVisible.length > 1) radarVisible = radarVisible.filter(x => x !== i);
+    } else {
+      radarVisible = [...radarVisible, i];
+    }
+    buildRadarSelects(); drawRadar();
+  };
+  window.radarSelectAll = function() { radarVisible = DATA.map((_,i) => i); buildRadarSelects(); drawRadar(); };
+  window.radarClearAll  = function() { radarVisible = [0]; buildRadarSelects(); drawRadar(); };
+
+  function drawRadar() {
+    destroyChart('chart-radar');
+    const datasets = radarVisible.map(i => ({
+      label:               radarData[i].fullName,
+      data:                radarData[i].values,
+      backgroundColor:     radarData[i].color + '1a',
+      borderColor:         radarData[i].color,
+      borderWidth:         2,
+      pointBackgroundColor: radarData[i].color,
+      pointBorderColor:    '#fff',
+      pointBorderWidth:    1.5,
+      pointRadius:         4,
+      pointHoverRadius:    6
+    }));
+    chartInstances['chart-radar'] = new Chart(document.getElementById('chart-radar'), {
+      type: 'radar',
+      data: { labels: radarLabels, datasets },
+      options: {
+        scales: {
+          r: {
+            min: 0, max: 1,
+            ticks: { display: false },
+            grid:  { color: '#e4e7ea' },
+            angleLines: { color: '#d1d5db' },
+            pointLabels: { font:{ size:12, weight:'500' }, color:'#23282c' }
+          }
+        },
+        plugins: {
+          legend: { position:'bottom', labels:{ font:{size:11}, boxWidth:12, padding:10 } },
+          tooltip: { callbacks: {
+            title: ctx => radarLabels[ctx[0].dataIndex],
+            label: ctx => {
+              const i   = radarVisible[ctx.datasetIndex];
+              const raw = radarData[i].raw[ctx.dataIndex];
+              const pct = Math.round(ctx.raw * 100);
+              return radarData[i].fullName + ': ' + raw + '  (' + pct + '% of top)';
+            }
+          }}
+        },
+        maintainAspectRatio: true
+      }
+    });
+  }
+
+  buildRadarSelects();
+  drawRadar();
+
+  /* ── 2. BUBBLE ─────────────────────────────── */
+  destroyChart('chart-bubble');
+  chartInstances['chart-bubble'] = new Chart(
+    document.getElementById('chart-bubble'), {
+      type: 'bubble',
+      data: { datasets: src.map((r,i) => ({
+        label: names[i],
+        data: [{ x: r.works.length, y: parseInt(r.h_index)||0,
+                 r: Math.max(6, r.awards.length * 3.5) }],
+        backgroundColor: colors[i % colors.length] + 'bb',
+        borderColor:     colors[i % colors.length],
+        borderWidth: 2
+      }))},
+      options: {
+        scales: {
+          x: { title:{ display:true, text:'Works / Publications', font:{size:11} },
+               beginAtZero:true, grid:{color:'#f0f0f0'} },
+          y: { title:{ display:true, text:'H-Index', font:{size:11} },
+               beginAtZero:true, grid:{color:'#f0f0f0'} }
+        },
+        plugins: {
+          legend:{ position:'bottom', labels:{ font:{size:11}, boxWidth:12 } },
+          tooltip:{ callbacks:{ label: ctx => {
+            const r = DATA[ctx.datasetIndex];
+            return [ctx.dataset.label,
+                    'Works: '+r.works.length,
+                    'H-Index: '+(parseInt(r.h_index)||'N/A'),
+                    'Awards: '+r.awards.length];
+          }}}
+        },
+        maintainAspectRatio: true
+      }
+    }
+  );
+
+  /* ── 3. MAP ─────────────────────────────────── */
+  buildMap();
+
+  /* ── 4. TIMELINE ──────────────────────────── */
+  const tlDiv = document.getElementById('timeline-select');
+  // All candidates visible by default
+  let tlVisible = DATA.map((_,i) => i);
+
+  function buildTlButtons() {
+    tlDiv.innerHTML =
+      '<span style="font-size:11px;color:var(--mu);margin-right:4px">Hide/Show:</span>'
+      + src.map((r,i) =>
+          '<button class="sel-btn'+(tlVisible.includes(i)?' active':'')+'" onclick="toggleTl('+i+')" '
+          +'style="border-color:'+colors[i%colors.length]+';'
+          +(tlVisible.includes(i) ? 'background:'+colors[i%colors.length]+';color:#fff;' : '')
+          +'">'+ names[i] +'</button>'
+        ).join('')
+      + '<button class="sel-btn" onclick="tlAll()" style="margin-left:8px;font-size:11px">All</button>'
+      + '<button class="sel-btn" onclick="tlNone()" style="font-size:11px">None</button>';
+  }
+
+  window.toggleTl = function(i) {
+    if (tlVisible.includes(i)) {
+      if (tlVisible.length > 1) tlVisible = tlVisible.filter(x => x !== i);
+    } else {
+      tlVisible = [...tlVisible, i];
+    }
+    buildTlButtons(); renderAllTimelines();
+  };
+  window.tlAll  = function() { tlVisible = src.map((_,i)=>i); buildTlButtons(); renderAllTimelines(); };
+  window.tlNone = function() { tlVisible = [0]; buildTlButtons(); renderAllTimelines(); };
+
+  function parseRows(r) {
+    const thisYear = 2025;
+    return r.professional.map(p => {
+      const match = p.match(/\((\d{4})[-](Present|\d{4})\)/i);
+      const start = match ? parseInt(match[1]) : 2000;
+      const end   = match ? (match[2].toLowerCase() === 'present' ? thisYear : parseInt(match[2])) : start + 2;
+      const label = p.replace(/\(.*?\)/g,'').trim().replace(/[-]+$/,'').trim().substring(0,60);
+      return { label, start, end, dur: end - start };
+    }).filter(row => row.dur >= 0);
+  }
+
+  function renderAllTimelines() {
+    const thisYear = 2025;
+    const container = document.getElementById('chart-timeline');
+
+    // Compute global year range across all visible candidates
+    const allRows = tlVisible.flatMap(i => parseRows(DATA[i]));
+    if (allRows.length === 0) { container.innerHTML = ''; return; }
+    const globalMin = Math.min(...allRows.map(r => r.start));
+    const globalMax = Math.max(...allRows.map(r => r.end));
+    const span = globalMax - globalMin || 1;
+
+    // Year axis ticks
+    const tickStep = span <= 10 ? 2 : span <= 20 ? 5 : 10;
+    let ticks = '';
+    for (let y = Math.ceil(globalMin/tickStep)*tickStep; y <= globalMax; y += tickStep) {
+      const pct = ((y - globalMin) / span * 100).toFixed(1);
+      ticks += '<span style="position:absolute;left:'+pct+'%;font-size:10px;color:#adb5bd;transform:translateX(-50%)">'+y+'</span>';
+    }
+    const axisHtml =
+      '<div style="position:relative;height:18px;margin-left:120px;margin-bottom:6px;border-bottom:1px solid #e4e7ea">'
+      + ticks + '</div>';
+
+    let html = axisHtml;
+
+    tlVisible.forEach(i => {
+      const r = DATA[i];
+      const color = colors[i % colors.length];
+      const rows = parseRows(r);
+      if (rows.length === 0) return;
+
+      // Candidate name separator
+      html += '<div style="font-size:11px;font-weight:600;color:'+color+';margin:8px 0 4px 0;'
+            + 'padding:2px 8px;background:'+color+'18;border-left:3px solid '+color+';border-radius:0 3px 3px 0">'
+            + r.name + '</div>';
+
+      rows.forEach(row => {
+        const left  = ((row.start - globalMin) / span * 100).toFixed(1);
+        const width = Math.max(1.5, (row.dur  / span * 100)).toFixed(1);
+        const endLabel = row.end === thisYear ? 'Present' : row.end;
+        html += '<div class="tl-row">'
+          + '<div class="tl-label" title="'+row.label+'">'+row.label+'</div>'
+          + '<div class="tl-bar-wrap">'
+          + '<div class="tl-bar" style="width:'+width+'%;margin-left:'+left+'%;background:'+color+'">'
+          + (row.dur >= 2 ? row.start+'-'+endLabel : '')
+          + '</div>'
+          + '<div class="tl-tooltip">'+row.label+'<br>'+row.start+' - '+endLabel+' ('+row.dur+'y)</div>'
+          + '</div></div>';
+      });
+    });
+
+    container.innerHTML = html;
+  }
+
+  buildTlButtons();
+  renderAllTimelines();
+
+  /* ── 5. HISTOGRAM ─────────────────────────── */
+  const histoMetrics = [
+    { label:'Awards', vals: awards },
+    { label:'Works',  vals: works  },
+    { label:'Degrees',vals: deg    },
+    { label:'Career', vals: career }
+  ];
+  let histoMetric = 0;
+  const histoCtrl = document.getElementById('histo-controls');
+  function buildHistoControls() {
+    histoCtrl.innerHTML =
+      '<div style="display:flex;gap:4px;flex-wrap:wrap">'
+      + histoMetrics.map((m,i) =>
+          '<button class="sel-btn'+(i===histoMetric?' active':'')+'" onclick="setHistoMetric('+i+')" style="font-size:11px">'+m.label+'</button>'
+        ).join('')
+      +'</div>';
+  }
+  window.setHistoMetric = function(i) { histoMetric = i; buildHistoControls(); drawHisto(); };
+  function drawHisto() {
+    destroyChart('chart-histo');
+    const vals     = histoMetrics[histoMetric].vals;
+    const maxVal   = Math.max(...vals);
+    const bgColors = vals.map(v => {
+      const ratio = maxVal > 0 ? v / maxVal : 0;
+      if (ratio >= 0.9) return '#1e7e34';
+      if (ratio >= 0.6) return '#20a8d8';
+      if (ratio >= 0.3) return '#f59e0b';
+      return '#f86c6b';
+    });
+    chartInstances['chart-histo'] = new Chart(document.getElementById('chart-histo'), {
+      type: 'bar',
+      data: {
+        labels: names,
+        datasets: [{
+          label: histoMetrics[histoMetric].label,
+          data: vals,
+          backgroundColor: bgColors,
+          borderRadius: 4, borderSkipped: false
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => {
+            const pct = maxVal > 0 ? Math.round(ctx.raw / maxVal * 100) : 0;
+            return ctx.dataset.label + ': ' + ctx.raw + '  (' + pct + '% of top)';
+          }}}
+        },
+        scales: {
+          y: { beginAtZero:true, grid:{color:'#f0f0f0'} },
+          x: { grid:{display:false} }
+        },
+        maintainAspectRatio: true
+      }
+    });
+  }
+  buildHistoControls();
+  drawHisto();
+
+  /* ── 6. STACKED BAR ─────────────────────────── */
+  destroyChart('chart-stacked');
+  const degTypes = ['PhD','MFA','MA','MSc','BSc','BS','Diploma','-'];
+  const degColors = { PhD:'#2f353a', MFA:'#4dbd74', MA:'#20a8d8',
+                      MSc:'#63c2de', BSc:'#ffc107', BS:'#f59e0b',
+                      Diploma:'#f86c6b', '-':'#c8ced3' };
+  const allTypes = [...new Set(src.flatMap(r => r.education.map(e => e.degree)))];
+  const stackedDatasets = allTypes.map(type => ({
+    label: type,
+    data: src.map(r => r.education.filter(e => e.degree === type).length),
+    backgroundColor: degColors[type] || '#94a3b8',
+    borderRadius: 2
+  }));
+  chartInstances['chart-stacked'] = new Chart(
+    document.getElementById('chart-stacked'), {
+      type: 'bar',
+      data: { labels: names, datasets: stackedDatasets },
+      options: {
+        scales: {
+          x: { stacked:true, grid:{display:false} },
+          y: { stacked:true, beginAtZero:true, ticks:{stepSize:1}, grid:{color:'#f0f0f0'} }
+        },
+        plugins: {
+          legend: { position:'bottom', labels:{ font:{size:11}, boxWidth:12 } },
+          tooltip: { callbacks: { label: ctx =>
+            ctx.dataset.label + ': ' + ctx.raw + (ctx.raw > 0 ? ' degree(s)' : '')
+          }}
+        },
+        maintainAspectRatio: true
+      }
+    }
+  );
+}
+
+/* ── MAP ─────────────────────────────────────── */
+
+
+
+function buildMap() {
+  const mapEl = document.getElementById('chart-map');
+  if (!mapEl) return;
+
+  destroyChart('chart-map-canvas');
+
+  const src = compFiltered.length > 0 ? compFiltered : DATA;
+  const natLabels = [...new Set([...src.map(r=>r.nationality), ...src.map(r=>r.residence)])];
+  const natData   = natLabels.map(l => src.filter(r=>r.nationality===l).length);
+  const resData   = natLabels.map(l => src.filter(r=>r.residence===l).length);
+
+  const baseNat = '#2f353a', baseRes = '#63c2de';
+  const hlNat   = '#e83e3e', hlRes   = '#f59e0b';
+  const dim     = '44';
+
+  mapEl.innerHTML = '<canvas id="chart-map-canvas" style="width:100%;height:100%"></canvas>';
+
+  requestAnimationFrame(function() {
+    const canvas = document.getElementById('chart-map-canvas');
+    if (!canvas) return;
+
+    const chart = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: natLabels,
+        datasets: [
+          { label:'Nationality', data: natData,
+            backgroundColor: natLabels.map(() => baseNat),
+            borderRadius:3, borderSkipped:false },
+          { label:'Residence',   data: resData,
+            backgroundColor: natLabels.map(() => baseRes),
+            borderRadius:3, borderSkipped:false }
+        ]
+      },
+      options: {
+        onHover: function(event, elements) {
+          if (!elements.length) {
+            chart.data.datasets[0].backgroundColor = natLabels.map(() => baseNat);
+            chart.data.datasets[1].backgroundColor = natLabels.map(() => baseRes);
+            chart.update('none'); return;
+          }
+          const hovIdx   = elements[0].index;
+          const hovLabel = natLabels[hovIdx];
+          const isNat    = elements[0].datasetIndex === 0;
+          // Collect which other labels are linked via same candidate
+          const linked = new Set();
+          src.forEach(r => {
+            if (isNat  && r.nationality === hovLabel) linked.add(r.residence);
+            if (!isNat && r.residence   === hovLabel) linked.add(r.nationality);
+          });
+          chart.data.datasets[0].backgroundColor = natLabels.map((l, i) => {
+            if (isNat  && i === hovIdx)  return hlNat;
+            if (!isNat && linked.has(l)) return hlNat;
+            return baseNat + ((!isNat && !linked.has(l)) ? dim : '');
+          });
+          chart.data.datasets[1].backgroundColor = natLabels.map((l, i) => {
+            if (!isNat && i === hovIdx) return hlRes;
+            if (isNat  && linked.has(l)) return hlRes;
+            return baseRes + ((isNat && !linked.has(l)) ? dim : '');
+          });
+          chart.update('none');
+        },
+        plugins: {
+          legend: { position:'bottom', labels:{ font:{size:11}, boxWidth:12 } },
+          tooltip: {
+            callbacks: {
+              title: ctx => {
+                const lbl = ctx[0].label;
+                const cands = src.filter(r => r.nationality===lbl || r.residence===lbl);
+                return lbl + (cands.length ? '  (' + cands.map(r=>r.name.split(' ').slice(-1)[0]).join(', ') + ')' : '');
+              },
+              label: ctx => {
+                const lbl  = ctx.label;
+                const isNat2 = ctx.datasetIndex === 0;
+                const cands = src.filter(r => isNat2 ? r.nationality===lbl : r.residence===lbl);
+                const cross = src.filter(r => isNat2 ? r.nationality===lbl : r.residence===lbl)
+                                 .map(r => isNat2 ? r.residence : r.nationality);
+                return ctx.dataset.label + ': ' + ctx.raw
+                  + (cross.length ? '  ->  ' + [...new Set(cross)].join(', ') : '');
+              }
+            }
+          }
+        },
+        scales: {
+          x: { grid:{display:false}, ticks:{font:{size:10}} },
+          y: { beginAtZero:true, ticks:{stepSize:1}, grid:{color:'#f0f0f0'} }
+        },
+        maintainAspectRatio: false
+      }
+    });
+    chartInstances['chart-map-canvas'] = chart;
+  });
+}
+
+
+/* ── CHART FILTER BARS ─────────────────────────────── */
+function buildChartFilterBar(prefix) {
+  const barEl = document.getElementById('chart-' + prefix + '-filter');
+  if (!barEl) return;
+  const curCat = prefix === 'raw' ? rawCat : compCat;
+  const fields = [...new Set(DATA.map(r => r.field))];
+  let html = '<span class="col-lbl">Filter:</span>';
+  html += '<button class="cat-btn' + (!curCat ? ' active' : '') + '" onclick="setChartCat(\'' + prefix + '\',this,\'\')">All</button>';
+  fields.forEach(function(f) {
+    const safe = f.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    html += '<button class="cat-btn' + (curCat === f ? ' active' : '') + '" onclick="setChartCat(\'' + prefix + '\',this,\'' + safe + '\')">' + f + '</button>';
+  });
+  barEl.innerHTML = html;
+}
+
+function setChartCat(prefix, btn, cat) {
+  // Update chart filter bar buttons
+  document.querySelectorAll('#chart-' + prefix + '-filter .cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Also sync with the table filter bar
+  document.querySelectorAll('#' + prefix + '-cat-bar .cat-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === (cat || 'All'));
+  });
+
+  // Update the cat variable and filter
+  if (prefix === 'raw') {
+    rawCat = cat; rawPage = 1;
+    rawFiltered = DATA.filter(r => (!cat || r.field === cat));
+    renderRaw();
+    buildRawCharts();
+  } else {
+    compCat = cat; compPage = 1;
+    compFiltered = DATA.filter(r => (!cat || r.field === cat));
+    renderComp();
+    buildCompCharts();
+  }
+}
 </script>
 </body>
 </html>
