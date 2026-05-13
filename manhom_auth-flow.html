@@ -765,11 +765,15 @@ function sMembership(){
 function sCheckout(){
   const plan=S.plan||{title:'الأساسية',price:300,cycle:'yearly'};
   const price=plan.price||300, title=plan.title||'الأساسية', isY=plan.cycle==='yearly';
-  const vat=Math.round(price*.2), total=price+vat;
+  const total=price;
 
   // SCA screen
   if(S.checkoutSca) return `
-  <div style="min-height:100vh;background:#f4f6f9;display:flex;align-items:center;justify-content:center;padding:20px;font-family:'IBM Plex Sans Arabic',sans-serif">
+  <div style="min-height:100vh;background:#f4f6f9;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;font-family:'IBM Plex Sans Arabic',sans-serif">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:white;border:1px solid #e2e8f0;border-radius:100px;padding:7px 16px;margin-bottom:16px;font-size:12px;color:#64748b">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      هذه الشاشة يوفرها Stripe تلقائياً — لا تحتاج أي جهد برمجي من طرفك
+    </div>
     <div style="background:white;border-radius:20px;padding:40px 32px;max-width:440px;width:100%;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.08);border:1px solid #e5e7eb">
       <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#1d4ed8,#6d28d9);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px">🔐</div>
       <div style="font-size:11px;font-weight:700;color:#6b7280;letter-spacing:1px;margin-bottom:8px">STRONG CUSTOMER AUTHENTICATION</div>
@@ -786,6 +790,7 @@ function sCheckout(){
       <button class="btn btn-ghost" onclick="S.checkoutSca=false;draw()">رجوع</button>
       <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:20px;color:#9ca3af;font-size:12px">🔒 Secured by Stripe · PCI DSS Level 1</div>
     </div>
+  </div>
   </div>`;
 
   // Main checkout
@@ -811,9 +816,6 @@ function sCheckout(){
         <div style="border-top:1px solid #e2e8f0;padding-top:20px">
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#4b5563;padding:10px 0;border-bottom:1px solid #f1f5f9">
             <span style="font-weight:500">عضوية ${title}</span><span>£${price}</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#4b5563;padding:10px 0;border-bottom:1px solid #f1f5f9">
-            <span style="font-weight:500">ضريبة القيمة المضافة UK (20%)</span><span>£${vat}</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:900;color:#1a1f36;padding:14px 0">
             <span>الإجمالي اليوم</span><span>£${total}</span>
@@ -920,18 +922,19 @@ function sVerify(){
       <h2 style="font-size:22px;font-weight:900;margin-bottom:10px">التحقق من الهوية</h2>
       <p style="font-size:14px;color:#6b7280;line-height:1.8">للامتثال للوائح FCA ومتطلبات KYC نحتاج تأكيد هويتك لتفعيل عضويتك الموثقة.</p>
     </div>
-    <div style="background:#f8fafc;border-radius:12px;padding:20px;margin-bottom:24px">
-      <p style="font-size:13px;font-weight:700;color:#374151;margin-bottom:12px">لماذا نطلب هذا؟</p>
-      ${[['🔒','ضمان أن الملف الموثق يعود لشخص حقيقي'],['🏦','متطلبات Stripe للاشتراكات المتكررة في UK'],['⚖️','الامتثال لقانون مكافحة غسيل الأموال AMLD6'],['🛡️','حماية هويتك من الانتحال']].map((r,i)=>`
-      <div style="display:flex;gap:10px;padding:7px 0;border-bottom:${i<3?'1px solid #f1f5f9':'none'}"><span style="font-size:16px;flex-shrink:0">${r[0]}</span><span style="font-size:13px;color:#4b5563;line-height:1.6">${r[1]}</span></div>`).join('')}
-    </div>
-    <div style="display:flex;gap:10px;padding:12px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;margin-bottom:16px">
-      <span style="flex-shrink:0;font-size:16px">⚠️</span>
-      <p style="font-size:12.5px;color:#991b1b;margin:0;line-height:1.8"><strong>تنبيه هام:</strong> تماشياً مع القوانين البريطانية لمكافحة انتحال الشخصيات، يُحظر نشر أي بيانات أو سير ذاتية للعامة في المنصة حتى يتم التحقق من الهوية بنجاح.</p>
-    </div>
-    <div style="display:flex;gap:10px;padding:12px 14px;background:#fafafa;border-radius:10px;border:1px solid #e5e7eb;margin-bottom:20px">
-      <span style="flex-shrink:0">🔒</span>
-      <p style="font-size:12.5px;color:#6b7280;margin:0;line-height:1.7">بياناتك مشفرة. لن تُشارك مع أي طرف ثالث. تُحذف الصور خلال 30 يوماً وفق GDPR.</p>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:20px">
+      <div style="display:flex;gap:10px;align-items:flex-start;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #e2e8f0">
+        <span style="flex-shrink:0">⚖️</span>
+        <p style="font-size:12.5px;color:#374151;margin:0;line-height:1.8">تُجمع بياناتك لأغراض الامتثال لقانون مكافحة غسيل الأموال <strong>(MLR 2017)</strong> المعمول به في المملكة المتحدة.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #e2e8f0">
+        <span style="flex-shrink:0">⚠️</span>
+        <p style="font-size:12.5px;color:#92400e;margin:0;line-height:1.8"><strong>تنبيه:</strong> لن يتم تفعيل ميزة النشر العام في المنصة حتى يجتاز حسابك فحص الهوية بنجاح.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="flex-shrink:0">🔒</span>
+        <p style="font-size:12.5px;color:#6b7280;margin:0;line-height:1.8">بياناتك مشفرة ولن تُشارك. تُحذف الصور خلال 30 يوماً وفق GDPR.</p>
+      </div>
     </div>
     <div style="text-align:center;font-size:13px;color:#6b7280;margin-bottom:8px">⏱️ يستغرق أقل من 3 دقائق</div>
     ${pb('ابدأ التحقق الآن',"S.verifyStep='docType';draw()")}
@@ -942,6 +945,10 @@ function sVerify(){
   if(S.verifyStep==='docType'){
     const docs=[{id:'passport',l:'جواز سفر',d:'مقبول من جميع الدول',i:'🛂'},{id:'national_id',l:'بطاقة هوية وطنية',d:'للمقيمين في دول تصدرها',i:'🪪'},{id:'driving_licence',l:'رخصة قيادة بريطانية',d:'DVLA UK فقط',i:'🚗'},{id:'brp',l:'Biometric Residence Permit',d:'للمقيمين في المملكة المتحدة',i:'📋'}];
     return wrap(card(`
+    <div style="display:inline-flex;align-items:center;gap:8px;background:white;border:1px solid #e2e8f0;border-radius:100px;padding:6px 14px;margin-bottom:16px;font-size:12px;color:#64748b">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      هذه الشاشات يوفرها Stripe Identity تلقائياً — لا تحتاج أي جهد برمجي من طرفك
+    </div>
       <h2 style="font-size:20px;font-weight:900;margin-bottom:6px">اختر نوع الوثيقة</h2>
       <p style="font-size:13.5px;color:#6b7280;margin-bottom:24px;line-height:1.7">اختر وثيقة سارية المفعول وغير منتهية الصلاحية.</p>
       <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
@@ -968,6 +975,10 @@ function sVerify(){
 
   // SCAN DOC
   if(S.verifyStep==='scanDoc') return wrap(card(`
+    <div style="display:inline-flex;align-items:center;gap:8px;background:white;border:1px solid #e2e8f0;border-radius:100px;padding:6px 14px;margin-bottom:16px;font-size:12px;color:#64748b">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      هذه الشاشات يوفرها Stripe Identity تلقائياً — لا تحتاج أي جهد برمجي من طرفك
+    </div>
     <div style="font-size:12px;color:#0570de;font-weight:700;margin-bottom:6px">● الخطوة 1 من 2 — مسح الوثيقة</div>
     <h2 style="font-size:20px;font-weight:900;margin-bottom:6px">صوّر وثيقتك الرسمية</h2>
     <p style="font-size:13px;color:#6b7280;margin-bottom:20px;line-height:1.7">تأكد من وضوح الصورة وإضاءة جيدة وعدم وجود انعكاس.</p>
@@ -995,6 +1006,10 @@ function sVerify(){
 
   // SELFIE
   if(S.verifyStep==='selfie') return wrap(card(`
+    <div style="display:inline-flex;align-items:center;gap:8px;background:white;border:1px solid #e2e8f0;border-radius:100px;padding:6px 14px;margin-bottom:16px;font-size:12px;color:#64748b">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      هذه الشاشات يوفرها Stripe Identity تلقائياً — لا تحتاج أي جهد برمجي من طرفك
+    </div>
     <div style="font-size:12px;color:#0570de;font-weight:700;margin-bottom:6px">● الخطوة 2 من 2 — Liveness Check</div>
     <h2 style="font-size:20px;font-weight:900;margin-bottom:6px">صورة حية للتحقق</h2>
     <p style="font-size:13px;color:#6b7280;margin-bottom:16px;line-height:1.7">النظام يتحقق أنك شخص حقيقي وليس صورة مطبوعة.</p>
