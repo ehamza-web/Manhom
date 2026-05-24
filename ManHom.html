@@ -1355,19 +1355,51 @@ function renderSubTab(tab) {
   <div style="background:white;border:1px solid #f1f5f9;border-radius:14px;padding:28px 32px;margin-bottom:20px">
     <h3 style="font-size:18px;font-weight:800;color:#1e293b;margin-bottom:8px;text-align:right">تفاصيل الاشتراك الحالي</h3>
     <p style="font-size:13px;color:#64748b;margin-bottom:24px;text-align:right">لديك تحكم كامل في الاشتراك الخاص بك ، يمكنك الإشتراك الآن .</p>
-    <div style="display:flex;flex-direction:column">
-      ${subDetails.map((r,i) => `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 0;${i<subDetails.length-1?'border-bottom:1px solid #f1f5f9':''}">
-        <span style="font-size:14px;font-weight:700;color:#1e293b">${r.label}</span>
-        <span style="font-size:14px;color:#475569">${r.val}</span>
-      </div>`).join('')}
-    </div>
-    <div style="display:flex;align-items:center;padding:18px 0;border-top:1px solid #f1f5f9">
-      <span style="font-size:14px;font-weight:700;color:#1e293b;margin-right:auto">تجديد تلقائي</span>
-      <div style="display:flex;align-items:center;gap:24px">
-        <span style="font-size:13.5px;color:#475569;line-height:1.6;padding-left:32px">سيتم تجديد حسابك تلقائياً في: 2026-06-24 إذاكنت ترغب في إلغاء اشتراكك حق لا يتم تجديده</span>
-        <div onclick="toggleRenewal(this)" style="position:relative;width:44px;height:24px;background:#4169E1;border-radius:100px;cursor:pointer;flex-shrink:0" data-on="true">
-          <div style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:white;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:all .2s"></div>
+    <div style="display:flex;flex-direction:column;direction:rtl">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid #f1f5f9">
+        <span style="font-size:14px;font-weight:700;color:#1e293b">نوع الاشتراك</span>
+        <span style="font-size:14px;color:#475569">${isMoushoor?'أساسية':'أساسية'}</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid #f1f5f9">
+        <span style="font-size:14px;font-weight:700;color:#1e293b">حالة الاشتراك</span>
+        <span><span style="background:#22c55e;color:white;padding:3px 14px;border-radius:100px;font-size:12px;font-weight:700">فعال</span></span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid #f1f5f9">
+        <span style="font-size:14px;font-weight:700;color:#1e293b">سعر الاشتراك</span>
+        <span style="font-size:14px;color:#475569">${isMoushoor?'550 USD / السنة':'36 GBP / الشهر'}</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid #f1f5f9">
+        <span style="font-size:14px;font-weight:700;color:#1e293b">سعر تجديد الاشتراك</span>
+        <span style="font-size:14px;color:#475569">${isMoushoor?'550 USD':'36 GBP'}</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid #f1f5f9">
+        <span style="font-size:14px;font-weight:700;color:#1e293b">طريقة الدفع</span>
+        <span style="font-size:14px;color:#475569">Stripe</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid #f1f5f9">
+        <span style="font-size:14px;font-weight:700;color:#1e293b">تاريخ بداية الاشتراك</span>
+        <span style="font-size:14px;color:#475569">${isMoushoor?'2026-05-01':'2026-05-24'}</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid #f1f5f9">
+        <span style="font-size:14px;font-weight:700;color:#1e293b">تاريخ نهاية الاشتراك</span>
+        <span style="font-size:14px;color:#475569">${isMoushoor?'2026-05-01':'2026-06-24'}</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:1px solid #f1f5f9">
+        <span style="font-size:14px;font-weight:700;color:#1e293b">الاستهلاك الشهري للباقة</span>
+        <span style="display:inline-flex;align-items:center">
+          <button style="background:#4169E1;color:white;border:none;border-radius:100px;padding:5px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;direction:rtl">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            عرض
+          </button>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 0">
+        <span style="font-size:14px;font-weight:700;color:#1e293b">تجديد تلقائي</span>
+        <div style="display:flex;align-items:center;gap:16px">
+          <span style="font-size:13px;color:#475569;line-height:1.6">سيتم تجديد حسابك تلقائياً في: 2026-06-24 إذاكنت ترغب في إلغاء اشتراكك حق لا يتم تجديده</span>
+          <div onclick="toggleRenewal(this)" style="position:relative;width:44px;height:24px;background:#4169E1;border-radius:100px;cursor:pointer;flex-shrink:0" data-on="true">
+            <div style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:white;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:all .2s"></div>
+          </div>
         </div>
       </div>
     </div>
