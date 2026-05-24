@@ -1327,19 +1327,23 @@ function sMawshoorPaywall(){
 function renderSubTab(tab) {
   const isMoushoor = tab === 'moushoor';
   const subDetails = isMoushoor ? [
-    {label:'نوع الاشتراك',           val:'الباقة الشخصية'},
+    {label:'نوع الاشتراك',           val:'أساسية'},
     {label:'حالة الاشتراك',          val:'<span style="background:#22c55e;color:white;padding:3px 14px;border-radius:100px;font-size:12px;font-weight:700">فعال</span>'},
-    {label:'سعر الاشتراك',           val:'550 دولار / السنة'},
-    {label:'سعر تجديد الاشتراك',     val:'550 دولار'},
-    {label:'تاريخ بداية الاشتراك',   val:'2026-05-01'},
-    {label:'الاستهلاك الشهري للباقة',val:'<button style="background:#4169E1;color:white;border:none;border-radius:100px;padding:5px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">عرض</button>'},
+    {label:'سعر الاشتراك',           val:'gbp 36 / الشهر'},
+    {label:'سعر تجديد الاشتراك',     val:'gbp 36'},
+    {label:'طريقة الدفع',            val:'stripe'},
+    {label:'تاريخ بداية الاشتراك',   val:'2026-05-24'},
+    {label:'تاريخ نهاية الاشتراك',   val:'2026-06-24'},
+    {label:'الاستهلاك الشهري للباقة',val:'<button style="background:#4169E1;color:white;border:none;border-radius:100px;padding:5px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"2\"><path d=\"M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg> عرض</button>'},
   ] : [
-    {label:'نوع الاشتراك',           val:'الخطة المجانية'},
+    {label:'نوع الاشتراك',           val:'أساسية'},
     {label:'حالة الاشتراك',          val:'<span style="background:#22c55e;color:white;padding:3px 14px;border-radius:100px;font-size:12px;font-weight:700">فعال</span>'},
-    {label:'سعر الاشتراك',           val:'مجانا / الشهر'},
-    {label:'سعر تجديد الاشتراك',     val:'مجانا'},
-    {label:'تاريخ بداية الاشتراك',   val:'2026-05-20'},
-    {label:'الاستهلاك الشهري للباقة',val:'<button style="background:#4169E1;color:white;border:none;border-radius:100px;padding:5px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">عرض</button>'},
+    {label:'سعر الاشتراك',           val:'gbp 36 / الشهر'},
+    {label:'سعر تجديد الاشتراك',     val:'gbp 36'},
+    {label:'طريقة الدفع',            val:'stripe'},
+    {label:'تاريخ بداية الاشتراك',   val:'2026-05-24'},
+    {label:'تاريخ نهاية الاشتراك',   val:'2026-06-24'},
+    {label:'الاستهلاك الشهري للباقة',val:'<button style="background:#4169E1;color:white;border:none;border-radius:100px;padding:5px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"2\"><path d=\"M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg> عرض</button>'},
   ];
   const cards = isMoushoor ? [
     {type:'Visa', linked:'الاشتراك الشخصي personal', num:'**** **** **** 4242', exp:'07/2055', def:true},
@@ -1358,13 +1362,14 @@ function renderSubTab(tab) {
         <span style="font-size:14px;color:#475569">${r.val}</span>
       </div>`).join('')}
     </div>
-    <!-- إيقاف التجديد التلقائي -->
-    <div style="margin-top:20px;padding-top:20px;border-top:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between">
-      <button onclick="showCancelModal()" style="background:white;color:#dc2626;border:1px solid #fecaca;border-radius:100px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px" onmouseover="this.style.background='#fef2f2'" onmouseout="this.style.background='white'">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
-        إيقاف التجديد التلقائي
-      </button>
-      <p style="font-size:12px;color:#94a3b8;max-width:340px;text-align:right;line-height:1.6">سيستمر اشتراكك حتى نهاية الفترة الحالية ولن يتجدد تلقائياً بعد ذلك.</p>
+    <div style="display:flex;align-items:center;padding:18px 0;border-top:1px solid #f1f5f9">
+      <span style="font-size:14px;font-weight:700;color:#1e293b;margin-right:auto">تجديد تلقائي</span>
+      <div style="display:flex;align-items:center;gap:24px">
+        <span style="font-size:13.5px;color:#475569;line-height:1.6;padding-left:32px">سيتم تجديد حسابك تلقائياً في: 2026-06-24 إذاكنت ترغب في إلغاء اشتراكك حق لا يتم تجديده</span>
+        <div onclick="toggleRenewal(this)" style="position:relative;width:44px;height:24px;background:#4169E1;border-radius:100px;cursor:pointer;flex-shrink:0" data-on="true">
+          <div style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:white;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:all .2s"></div>
+        </div>
+      </div>
     </div>
   </div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
@@ -1509,10 +1514,29 @@ function submitPayment(){
   draw();
 }
 
+function toggleRenewal(el){
+  const isOn = el.dataset.on === 'true';
+  if(isOn){
+    // turning OFF → show confirmation modal
+    showCancelModal(el);
+  } else {
+    // turning ON → re-enable
+    el.style.background = '#4169E1';
+    el.querySelector('div').style.right = '3px';
+    el.querySelector('div').style.left = 'auto';
+    el.dataset.on = 'true';
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#1e293b;color:white;padding:14px 28px;border-radius:100px;font-size:14px;font-weight:600;font-family:"IBM Plex Sans Arabic",sans-serif;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);display:flex;align-items:center;gap:8px;animation:toastIn .3s ease';
+    toast.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> تم تفعيل التجديد التلقائي';
+    document.body.appendChild(toast);
+    setTimeout(()=>toast.remove(), 3500);
+  }
+}
+
 // ══════════════════════════════════════════
 // CANCEL RENEWAL MODAL
 // ══════════════════════════════════════════
-function showCancelModal(){
+function showCancelModal(toggleEl){
   const modal = document.createElement('div');
   modal.id = 'cancel-modal';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)';
@@ -1529,7 +1553,7 @@ function showCancelModal(){
         </p>
       </div>
       <div style="display:flex;gap:10px">
-        <button onclick="confirmCancel()" style="flex:1;background:#dc2626;color:white;border:none;border-radius:100px;padding:13px 0;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
+        <button id="confirm-cancel-btn" style="flex:1;background:#dc2626;color:white;border:none;border-radius:100px;padding:13px 0;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
           نعم، إيقاف التجديد
         </button>
         <button onclick="closeCancelModal()" style="flex:1;background:white;color:#475569;border:1px solid #e2e8f0;border-radius:100px;padding:13px 0;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">
@@ -1539,6 +1563,8 @@ function showCancelModal(){
     </div>`;
   modal.addEventListener('click', e => { if(e.target === modal) closeCancelModal(); });
   document.body.appendChild(modal);
+  // Wire confirm button with toggle reference
+  document.getElementById('confirm-cancel-btn').onclick = () => confirmCancel(toggleEl);
 }
 
 function closeCancelModal(){
@@ -1546,9 +1572,15 @@ function closeCancelModal(){
   if(m) m.remove();
 }
 
-function confirmCancel(){
+function confirmCancel(toggleEl){
   closeCancelModal();
-  // Show success toast
+  // Update toggle to OFF state
+  if(toggleEl){
+    toggleEl.style.background = '#e2e8f0';
+    toggleEl.querySelector('div').style.right = 'auto';
+    toggleEl.querySelector('div').style.left = '3px';
+    toggleEl.dataset.on = 'false';
+  }
   const toast = document.createElement('div');
   toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#1e293b;color:white;padding:14px 28px;border-radius:100px;font-size:14px;font-weight:600;font-family:"IBM Plex Sans Arabic",sans-serif;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);display:flex;align-items:center;gap:8px;animation:toastIn .3s ease';
   toast.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> تم إيقاف التجديد التلقائي بنجاح';
