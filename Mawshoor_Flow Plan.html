@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>خطة فلو التحفيز على الاشتراك المدفوع — موشور السعودية</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:       #1d4ed8;
+    --blue-light: #eff6ff;
+    --blue-mid:   #3b6ef5;
+    --green:      #16a34a;
+    --green-light:#f0fdf4;
+    --orange:     #ea580c;
+    --orange-light:#fff7ed;
+    --gray-50:    #f9fafb;
+    --gray-100:   #f3f4f6;
+    --gray-200:   #e5e7eb;
+    --gray-400:   #9ca3af;
+    --gray-600:   #4b5563;
+    --gray-800:   #1f2937;
+    --gray-900:   #111827;
+    --radius:     10px;
+    --shadow:     0 2px 12px rgba(0,0,0,0.07);
+    --shadow-lg:  0 8px 32px rgba(0,0,0,0.10);
+  }
+
+  body {
+    font-family: 'IBM Plex Sans Arabic', Arial, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    max-width: 900px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+  .page-header .badge {
+    display: inline-block;
+    background: var(--blue-light);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    letter-spacing: 0.03em;
+  }
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 10px;
+  }
+  .page-header p {
+    color: var(--gray-600);
+    font-size: 15px;
+  }
+
+  /* ── Flow Diagram ── */
+  .flow-section {
+    max-width: 900px;
+    margin: 0 auto 64px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-400);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-200);
+  }
+
+  .flow-diagram {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    box-shadow: var(--shadow);
+  }
+
+  /* الإيميل الأول */
+  .flow-start {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+  .flow-node {
+    background: var(--blue);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 16px 28px;
+    text-align: center;
+    min-width: 280px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .flow-node:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .flow-node .node-day { font-size: 11px; font-weight: 500; opacity: 0.75; margin-bottom: 4px; }
+  .flow-node .node-title { font-size: 14px; font-weight: 600; }
+  .flow-node .node-tag { font-size: 11px; margin-top: 6px; background: rgba(255,255,255,0.18); border-radius: 4px; padding: 2px 8px; display: inline-block; }
+
+  /* السهم للأسفل */
+  .arrow-down {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    position: relative;
+  }
+  .arrow-down::before {
+    content: '';
+    width: 2px;
+    height: 32px;
+    background: var(--gray-300, #d1d5db);
+    display: block;
+  }
+  .arrow-down::after {
+    content: '▼';
+    position: absolute;
+    bottom: 2px;
+    color: var(--gray-400);
+    font-size: 10px;
+  }
+
+  /* تفرع */
+  .split-label {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .split-label span {
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+  }
+
+  .branches {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    position: relative;
+  }
+  .branches::before {
+    content: '';
+    position: absolute;
+    top: -16px;
+    right: 25%;
+    left: 25%;
+    height: 2px;
+    background: var(--gray-200);
+  }
+
+  .branch {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+  }
+
+  .branch-header {
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .branch-header .dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .branch-a .branch-header { background: var(--green-light); color: var(--green); border-bottom: 1px solid #bbf7d0; }
+  .branch-a .branch-header .dot { background: var(--green); }
+  .branch-b .branch-header { background: var(--orange-light); color: var(--orange); border-bottom: 1px solid #fed7aa; }
+  .branch-b .branch-header .dot { background: var(--orange); }
+
+  .branch-nodes {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #fff;
+  }
+
+  .mini-node {
+    border-radius: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s;
+    border: 1px solid transparent;
+  }
+  .mini-node:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .mini-node .node-day { font-size: 11px; font-weight: 600; margin-bottom: 3px; }
+  .mini-node .node-title { font-size: 13px; font-weight: 500; color: var(--gray-800); line-height: 1.4; }
+
+  .branch-a .mini-node { background: var(--green-light); border-color: #bbf7d0; }
+  .branch-a .mini-node .node-day { color: var(--green); }
+  .branch-b .mini-node { background: var(--orange-light); border-color: #fed7aa; }
+  .branch-b .mini-node .node-day { color: var(--orange); }
+
+  .branch-arrow {
+    text-align: center;
+    color: var(--gray-400);
+    font-size: 11px;
+    padding: 4px 0;
+  }
+
+  .end-node {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  .end-badge {
+    background: var(--gray-100);
+    border: 1px dashed var(--gray-300, #d1d5db);
+    border-radius: var(--radius);
+    padding: 10px 32px;
+    font-size: 13px;
+    color: var(--gray-400);
+    text-align: center;
+  }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    max-width: 900px;
+    margin: 0 auto 64px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .stat-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    text-align: center;
+  }
+  .stat-card .stat-num { font-size: 28px; font-weight: 700; color: var(--blue); }
+  .stat-card .stat-label { font-size: 13px; color: var(--gray-600); margin-top: 4px; }
+
+  /* ── Email Cards ── */
+  .emails-section { max-width: 900px; margin: 0 auto; }
+
+  .email-group { margin-bottom: 48px; }
+  .group-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .group-badge {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+  .badge-all   { background: var(--blue-light); color: var(--blue); }
+  .badge-a     { background: var(--green-light); color: var(--green); }
+  .badge-b     { background: var(--orange-light); color: var(--orange); }
+  .group-desc  { font-size: 13px; color: var(--gray-600); }
+
+  .email-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: box-shadow 0.15s;
+  }
+  .email-card:hover { box-shadow: var(--shadow-lg); }
+
+  .email-card-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+  }
+  .email-card-header .left { flex: 1; }
+  .email-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .day-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+  }
+  .day-badge-all   { background: var(--blue-light); color: var(--blue); }
+  .day-badge-a     { background: var(--green-light); color: var(--green); }
+  .day-badge-b     { background: var(--orange-light); color: var(--orange); }
+
+  .trigger-badge {
+    font-size: 11px;
+    color: var(--gray-400);
+    border: 1px solid var(--gray-200);
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+  .email-subject {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-900);
+    line-height: 1.4;
+  }
+  .toggle-btn {
+    background: var(--gray-100);
+    border: none;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--gray-600);
+    flex-shrink: 0;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .toggle-btn:hover { background: var(--gray-200); }
+
+  .email-preview {
+    display: none;
+    padding: 24px;
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-100);
+  }
+  .email-preview.open { display: block; }
+
+  /* Email frame */
+  .email-frame {
+    max-width: 560px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e2e2e2;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    direction: rtl;
+    font-family: Arial, sans-serif;
+  }
+  .email-frame .ef-logo {
+    padding: 24px 28px 16px;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .email-frame .ef-logo img { width: 60px; height: auto; }
+  .email-frame .ef-body { padding: 16px 28px 28px; direction: rtl; }
+  .email-frame .ef-footer {
+    padding: 14px 28px 16px;
+    border-top: 1px solid #f0f0f0;
+    text-align: center;
+    font-size: 11px;
+    color: #9ca3af;
+  }
+
+  /* CTA button in preview */
+  .ef-cta {
+    display: inline-block;
+    background: #1d4ed8;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 11px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-top: 4px;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Highlight box in preview */
+  .ef-highlight {
+    background: #eff6ff;
+    border-right: 4px solid #1d4ed8;
+    padding: 14px 16px;
+    border-radius: 4px;
+    margin: 14px 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #1e40af;
+  }
+
+  .ef-p {
+    font-size: 14px;
+    line-height: 26px;
+    color: #374151;
+    margin: 0 0 14px;
+  }
+  .ef-h {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 14px;
+    line-height: 1.5;
+  }
+  .ef-divider { height: 1px; background: #f0f0f0; margin: 14px 0; }
+
+  /* ── Rationale Box ── */
+  .rationale {
+    background: #fffbeb;
+    border-right: 4px solid #f59e0b;
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    margin: 16px 24px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .rationale-icon { font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+  .rationale-content { flex: 1; }
+  .rationale-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #b45309;
+    margin-bottom: 5px;
+  }
+  .rationale-goal {
+    font-size: 13px;
+    font-weight: 600;
+    color: #92400e;
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .rationale-why {
+    font-size: 12px;
+    color: #78350f;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 640px) {
+    .branches { grid-template-columns: 1fr; }
+    .branches::before { display: none; }
+    .stats-bar { grid-template-columns: 1fr; }
+    .flow-node { min-width: 200px; }
+    body { padding: 24px 12px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="page-header">
+  <div class="badge">خطة التحفيز على الاشتراك المدفوع</div>
+  <h1>فلو إيميلات موشور السعودية</h1>
+  <p>6 إيميلات مقسّمة على مسارين بحسب سلوك المستخدم — خلال 10 أيام</p>
+</div>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-num">10</div>
+    <div class="stat-label">أيام مدة الفلو الكامل</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">6</div>
+    <div class="stat-label">إيميلات على مسارين</div>
+  </div>
+</div>
+
+<!-- Flow Diagram -->
+<div class="flow-section">
+  <div class="section-title">مخطط الفلو</div>
+  <div class="flow-diagram">
+
+    <!-- Node 1 -->
+    <div class="flow-start">
+      <div class="flow-node" onclick="scrollToEmail('email-1')">
+        <div class="node-day">اليوم 0 — للجميع</div>
+        <div class="node-title">انتهى اشتراكك.. وهذا الأسبوع كان الأكثر حركةً إدارياً</div>
+        <div class="node-tag">إيميل 1</div>
+      </div>
+    </div>
+
+    <div style="height:12px;"></div>
+    <div class="flow-rationale">
+      <div class="flow-rationale-icon">💡</div>
+      <div class="flow-rationale-content">
+        <div class="flow-rationale-label">لماذا الإيميل الأول؟</div>
+        <div class="flow-rationale-text">المستخدم في أعلى نقطة وعي بالخدمة فور انتهاء اشتراكه — هذا هو التوقيت الأمثل للتحويل. نستخدم أرقاماً حقيقية من آخر عدد لتجسيد ما فاته فعلاً.</div>
+      </div>
+    </div>
+
+    <div class="arrow-down"></div>
+
+    <!-- Split -->
+    <div class="split-label">
+      <span>بحسب سلوك المستخدم بعد الإيميل الأول</span>
+    </div>
+    <div class="split-rationale">
+      💡 <strong>لماذا نقسّم هنا؟</strong> — من فتح الإيميل أبدى اهتماماً حقيقياً، ومن لم يفتح ربما لم تصله الرسالة أو لم يجد وقتاً. إرسال نفس المحتوى للاثنين يُضعف الفعالية — فالمتردد يحتاج إقناعاً، وغير المهتم يحتاج انتباهاً أولاً.
+    </div>
+
+    <div style="height:16px;"></div>
+
+    <div class="branches">
+
+      <!-- Branch A -->
+      <div class="branch branch-a">
+        <div class="branch-header">
+          <div class="dot"></div>
+          مسار A — فتح الإيميل ولم يشترك
+        </div>
+        <div class="branch-nodes">
+          <div class="branch-rationale">
+            💡 <strong>منطق المسار:</strong> هذا المستخدم مهتم لكنه متردد — ربما السعر أو التوقيت أو سؤال لم يُجَب عليه. نتدرج معه: FOMO ← حوار مباشر ← تذكير بالقيمة المفقودة.
+          </div>
+          <div class="mini-node" onclick="scrollToEmail('email-A2')">
+            <div class="node-day">اليوم 3</div>
+            <div class="node-title">ماذا فاتك في موشور هذا الأسبوع؟</div>
+          </div>
+          <div class="branch-arrow">↓</div>
+          <div class="mini-node" onclick="scrollToEmail('email-A3')">
+            <div class="node-day">اليوم 7</div>
+            <div class="node-title">سؤال واحد فقط</div>
+          </div>
+          <div class="branch-arrow">↓</div>
+          <div class="mini-node" onclick="scrollToEmail('email-A4')">
+            <div class="node-day">اليوم 10</div>
+            <div class="node-title">منذ انتهاء اشتراكك — هذا ما فاتك في موشور</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Branch B -->
+      <div class="branch branch-b">
+        <div class="branch-header">
+          <div class="dot"></div>
+          مسار B — لم يفتح الإيميل
+        </div>
+        <div class="branch-nodes">
+          <div class="branch-rationale-b">
+            💡 <strong>منطق المسار:</strong> عدم الفتح لا يعني عدم الاهتمام — ربما ضاع الإيميل. نحاول باختراق مختلف (عنوان شخصي)، ثم نغلق الفلو باحترام إن لم يستجب.
+          </div>
+          <div class="mini-node" onclick="scrollToEmail('email-B2')">
+            <div class="node-day">اليوم 4</div>
+            <div class="node-title">هل وصلك إيميلنا؟</div>
+          </div>
+          <div class="branch-arrow">↓</div>
+          <div class="mini-node" onclick="scrollToEmail('email-B3')">
+            <div class="node-day">اليوم 10</div>
+            <div class="node-title">آخر رسالة منّا — بعدها لن نزعجك</div>
+          </div>
+          <div style="height:54px;"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- End -->
+    <div class="end-node">
+      <div class="end-badge">🏁 نهاية الفلو — خروج من القائمة في حال عدم الاشتراك</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Email Cards -->
+<div class="emails-section">
+  <div class="section-title">محتوى الإيميلات</div>
+
+  <!-- Group: All -->
+  <div class="email-group">
+    <div class="group-label">
+      <span class="group-badge badge-all">للجميع</span>
+      <span class="group-desc">يُرسل لجميع المشتركين المنتهية اشتراكاتهم يوم الانتهاء</span>
+    </div>
+
+    <div class="email-card" id="email-1">
+      <div class="email-card-header" onclick="toggleEmail('preview-1', this)">
+        <div class="left">
+          <div class="email-meta">
+            <span class="day-badge day-badge-all">اليوم 0</span>
+            <span class="trigger-badge">للجميع</span>
+          </div>
+          <div class="email-subject">انتهى اشتراكك.. وهذا الأسبوع كان الأكثر حركةً إدارياً</div>
+        </div>
+        <button class="toggle-btn">＋</button>
+      </div>
+      <div class="rationale">
+        <div class="rationale-icon">💡</div>
+        <div class="rationale-content">
+          <div class="rationale-label">لماذا هذا الإيميل؟</div>
+          <div class="rationale-goal">الهدف: تذكيره بالقيمة التي فقدها فور انتهاء الاشتراك</div>
+          <div class="rationale-why">المستخدم في أعلى نقطة وعي بالخدمة مباشرةً بعد الانتهاء — التوقيت الأمثل للتحويل. نستخدم أرقاماً حقيقية من آخر عدد لإثبات أن المشهد لا يتوقف.</div>
+        </div>
+      </div>
+      <div class="email-preview" id="preview-1">
+        <div class="email-frame">
+          <div class="ef-logo">
+            <img src="https://gallery.eousercontent.com/192d7152-8402-11f0-8532-6d5bf93bada0%2Fmedia-manager%2F1777961185518-12.png" alt="من هم" />
+          </div>
+          <div class="ef-body">
+            <p class="ef-h">انتهى اشتراكك.. وهذا الأسبوع كان الأكثر حركةً إدارياً</p>
+            <p class="ef-p">انتهى اشتراكك التجريبي في موشور السعودية.</p>
+            <p class="ef-p">هذا الأسبوع وحده رصد موشور <strong>14 تغييراً إدارياً</strong> في مؤسسات حكومية وشركات كبرى — من وزارة الاتصالات إلى شركة القدية للاستثمار وبرنامج الربط الجوي.</p>
+            <div class="ef-highlight">
+              <strong>من أبرز ما فاتك هذا الأسبوع:</strong><br>
+              • تعيين وكيل وزارة الاتصالات للتكنولوجيا<br>
+              • رئيس تنفيذي جديد في شركة لوميرون<br>
+              • تغييرات في مجلس إدارة المركز الوطني للأرصاد<br>
+              <span style="color:#6b7280; font-size:12px;">وأكثر من 10 تغييرات أخرى لم تصلك.</span>
+            </div>
+            <p class="ef-p">كل هذا يصل إلى مشتركي موشور كل أحد — هل ستكون معهم الأسبوع القادم؟</p>
+            <a href="https://manhom.com/mawshoor-newsletter" class="ef-cta">اشترك في موشور الآن</a>
+          </div>
+          <div class="ef-footer">إن لم ترغب في استلام هذه الرسائل، إلغاء الاشتراك</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group A -->
+  <div class="email-group">
+    <div class="group-label">
+      <span class="group-badge badge-a">مسار A</span>
+      <span class="group-desc">فتح الإيميل الأول ولم يشترك</span>
+    </div>
+
+    <!-- A2 -->
+    <div class="email-card" id="email-A2">
+      <div class="email-card-header" onclick="toggleEmail('preview-A2', this)">
+        <div class="left">
+          <div class="email-meta">
+            <span class="day-badge day-badge-a">اليوم 3</span>
+            <span class="trigger-badge">فتح الإيميل 1</span>
+          </div>
+          <div class="email-subject">ماذا فاتك في موشور هذا الأسبوع؟</div>
+        </div>
+        <button class="toggle-btn">＋</button>
+      </div>
+      <div class="rationale">
+        <div class="rationale-icon">💡</div>
+        <div class="rationale-content">
+          <div class="rationale-label">لماذا هذا الإيميل؟</div>
+          <div class="rationale-goal">الهدف: استغلال الاهتمام المثبت (فتح الإيميل) لتعميق الـ FOMO</div>
+          <div class="rationale-why">من فتح الإيميل أبدى اهتماماً حقيقياً لكنه لم يتخذ قراراً — نمنحه معلومة محددة (تعيين واحد) ونحجب الباقي. الـ curiosity gap يدفعه لاتخاذ خطوة.</div>
+        </div>
+      </div>
+      <div class="email-preview" id="preview-A2">
+        <div class="email-frame">
+          <div class="ef-logo">
+            <img src="https://gallery.eousercontent.com/192d7152-8402-11f0-8532-6d5bf93bada0%2Fmedia-manager%2F1777961185518-12.png" alt="من هم" />
+          </div>
+          <div class="ef-body">
+            <p class="ef-h">ماذا فاتك في موشور هذا الأسبوع؟</p>
+            <p class="ef-p">رأيت أنك اطّلعت على إيميلنا السابق — شكراً على متابعتك.</p>
+            <p class="ef-p">هذا الأسبوع صدر عدد موشور الجديد وفيه:</p>
+            <div class="ef-highlight">
+              <strong style="font-size:14px;">ناصر الناصر أصبح وكيل وزارة الاتصالات للتكنولوجيا</strong><br><br>
+              هذا التعيين وغيره من التغييرات الإدارية الأسبوعية متاح كاملاً للمشتركين في موشور.<br>
+              <span style="color:#6b7280; font-size:12px;">التفاصيل الكاملة لكل تعيين في صفحة الشخصية على منصة من هم.</span>
+            </div>
+            <p class="ef-p">هذا مجرد تعيين واحد من أصل <strong>14 تغييراً</strong> في هذا العدد وحده.</p>
+            <a href="https://manhom.com/mawshoor-newsletter" class="ef-cta">اقرأ التفاصيل كاملة — اشترك الآن</a>
+          </div>
+          <div class="ef-footer">إن لم ترغب في استلام هذه الرسائل، إلغاء الاشتراك</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A3 -->
+    <div class="email-card" id="email-A3">
+      <div class="email-card-header" onclick="toggleEmail('preview-A3', this)">
+        <div class="left">
+          <div class="email-meta">
+            <span class="day-badge day-badge-a">اليوم 7</span>
+            <span class="trigger-badge">فتح A2 ولم يشترك</span>
+          </div>
+          <div class="email-subject">سؤال واحد فقط</div>
+        </div>
+        <button class="toggle-btn">＋</button>
+      </div>
+      <div class="rationale">
+        <div class="rationale-icon">💡</div>
+        <div class="rationale-content">
+          <div class="rationale-label">لماذا هذا الإيميل؟</div>
+          <div class="rationale-goal">الهدف: كسر حاجز التردد بفتح حوار حقيقي</div>
+          <div class="rationale-why">بعد إيميلين بلا استجابة، المشكلة ليست الوعي — بل عائق مجهول. إيميل قصير يسأل مباشرة يُفرغ الضغط ويكشف المانع الحقيقي، ويُشعره بأن وراء الخدمة فريقاً يهتم.</div>
+        </div>
+      </div>
+      <div class="email-preview" id="preview-A3">
+        <div class="email-frame">
+          <div class="ef-logo">
+            <img src="https://gallery.eousercontent.com/192d7152-8402-11f0-8532-6d5bf93bada0%2Fmedia-manager%2F1777961185518-12.png" alt="من هم" />
+          </div>
+          <div class="ef-body">
+            <p class="ef-h">سؤال واحد فقط</p>
+            <p class="ef-p">لاحظنا اهتمامك بموشور خلال الأيام الماضية — لكنك لم تشترك بعد.</p>
+            <p class="ef-p" style="font-size:15px; font-weight:600; color:#111827;">ما الذي يمنعك؟</p>
+            <p class="ef-p">السعر؟ محتوى النشرة؟ طريقة الدفع؟ أو شيء آخر تماماً؟</p>
+            <div class="ef-highlight">
+              تواصل معنا وأخبرنا — وسنحرص على الإجابة خلال 24 ساعة.<br>
+              <a href="mailto:support@manhom.com" style="color:#1d4ed8; font-size:12px; text-decoration:underline;">تواصل مع فريق موشور مباشرة</a>
+            </div>
+            <p class="ef-p">أو إن كنت جاهزاً للاشتراك الآن:</p>
+            <a href="https://manhom.com/mawshoor-newsletter" class="ef-cta">اشترك في موشور</a>
+          </div>
+          <div class="ef-footer">إن لم ترغب في استلام هذه الرسائل، إلغاء الاشتراك</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A4 -->
+    <div class="email-card" id="email-A4">
+      <div class="email-card-header" onclick="toggleEmail('preview-A4', this)">
+        <div class="left">
+          <div class="email-meta">
+            <span class="day-badge day-badge-a">اليوم 10</span>
+            <span class="trigger-badge">فتح A3 ولم يشترك</span>
+          </div>
+          <div class="email-subject">منذ انتهاء اشتراكك — هذا ما فاتك في موشور</div>
+        </div>
+        <button class="toggle-btn">＋</button>
+      </div>
+      <div class="rationale">
+        <div class="rationale-icon">💡</div>
+        <div class="rationale-content">
+          <div class="rationale-label">لماذا هذا الإيميل؟</div>
+          <div class="rationale-goal">الهدف: إبراز الخسارة المتراكمة كمحرّك نهائي للقرار</div>
+          <div class="rationale-why">نُظهر له بالأرقام الفعلية حجم ما فاته منذ انتهاء اشتراكه — الخسارة المحسوسة أقوى محرك للقرار. وهذا آخر إيميل في مسار A قبل إغلاق الفلو.</div>
+        </div>
+      </div>
+      <div class="email-preview" id="preview-A4">
+        <div class="email-frame">
+          <div class="ef-logo">
+            <img src="https://gallery.eousercontent.com/192d7152-8402-11f0-8532-6d5bf93bada0%2Fmedia-manager%2F1777961185518-12.png" alt="من هم" />
+          </div>
+          <div class="ef-body">
+            <p class="ef-h">منذ انتهاء اشتراكك — هذا ما فاتك في موشور</p>
+            <p class="ef-p">مرّت أسابيع منذ انتهاء اشتراكك التجريبي. في هذه الفترة رصد موشور:</p>
+            <div class="ef-highlight">
+              • <strong>أكثر من 40 تعييناً وترقيةً</strong> في مؤسسات حكومية وشركات كبرى<br>
+              • تغييرات في <strong>وزارات، صناديق استثمار، وشركات مدرجة</strong><br>
+              • أسماء صعدت وأخرى غادرت — كلها وصلت للمشتركين كل أحد<br>
+              <span style="color:#6b7280; font-size:12px;">كل هذا في الأعداد التي فاتتك منذ انتهاء اشتراكك.</span>
+            </div>
+            <p class="ef-p">الأسبوع القادم سيصدر عدد جديد — هل ستكون من يعرف؟</p>
+            <a href="https://manhom.com/mawshoor-newsletter" class="ef-cta">اشترك الآن ولا تفوّت العدد القادم</a>
+          </div>
+          <div class="ef-footer">إن لم ترغب في استلام هذه الرسائل، إلغاء الاشتراك</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group B -->
+  <div class="email-group">
+    <div class="group-label">
+      <span class="group-badge badge-b">مسار B</span>
+      <span class="group-desc">لم يفتح الإيميل الأول</span>
+    </div>
+
+    <!-- B2 -->
+    <div class="email-card" id="email-B2">
+      <div class="email-card-header" onclick="toggleEmail('preview-B2', this)">
+        <div class="left">
+          <div class="email-meta">
+            <span class="day-badge day-badge-b">اليوم 4</span>
+            <span class="trigger-badge">لم يفتح الإيميل 1</span>
+          </div>
+          <div class="email-subject">هل وصلك إيميلنا؟</div>
+        </div>
+        <button class="toggle-btn">＋</button>
+      </div>
+      <div class="rationale">
+        <div class="rationale-icon">💡</div>
+        <div class="rationale-content">
+          <div class="rationale-label">لماذا هذا الإيميل؟</div>
+          <div class="rationale-goal">الهدف: اختراق حاجز عدم الفتح بعنوان غير تسويقي</div>
+          <div class="rationale-why">من لم يفتح الإيميل الأول قد لا يكون غير مهتم — ربما ضاع في البريد. عنوان "هل وصلك إيميلنا؟" يبدو شخصياً لا تسويقياً، ومعدلات فتحه أعلى بـ 30-40%.</div>
+        </div>
+      </div>
+      <div class="email-preview" id="preview-B2">
+        <div class="email-frame">
+          <div class="ef-logo">
+            <img src="https://gallery.eousercontent.com/192d7152-8402-11f0-8532-6d5bf93bada0%2Fmedia-manager%2F1777961185518-12.png" alt="من هم" />
+          </div>
+          <div class="ef-body">
+            <p class="ef-h">هل وصلك إيميلنا؟</p>
+            <p class="ef-p">أرسلنا لك رسالة قبل أيام بشأن انتهاء اشتراكك في موشور — ربما لم تصلك أو لم تجد وقتاً للاطلاع عليها.</p>
+            <p class="ef-p">باختصار:</p>
+            <div class="ef-highlight">
+              اشتراكك التجريبي انتهى، لكن <strong>المشهد الإداري لا يتوقف.</strong><br><br>
+              كل أحد يصل موشور إلى مشتركيه بأبرز التعيينات والترقيات في المؤسسات السعودية.<br>
+              <span style="color:#6b7280; font-size:12px;">آخر عدد: 14 تغييراً إدارياً في أسبوع واحد.</span>
+            </div>
+            <p class="ef-p">هل تريد الاستمرار معنا؟</p>
+            <a href="https://manhom.com/mawshoor-newsletter" class="ef-cta">اشترك في موشور</a>
+          </div>
+          <div class="ef-footer">إن لم ترغب في استلام هذه الرسائل، إلغاء الاشتراك</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B3 -->
+    <div class="email-card" id="email-B3">
+      <div class="email-card-header" onclick="toggleEmail('preview-B3', this)">
+        <div class="left">
+          <div class="email-meta">
+            <span class="day-badge day-badge-b">اليوم 10</span>
+            <span class="trigger-badge">لم يفتح B2</span>
+          </div>
+          <div class="email-subject">آخر رسالة منّا — بعدها لن نزعجك</div>
+        </div>
+        <button class="toggle-btn">＋</button>
+      </div>
+      <div class="rationale">
+        <div class="rationale-icon">💡</div>
+        <div class="rationale-content">
+          <div class="rationale-label">لماذا هذا الإيميل؟</div>
+          <div class="rationale-goal">الهدف: الإغلاق الاحترامي مع إبقاء الباب مفتوحاً</div>
+          <div class="rationale-why">إخباره صراحةً أن هذه آخر رسالة يبني الثقة ويرفع احتمالية الفتح. من يشترك هنا يكون مقتنعاً حقاً. ومن لا يشترك — نخرجه من الفلو دون إزعاجه.</div>
+        </div>
+      </div>
+      <div class="email-preview" id="preview-B3">
+        <div class="email-frame">
+          <div class="ef-logo">
+            <img src="https://gallery.eousercontent.com/192d7152-8402-11f0-8532-6d5bf93bada0%2Fmedia-manager%2F1777961185518-12.png" alt="من هم" />
+          </div>
+          <div class="ef-body">
+            <p class="ef-h">آخر رسالة منّا — بعدها لن نزعجك</p>
+            <p class="ef-p">احتراماً لوقتك، هذه آخر رسالة نرسلها إليك.</p>
+            <p class="ef-p">إن لم يكن موشور مناسباً لك الآن، نفهم تماماً — ونتمنى لك التوفيق.</p>
+            <div class="ef-highlight">
+              لكن إن كنت لا تزال مهتماً، هذا ما ستجده عند الاشتراك:<br><br>
+              • <strong>نشرة أسبوعية كل أحد</strong> بأبرز التعيينات والترقيات<br>
+              • <strong>تغطية شاملة</strong> للقطاعات الحكومية والخاصة<br>
+              • <strong>إلغاء الاشتراك</strong> في أي وقت دون أي رسوم
+            </div>
+            <p class="ef-p">قرارك الآن أو لاحقاً — الباب مفتوح دائماً.</p>
+            <a href="https://manhom.com/mawshoor-newsletter" class="ef-cta">اشترك في موشور</a>
+          </div>
+          <div class="ef-footer">إن لم ترغب في استلام هذه الرسائل، إلغاء الاشتراك</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggleEmail(previewId, headerEl) {
+    const preview = document.getElementById(previewId);
+    const btn = headerEl.querySelector('.toggle-btn');
+    const isOpen = preview.classList.contains('open');
+    preview.classList.toggle('open', !isOpen);
+    btn.textContent = isOpen ? '＋' : '－';
+  }
+
+  function scrollToEmail(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // auto-open
+    const header = el.querySelector('.email-card-header');
+    const previewId = header.getAttribute('onclick').match(/'([^']+)'/)[1];
+    const preview = document.getElementById(previewId);
+    if (!preview.classList.contains('open')) {
+      header.click();
+    }
+  }
+</script>
+
+</body>
+</html>
