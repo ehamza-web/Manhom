@@ -248,9 +248,19 @@ function sNominees(){
 
   const labels = (p) => {
     const parts = [];
-    if(p.isNew)   parts.push('<span style="background:#fef3c7;color:#b45309;border-radius:100px;padding:2px 8px;font-size:10px;font-weight:700">✦ مرشح جديد</span>');
-    if(!p.isNew)  parts.push('<span style="background:#f1f5f9;color:#475569;border-radius:100px;padding:2px 8px;font-size:10px;font-weight:700">من قائمة 2025</span>');
-    if(p.updated) parts.push('<span style="background:#eff6ff;color:#4169E1;border-radius:100px;padding:2px 8px;font-size:10px;font-weight:700">✓ تم تحديث الملف</span>');
+    // من قائمة 2025: first 3 non-updated, non-new people
+    const list2025 = ['s1','s2','s3'];
+    // مرشح جديد: 4 people
+    const listNew  = ['s4','s5','s6','s7'];
+    // تم تحديث الملف مؤخراً: 3 people (can overlap with above)
+    const listUpd  = ['s8','s9','s10'];
+
+    if(p.isNew || listNew.includes(p.id))
+      parts.push('<span style="background:#fef3c7;color:#b45309;border-radius:100px;padding:2px 10px;font-size:10.5px;font-weight:700">✦ مرشح جديد</span>');
+    else if(list2025.includes(p.id))
+      parts.push('<span style="background:#f1f5f9;color:#475569;border-radius:100px;padding:2px 10px;font-size:10.5px;font-weight:700">من قائمة 2025</span>');
+    if(p.updated || listUpd.includes(p.id))
+      parts.push('<span style="background:#eff6ff;color:#4169E1;border-radius:100px;padding:2px 10px;font-size:10.5px;font-weight:700">✓ تم تحديث الملف مؤخراً</span>');
     return parts.join(' ');
   };
 
@@ -316,10 +326,7 @@ function sNominees(){
           <div style="font-size:14px;font-weight:800;color:#1e293b;margin-bottom:2px">${p.name}</div>
           <div style="font-size:12.5px;color:#64748b;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${p.role}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <span style="font-size:12px;color:#94a3b8">🗳️ ${p.votes.toLocaleString()}</span>
-          ${voteBtn(p)}
-        </div>
+        <div style="flex-shrink:0">${voteBtn(p)}</div>
       </div>`).join('')}
     </div>` : `<div style="text-align:center;padding:64px 0;color:#94a3b8;font-size:15px">لم يتم العثور على شخصية</div>`}
 
