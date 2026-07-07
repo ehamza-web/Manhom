@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>قدرات سورية 2026 — المرشحون</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:#FDFDFD;direction:rtl;color:#1e293b}
+button{font-family:inherit;cursor:pointer}
+a{text-decoration:none;color:inherit}
+
+/* ── Layout ── */
+.page{min-height:100vh;display:flex;flex-direction:column}
+.container{max-width:1100px;margin:0 auto;padding:0 20px;width:100%}
+.container-lg{max-width:1280px;margin:0 auto;padding:0 20px;width:100%}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;font-family:inherit;cursor:pointer;font-weight:700;transition:all .2s}
+.btn-primary{background:#0570de;color:white;border-radius:10px;padding:15px 24px;font-size:15px;width:100%}
+.btn-primary:hover{background:#0461c8}
+.btn-primary:disabled{background:#93c5fd;cursor:not-allowed}
+.btn-ghost{background:transparent;color:#6b7280;border:1px solid #e2e8f0;border-radius:10px;padding:13px 24px;font-size:14px;width:100%;margin-top:8px}
+.btn-blue{background:#2563eb;color:white;border-radius:100px;padding:10px 28px;font-size:14px}
+.btn-blue:hover{background:#1d4ed8}
+.btn-dark{background:#1e293b;color:white;border-radius:100px;padding:9px 20px;font-size:13px}
+
+/* ── Cards ── */
+.card{background:white;border:1px solid #f1f5f9;border-radius:16px;padding:24px;box-shadow:0 1px 2px rgba(0,0,0,.02)}
+
+/* ── Header ── */
+.site-header{background:#96E3FF;border-bottom:1px solid rgba(0,0,0,.05);position:sticky;top:0;z-index:50}
+.header-inner{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;height:72px;gap:8px}
+.logo{font-size:22px;font-weight:900;color:#1e293b;background:none;border:none;padding:0}
+.logo em{color:#4169E1;font-style:normal}
+.nav-btn{background:none;border:none;font-size:15px;font-weight:500;color:#4F4F4F;padding:7px 10px;border-radius:6px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-btn:hover{color:#4169E1;background:rgba(0,0,0,0.05)}
+
+/* ── Dropdown ── */
+.dropdown{position:relative}
+.dd-menu{display:none;position:absolute;top:calc(100% + 6px);right:0;background:white;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14);border:1px solid #e2e8f0;min-width:210px;z-index:300;overflow:hidden}
+.dd-menu.open{display:block}
+.dd-item{display:flex;align-items:center;gap:6px;width:100%;padding:12px 18px;font-size:14px;color:#1e293b;font-weight:500;background:transparent;border:none;font-family:inherit;text-align:right}
+.dd-item:hover{background:#f0f9ff;cursor:pointer}
+
+/* ── Person card ── */
+.person-card{cursor:pointer;background:white;border-radius:12px;overflow:hidden;border:1px solid #f1f5f9;transition:box-shadow .2s,transform .2s}
+.person-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.10);transform:translateY(-2px)}
+.person-card img{width:100%;aspect-ratio:306/353;object-fit:cover;object-position:top;display:block}
+.person-card .pc-info{padding:10px 10px 12px;text-align:center}
+.person-card h3{font-size:13px;font-weight:700;color:#20211F;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;line-height:1.4}
+.person-card p{font-size:11.5px;color:#4F4F4F;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+/* ── Chips ── */
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 10px;border-radius:100px;font-weight:600}
+.chip-blue{background:#eff6ff;color:#2563eb}
+.chip-green{background:#f0fdf4;color:#166534}
+.chip-gray{background:#f1f5f9;color:#475569}
+.chip-amber{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
+
+/* ── VIP card ── */
+.vip-ceo{background:linear-gradient(180deg,#FEF6D8 0%,#F6EDCA 79%,#E0D29E 100%);border-radius:10px;border:1px solid #E0D29E;padding:12px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:box-shadow .2s,transform .2s;margin-bottom:8px}
+.vip-ceo:hover{box-shadow:0 4px 16px rgba(0,0,0,.10);transform:translateY(-1px)}
+
+/* ── Day badge ── */
+.day-badge{display:flex;flex-direction:column;align-items:center;justify-content:center;width:50px;height:50px;border-radius:12px;flex-shrink:0}
+.day-badge .nb{font-size:18px;font-weight:800;line-height:1}
+.day-badge .mb{font-size:9px;margin-top:2px;font-weight:600}
+.day-badge.db-blue{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe}.day-badge.db-blue .nb{color:#1d4ed8}.day-badge.db-blue .mb{color:#2563eb}
+.day-badge.db-green{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac}.day-badge.db-green .nb,.day-badge.db-green .mb{color:#15803d}
+.day-badge.db-amber{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d}.day-badge.db-amber .nb,.day-badge.db-amber .mb{color:#b45309}
+.day-badge.db-red{background:linear-gradient(135deg,#fef2f2,#fecaca);border:1px solid #fca5a5}.day-badge.db-red .nb,.day-badge.db-red .mb{color:#b91c1c}
+
+/* ── Pay inputs ── */
+.pay-input{width:100%;height:48px;padding:0 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;box-sizing:border-box}
+.pay-input:focus{border-color:#0570de}
+
+/* ── KYC progress ── */
+.kyc-progress-bar{height:3px;background:#e5e7eb}
+.kyc-progress-fill{height:100%;background:#0570de;transition:width .4s ease}
+
+/* ── Footer ── */
+.site-footer{background:#f8fafc;border-top:1px solid #e2e8f0;margin-top:48px}
+.footer-grid{max-width:1280px;margin:0 auto;padding:48px 20px 0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-bottom{border-top:1px solid #e2e8f0;padding:16px 20px;text-align:center;font-size:14px;color:#94a3b8}
+.footer-col a{display:block;padding:5px 0;font-size:14px;color:#64748b}
+
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(34,197,94,.18)}50%{box-shadow:0 0 0 7px rgba(34,197,94,.06)}}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+details summary::-webkit-details-marker{display:none}
+details summary{list-style:none}
+details[open] .nom-chevron{transform:rotate(180deg)}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+  </style>
+</head>
+<body>
+<div id="app" style="min-height:100vh;display:flex;flex-direction:column"></div>
+<script>
+const PEOPLE = [
+  {id:'masoud',  name:'مسعود شريف محمود',          role:'الرئيس التنفيذي في "مجموعة إي آند"',                        photo:'https://manhom.majarracdn.cloud/mgmt/images/118419/1772351963/%D9%85%D8%B3%D8%B9%D9%88%D8%AF-%D9%85%D8%AD%D9%85%D8%AF-%D8%B4%D8%B1%D9%8A%D9%81-%D9%85%D8%AD%D9%85%D9%88%D8%AF_306_353.webp', v:'gold', country:'الإمارات'},
+  {id:'dheyab',  name:'الشيخ ذياب بن محمد بن زايد',role:'نائب رئيس "ديوان الرئاسة" للشؤون التنموية',               photo:'https://manhom.majarracdn.cloud/mgmt/images/115905/1746439965/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B0%D9%8A%D8%A7%D8%A8-%D8%A8%D9%86-%D9%85%D8%AD%D9%85%D8%AF-%D8%A8%D9%86-%D8%B2%D8%A7%D9%8A%D8%AF-%D8%A2%D9%84-%D9%86%D9%87%D9%8A%D8%A7%D9%86_306_353.webp', v:'blue', country:'الإمارات'},
+  {id:'badr2',   name:'بدر بن نصيف المنصوري',       role:'نائب الرئيس المساعد للشراكات الحكومية في "الدار العقارية"',photo:'https://manhom.majarracdn.cloud/mgmt/images/592705/%D8%A8%D8%AF%D8%B1-%D8%A8%D9%86-%D9%86%D8%B5%D9%8A%D9%81_306_353.webp', v:'blue', country:'الإمارات'},
+  {id:'fatima',  name:'فاطمة الزهراء الضاوي',       role:'مذيعة أخبار اقتصادية رئيسية لدى "قناة العربية"',          photo:'https://manhom.majarracdn.cloud/mgmt/images/122566/1774862820/%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D8%B6%D8%A7%D9%88%D9%8A_306_353.webp', v:'blue', country:'الإمارات'},
+  {id:'dallas',  name:'دالاس كحيلا',                role:'مؤسس "دالاس استديو"',                                     photo:'https://manhom.majarracdn.cloud/mgmt/images/266106/1775566252/%D8%AF%D8%A7%D9%84%D8%A7%D8%B3-%D9%83%D8%AD%D9%8A%D9%84%D8%A7_306_353.webp', v:'blue', country:'الإمارات'},
+  {id:'ammar',   name:'عمار هيكل',                  role:'الرئيس التنفيذي في "شركة مجرة"',                          photo:'https://manhom.majarracdn.cloud/mgmt/images/108460/1775470390/%D8%B9%D9%85%D8%A7%D8%B1-%D9%87%D9%8A%D9%83%D9%84_306_353.webp', v:'gold', country:'الإمارات'},
+  {id:'wasim',   name:'وسيم إبراهيم',               role:'مؤسس "شركة سكارليت رويال"',                               photo:'https://manhom.majarracdn.cloud/mgmt/images/282550/1771506012/%D9%88%D8%B3%D9%8A%D9%85-%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85_306_353.webp', v:'gold', country:'الإمارات'},
+  {id:'badr',    name:'بدر جعفر',                   role:'رائد أعمال اجتماعية إماراتي',                             photo:'https://manhom.majarracdn.cloud/mgmt/images/107426/1774267527/%D8%A8%D8%AF%D8%B1-%D8%AC%D8%B9%D9%81%D8%B1_306_353.webp', v:'gold', country:'الإمارات'},
+  {id:'ziad',    name:'زياد خلف عبد كريم',           role:'رئيس مجلس إدارة "مصرف التنمية الدولي"',                  photo:'https://manhom.majarracdn.cloud/mgmt/images/180863/1771833427/%D8%B2%D9%8A%D8%A7%D8%AF-%D8%AE%D9%84%D9%81-%D8%B9%D8%A8%D8%AF-%D9%83%D8%B1%D9%8A%D9%85_306_353.webp', v:'gold', country:'العراق'},
+  {id:'saeed2',  name:'سعيد المقبالي',               role:'مؤسس ورئيس مجلس إدارة "بوابة أبوظبي للاستثمار"',         photo:'https://manhom.majarracdn.cloud/mgmt/images/122978/1707204627/%D8%B3%D8%B9%D9%8A%D8%AF-%D8%A7%D9%84%D9%85%D9%82%D8%A8%D8%A7%D9%84%D9%8A_306_353.webp', v:'blue', country:'الإمارات'},
+];
+
+const MAWSHOOR = [
+  {who:'عبد القادر الحصرية', what:'أصبح سفير الجمهورية العربية السورية لدى كندا في', co:'وزارة الخارجية والمغتربين السورية', date:'15 مايو 2026', photo:'https://manhom.majarracdn.cloud/mgmt/images/109283/1743079653/%D8%B9%D8%A8%D8%AF-%D8%A7%D9%84%D9%82%D8%A7%D8%AF%D8%B1-%D8%AD%D8%B5%D8%B1%D9%8A%D8%A9.webp'},
+  {who:'برايان ستيروالت', what:'أصبح رئيس مجلس الإدارة في', co:'شركة جوليوس باير الشرق الأوسط المحدودة', date:'13 مايو 2026', photo:'https://manhom.majarracdn.cloud/mgmt/images/292533/1778680623/%D8%A8%D8%B1%D8%A7%D9%8A%D8%A7%D9%86-%D8%B3%D8%AA%D9%8A%D8%B1%D9%88%D8%A7%D9%84%D8%AA.webp'},
+  {who:'بول بوتون', what:'أصبح عضو مجلس الإدارة في', co:'شركة المتحدة للصناعات التعدينية', date:'13 مايو 2026', photo:'https://manhom.majarracdn.cloud/mgmt/images/292529/1778670515/%D8%A8%D9%88%D9%84-%D8%A8%D9%88%D8%AA%D9%88%D9%86.webp'},
+  {who:'سيرج بيخعازي', what:'أصبح عضو مجلس الإدارة في', co:'شركة المتحدة للصناعات التعدينية', date:'13 مايو 2026', photo:'https://manhom.majarracdn.cloud/mgmt/images/292526/1778669224/%D8%B3%D9%8A%D8%B1%D8%AC-%D8%A8%D9%8A%D8%AE%D8%B9%D8%A7%D8%B2%D9%8A.webp'},
+  {who:'الفضل الحميري', what:'أصبح المدير التنفيذي لقطاع الدعم المؤسسي للمجموعة في', co:'شركة تاكسي دبي', date:'12 مايو 2026', photo:'https://manhom.majarracdn.cloud/mgmt/images/118023/1778747420/%D8%A7%D9%84%D9%81%D8%B6%D9%84-%D8%B9%D9%8A%D8%B3%D9%89-%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%B1%D9%8A.webp'},
+  {who:'نيكولاس سيبويه', what:'أصبح الرئيس التنفيذي للشؤون المالية والتطوير المؤسسي في', co:'شركة أرامكس', date:'12 مايو 2026', photo:'https://manhom.majarracdn.cloud/mgmt/images/292466/1778567579/%D9%86%D9%8A%D9%83%D9%88%D9%84%D8%A7%D8%B3-%D8%B3%D9%8A%D8%A8%D9%88%D9%8A%D9%87.webp'},
+];
+
+const S = {
+  screen:'home',
+  personId:'masoud',
+  plan:{title:'الأساسية',price:300,cycle:'yearly'},
+  profileTab:'bio',
+  searchView:'grid',
+  mawshoorSub:false,
+  addStep:0,
+  nominateQ:'',
+  // checkout
+  checkoutSca:false,
+  // verify
+  verifyStep:'why',  // why | docType | scanDoc | selfie | done
+  verifyDoc:'passport',
+  verifyMode:'camera',
+  subTab:'manhom',
+  syriaQ:'',
+  syriaFilter:'all',
+};
+
+function go(screen, extra){
+  S.screen = screen;
+  if(extra) Object.assign(S, extra);
+  if(screen==='checkout'){ S.checkoutSca=false; }
+  if(screen==='verify'){   S.verifyStep='why'; }
+  window.scrollTo(0,0);
+  draw();
+}
+
+const BD = "M45.99 24L41.11 18.42L41.79 11.04L34.57 9.4L30.79 3L23.99 5.92L17.19 3L13.41 9.38L6.19 11L6.87 18.4L1.99 24L6.87 29.58L6.19 36.98L13.41 38.62L17.19 45L23.99 42.06L30.79 44.98L34.57 38.6L41.79 36.96L41.11 29.58L45.99 24ZM20.17 33.44L12.57 25.82L15.53 22.86L20.17 27.52L31.87 15.78L34.83 18.74L20.17 33.44Z";
+function badge(type='blue', size=16){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" fill="none" style="flex-shrink:0;vertical-align:middle"><path d="${BD}" fill="${type==='gold'?'#D4A017':'#4169E3'}"/></svg>`;
+}
+function pcard(p, onclick){
+  return `<div class="person-card" onclick="${onclick}">
+    <img src="${p.photo}" alt="${p.name}" onerror="this.src='https://picsum.photos/seed/${p.id}/306/353'">
+    <div class="pc-info">
+      <h3>${p.name}${p.v?badge(p.v,14):''}</h3>
+      <p>${p.role}</p>
+    </div>
+  </div>`;
+}
+
+
+const SYRIA_PEOPLE = [
+  {id:'s1', name:'أحمد الشرع',       role:'رئيس الحكومة السورية',              photo:'https://manhom.majarracdn.cloud/mgmt/images/122978/1707204627/%D8%B3%D8%B9%D9%8A%D8%AF-%D8%A7%D9%84%D9%85%D9%82%D8%A8%D8%A7%D9%84%D9%8A_306_353.webp',  votes:1842, firstChar:'أ', updated:true,  achievement:'تولّى رئاسة الحكومة السورية الانتقالية وأطلق خارطة طريق للإصلاح.'},
+  {id:'s2', name:'محمد البشير',       role:'رئيس مجلس الوزراء',                 photo:'https://manhom.majarracdn.cloud/mgmt/images/108460/1775470390/%D8%B9%D9%85%D8%A7%D8%B1-%D9%87%D9%8A%D9%83%D9%84_306_353.webp',  votes:1620, firstChar:'م', updated:true,  achievement:'قاد أول جلسة لمجلس الوزراء في دمشق وأعلن خطة إعادة إعمار.'},
+  {id:'s3', name:'غسان إبراهيم',      role:'وزير الإعلام',                       photo:'https://manhom.majarracdn.cloud/mgmt/images/266106/1775566252/%D8%AF%D8%A7%D9%84%D8%A7%D8%B3-%D9%83%D8%AD%D9%8A%D9%84%D8%A7_306_353.webp',  votes:1430, firstChar:'غ', updated:false, achievement:''},
+  {id:'s4', name:'ياسر العظمة',       role:'ممثل وكاتب سوري',                   photo:'https://manhom.majarracdn.cloud/mgmt/images/266106/1775566252/%D8%AF%D8%A7%D9%84%D8%A7%D8%B3-%D9%83%D8%AD%D9%8A%D9%84%D8%A7_306_353.webp',  votes:1280, firstChar:'ي', updated:true,  achievement:'أطلق مبادرة ثقافية لإعادة توثيق التراث السوري رقمياً.'},
+  {id:'s5', name:'آلاء الدين',        role:'رائدة أعمال وناشطة',                photo:'https://manhom.majarracdn.cloud/mgmt/images/122978/1707204627/%D8%B3%D8%B9%D9%8A%D8%AF-%D8%A7%D9%84%D9%85%D9%82%D8%A8%D8%A7%D9%84%D9%8A_306_353.webp',  votes:1150, firstChar:'آ', updated:true,  achievement:'أسست صندوق دعم لريادة أعمال الشباب السوري في المهجر.'},
+  {id:'s6', name:'ياسين الحاج صالح', role:'كاتب ومثقف سوري',                   photo:'https://manhom.majarracdn.cloud/mgmt/images/122566/1774862820/%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D8%B6%D8%A7%D9%88%D9%8A_306_353.webp',  votes:1050, firstChar:'ي', updated:false, achievement:''},
+  {id:'s7', name:'أحمد العودة',       role:'قيادي في الجنوب السوري',             photo:'https://manhom.majarracdn.cloud/mgmt/images/108460/1775470390/%D8%B9%D9%85%D8%A7%D8%B1-%D9%87%D9%8A%D9%83%D9%84_306_353.webp',  votes:980,  firstChar:'أ', updated:false, achievement:''},
+  {id:'s8', name:'محمد الجولاني',     role:'قائد عسكري وسياسي',                 photo:'https://manhom.majarracdn.cloud/mgmt/images/180863/1771833427/%D8%B2%D9%8A%D8%A7%D8%AF-%D8%AE%D9%84%D9%81-%D8%B9%D8%A8%D8%AF-%D9%83%D8%B1%D9%8A%D9%85_306_353.webp',  votes:920,  firstChar:'م', updated:true,  achievement:'أعلن خارطة طريق لدمج الفصائل في مؤسسة أمنية موحدة.'},
+  {id:'s9', name:'آيات الرمحي',       role:'ناشطة حقوق الإنسان',               photo:'https://manhom.majarracdn.cloud/mgmt/images/282550/1771506012/%D9%88%D8%B3%D9%8A%D9%85-%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85_306_353.webp',  votes:870,  firstChar:'آ', updated:true,  achievement:'وثّقت أكثر من 2000 حالة انتهاك وقدّمتها لمحكمة الجنايات الدولية.'},
+  {id:'s10',name:'غادة جمعاوي',       role:'مديرة الهلال الأحمر السوري',        photo:'https://manhom.majarracdn.cloud/mgmt/images/592705/%D8%A8%D8%AF%D8%B1-%D8%A8%D9%86-%D9%86%D8%B5%D9%8A%D9%81_306_353.webp', votes:820,  firstChar:'غ', updated:false, achievement:''},
+  {id:'s11',name:'محمود حمدان',       role:'رجل أعمال سوري بارز',              photo:'https://manhom.majarracdn.cloud/mgmt/images/107426/1774267527/%D8%A8%D8%AF%D8%B1-%D8%AC%D8%B9%D9%81%D8%B1_306_353.webp', votes:780,  firstChar:'م', updated:true,  achievement:'ضخّ 50 مليون دولار في مشاريع إعادة إعمار حلب.'},
+  {id:'s12',name:'آيه العيد',         role:'إعلامية وصحفية',                    photo:'https://manhom.majarracdn.cloud/mgmt/images/118419/1772351963/%D9%85%D8%B3%D8%B9%D9%88%D8%AF-%D9%85%D8%AD%D9%85%D8%AF-%D8%B4%D8%B1%D9%8A%D9%81-%D9%85%D8%AD%D9%85%D9%88%D8%AF_306_353.webp', votes:740,  firstChar:'آ', updated:false, achievement:''},
+  {id:'s13',name:'أحمد الطعان',       role:'فقيه وعالم دين',                    photo:'https://manhom.majarracdn.cloud/mgmt/images/115905/1746439965/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B0%D9%8A%D8%A7%D8%A8-%D8%A8%D9%86-%D9%85%D8%AD%D9%85%D8%AF-%D8%A8%D9%86-%D8%B2%D8%A7%D9%8A%D8%AF-%D8%A2%D9%84-%D9%86%D9%87%D9%8A%D8%A7%D9%86_306_353.webp', votes:700,  firstChar:'أ', updated:false, achievement:''},
+  {id:'s14',name:'ياسر إبراهيم',      role:'مدير تنفيذي في قطاع التقنية',       photo:'https://manhom.majarracdn.cloud/mgmt/images/115905/1746439965/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%B0%D9%8A%D8%A7%D8%A8-%D8%A8%D9%86-%D9%85%D8%AD%D9%85%D8%AF-%D8%A8%D9%86-%D8%B2%D8%A7%D9%8A%D8%AF-%D8%A2%D9%84-%D9%86%D9%87%D9%8A%D8%A7%D9%86_306_353.webp', votes:660,  firstChar:'ي', updated:true,  achievement:'أطلق منصة لتوثيق ملكية الأراضي السورية بالبلوك تشين.'},
+  {id:'s15',name:'منال عبد الله',     role:'مؤسسة منظمة إغاثية',               photo:'https://manhom.majarracdn.cloud/mgmt/images/592705/%D8%A8%D8%AF%D8%B1-%D8%A8%D9%86-%D9%86%D8%B5%D9%8A%D9%81_306_353.webp', votes:620,  firstChar:'م', updated:false, achievement:''},
+  {id:'s16',name:'أيمن الأصفري',      role:'فنان تشكيلي سوري عالمي',            photo:'https://manhom.majarracdn.cloud/mgmt/images/282550/1771506012/%D9%88%D8%B3%D9%8A%D9%85-%D8%A7%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85_306_353.webp', votes:580,  firstChar:'أ', updated:true,  achievement:'معرضه "سوريا تتنفس" جال 12 عاصمة عالمية وحصد 3 جوائز دولية.'},
+  {id:'s17',name:'رنا عباس',          role:'ناشطة في مجال اللجوء',              photo:'https://manhom.majarracdn.cloud/mgmt/images/107426/1774267527/%D8%A8%D8%AF%D8%B1-%D8%AC%D8%B9%D9%81%D8%B1_306_353.webp', votes:540,  firstChar:'ر', updated:false, achievement:''},
+  {id:'s18',name:'فراس طلاس',         role:'رجل أعمال في قطاع الطاقة',          photo:'https://manhom.majarracdn.cloud/mgmt/images/180863/1771833427/%D8%B2%D9%8A%D8%A7%D8%AF-%D8%AE%D9%84%D9%81-%D8%B9%D8%A8%D8%AF-%D9%83%D8%B1%D9%8A%D9%85_306_353.webp', votes:510,  firstChar:'ف', updated:false, achievement:''},
+  {id:'s19',name:'خالد الصالح',       role:'محامٍ وحقوقي',                      photo:'https://manhom.majarracdn.cloud/mgmt/images/118419/1772351963/%D9%85%D8%B3%D8%B9%D9%88%D8%AF-%D9%85%D8%AD%D9%85%D8%AF-%D8%B4%D8%B1%D9%8A%D9%81-%D9%85%D8%AD%D9%85%D9%88%D8%AF_306_353.webp', votes:480,  firstChar:'خ', updated:false, achievement:''},
+  {id:'s20',name:'ديمة القسي',        role:'طبيبة وناشطة صحية',                photo:'https://manhom.majarracdn.cloud/mgmt/images/122566/1774862820/%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D8%B6%D8%A7%D9%88%D9%8A_306_353.webp', votes:450,  firstChar:'د', updated:true,  achievement:'أسست أول شبكة عيادات متنقلة في الشمال السوري تخدم 40,000 مريض شهرياً.'},
+];
+
+if(!window.syriaVotes) window.syriaVotes = {};
+
+
+function voteSyria(id){
+  if(window.syriaVotes && window.syriaVotes[id]){ showToastSyria('لقد رشّحت هذه الشخصية مسبقاً ✓'); return; }
+  if(!window.syriaVotes) window.syriaVotes = {};
+  window.syriaVotes[id] = true;
+  const person = SYRIA_PEOPLE.find(x=>x.id===id);
+  if(person) person.votes++;
+  SYRIA_PEOPLE.sort((a,b)=>b.votes-a.votes);
+  draw();
+  showToastSyria('تم ترشيحك بنجاح! 🎉');
+}
+
+function showToastSyria(msg){
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#1e293b;color:white;padding:14px 28px;border-radius:100px;font-size:14px;font-weight:600;font-family:"IBM Plex Sans Arabic",sans-serif;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:toastIn .3s ease;white-space:nowrap';
+  t.innerHTML = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 3000);
+}
+
+
+function header(){
+  return `<header class="site-header">
+  <div class="header-inner">
+    <button class="logo btn" onclick="void(0)">من<em>هم</em></button>
+    <div style="flex:1;text-align:center">
+      <span style="font-size:15px;font-weight:700;color:#1e293b">قدرات سورية 2026 — المرشحون</span>
+    </div>
+    <div style="width:120px"></div>
+  </div>
+</header>`;
+}
+function footer(){ return ''; }
+function toggleDD(){}
+function closeDD(){}
+
+
+
+function sNominees(){
+  const q = S.syriaQ || '';
+  const filterChar = S.syriaFilter || 'all';
+  const allCandidates = [...SYRIA_PEOPLE, ...(window.syriaNewNominees||[])];
+  const chars = [...new Set(allCandidates.map(p=>p.firstChar))].sort((a,b)=>a.localeCompare(b,'ar'));
+
+  let list = [...allCandidates];
+  if(q) list = list.filter(p=>p.name.includes(q)||p.role.includes(q));
+  if(filterChar !== 'all') list = list.filter(p=>p.firstChar===filterChar);
+
+  const voteBtn = (p) => {
+    const voted = window.syriaVotes && window.syriaVotes[p.id];
+    return `<button onclick="${voted ? `showShareNominateModal('${p.name}')` : `voteSyria('${p.id}')`}" style="background:${voted?'#16a34a':'#4169E1'};color:white;border:none;border-radius:100px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0">
+      ${voted?'🔗 شارك':'رشّح للقائمة 2026'}
+    </button>`;
+  };
+
+  const labels = (p) => {
+    const parts = [];
+    if(p.isNew)   parts.push('<span style="background:#fef3c7;color:#b45309;border-radius:100px;padding:2px 8px;font-size:10px;font-weight:700">✦ مرشح جديد</span>');
+    if(!p.isNew)  parts.push('<span style="background:#f1f5f9;color:#475569;border-radius:100px;padding:2px 8px;font-size:10px;font-weight:700">من قائمة 2025</span>');
+    if(p.updated) parts.push('<span style="background:#eff6ff;color:#4169E1;border-radius:100px;padding:2px 8px;font-size:10px;font-weight:700">✓ تم تحديث الملف</span>');
+    return parts.join(' ');
+  };
+
+  return `
+  ${header()}
+
+  <!-- HERO -->
+  <section style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);padding:56px 20px 44px;text-align:center;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;opacity:0.04;background:repeating-linear-gradient(45deg,white 0,white 1px,transparent 0,transparent 50%);background-size:20px 20px;pointer-events:none"></div>
+    <div style="max-width:760px;margin:0 auto;position:relative">
+      <h1 style="font-size:36px;font-weight:900;color:white;margin-bottom:16px;line-height:1.3">ساهم في صياغة قائمة قدرات سورية لعام 2026</h1>
+      <p style="font-size:15px;color:rgba(255,255,255,0.85);margin-bottom:12px">
+        الإدراج في قائمة قدرات سورية 2026 سيتم وفقاً لثلاثة معايير:
+      </p>
+      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:24px">
+        ${['الملف العام','الإنجاز خلال العام الفائت','تصويت الجمهور'].map((m,i)=>`<div style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:100px;padding:7px 18px;font-size:13px;font-weight:700;color:white">${i+1}. ${m}</div>`).join('')}
+      </div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:16px 22px;max-width:520px;margin:0 auto;text-align:right">
+        <p style="font-size:14px;color:rgba(255,255,255,0.9);font-weight:700;margin-bottom:8px">إذا ورد اسمك في قائمة 2025، حدّث ملفك:</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.72);margin-bottom:5px">• لزيادة فرصك في الظهور في قائمة 2026</p>
+        <p style="font-size:13px;color:rgba(255,255,255,0.72)">• لزيادة فرصك في الحصول على تصويت الجمهور</p>
+      </div>
+    </div>
+  </section>
+
+  <main style="flex:1;max-width:1000px;margin:0 auto;padding:32px 20px;width:100%">
+
+    <!-- Title + Add button -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1 style="font-size:26px;font-weight:900;color:#1e293b;margin-bottom:4px">المرشحون حتى الآن</h1>
+        <p style="font-size:13.5px;color:#64748b">${allCandidates.length} مرشح · رشّح من تراه يستحق البقاء في قائمة قدرات سورية 2026</p>
+      </div>
+      <button onclick="showNominateSyriaModal()" style="display:inline-flex;align-items:center;gap:7px;background:#22c55e;color:white;border:none;border-radius:100px;padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        أضف مرشحاً لم تعثر عليه
+      </button>
+    </div>
+
+    <!-- Search -->
+    <div style="background:white;border:1.5px solid #e2e8f0;border-radius:100px;height:48px;display:flex;align-items:center;padding:0 8px 0 16px;gap:8px;margin-bottom:20px">
+      <button onclick="draw()" style="background:#4169E1;color:white;border:none;border-radius:100px;height:34px;padding:0 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0">بحث</button>
+      <input value="${q}" oninput="S.syriaQ=this.value;S.syriaFilter='all';draw()" placeholder="ابحث ضمن المرشحين..." style="flex:1;height:100%;border:none;outline:none;background:transparent;font-size:14px;font-family:inherit;text-align:right">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+
+    <!-- Filter -->
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:20px">
+      <button onclick="S.syriaFilter='all';S.syriaQ='';draw()" style="background:${filterChar==='all'?'#4169E1':'white'};color:${filterChar==='all'?'white':'#475569'};border:1px solid ${filterChar==='all'?'#4169E1':'#e2e8f0'};border-radius:100px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">الكل (${allCandidates.length})</button>
+      ${chars.map(ch=>`<button onclick="S.syriaFilter='${ch}';S.syriaQ='';draw()" style="background:${filterChar===ch?'#4169E1':'white'};color:${filterChar===ch?'white':'#475569'};border:1px solid ${filterChar===ch?'#4169E1':'#e2e8f0'};border-radius:100px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">${ch}</button>`).join('')}
+    </div>
+
+    <div style="font-size:12px;color:#94a3b8;margin-bottom:12px">${list.length} شخصية</div>
+
+    <!-- List -->
+    ${list.length ? `
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${list.map(p=>`
+      <div style="background:white;border-radius:12px;border:1px solid ${p.updated?'#dbeafe':p.isNew?'#fef3c7':'#f1f5f9'};padding:14px 16px;display:flex;align-items:center;gap:16px;transition:box-shadow .15s" onmouseover="this.style.boxShadow='0 3px 12px rgba(0,0,0,0.07)'" onmouseout="this.style.boxShadow=''">
+        <img src="${p.photo}" style="width:52px;height:62px;border-radius:8px;object-fit:cover;object-position:top;flex-shrink:0;display:block">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px">${labels(p)}</div>
+          <div style="font-size:14px;font-weight:800;color:#1e293b;margin-bottom:2px">${p.name}</div>
+          <div style="font-size:12.5px;color:#64748b;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${p.role}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span style="font-size:12px;color:#94a3b8">🗳️ ${p.votes.toLocaleString()}</span>
+          ${voteBtn(p)}
+        </div>
+      </div>`).join('')}
+    </div>` : `<div style="text-align:center;padding:64px 0;color:#94a3b8;font-size:15px">لم يتم العثور على شخصية</div>`}
+
+  </main>`;
+}
+
+
+const SCREENS = { nominees: sNominees };
+// S already declared above
+function go(screen, extra){ if(extra) Object.assign(S, extra); draw(); }
+function draw(){
+  document.getElementById('app').innerHTML = (sNominees)();
+}
+draw();
+
+</script>
+</body>
+</html>
