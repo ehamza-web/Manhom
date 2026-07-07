@@ -239,6 +239,11 @@ function sNominees(){
   if(q) list = list.filter(p=>p.name.includes(q)||p.role.includes(q));
   if(filterChar !== 'all') list = list.filter(p=>p.firstChar===filterChar);
 
+  const PAGE_SIZE = 8;
+  const page = S.syriaPage || 1;
+  const totalPages = Math.ceil(list.length / PAGE_SIZE);
+  const paged = list.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
+
   const voteBtn = (p) => {
     const voted = window.syriaVotes && window.syriaVotes[p.id];
     return `<button onclick="${voted ? `showShareNominateModal('${p.name}')` : `voteSyria('${p.id}')`}" style="background:${voted?'#16a34a':'#4169E1'};color:white;border:none;border-radius:100px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0">
@@ -336,17 +341,17 @@ function sNominees(){
     <!-- Search -->
     <div style="background:white;border:1.5px solid #e2e8f0;border-radius:100px;height:48px;display:flex;align-items:center;padding:0 8px 0 16px;gap:8px;margin-bottom:20px">
       <button onclick="draw()" style="background:#4169E1;color:white;border:none;border-radius:100px;height:34px;padding:0 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0">بحث</button>
-      <input value="${q}" oninput="S.syriaQ=this.value;S.syriaFilter='all';draw()" placeholder="ابحث ضمن المرشحين..." style="flex:1;height:100%;border:none;outline:none;background:transparent;font-size:14px;font-family:inherit;text-align:right">
+      <input value="${q}" oninput="S.syriaQ=this.value;S.syriaFilter='all';S.syriaPage=1;draw()" placeholder="ابحث ضمن المرشحين..." style="flex:1;height:100%;border:none;outline:none;background:transparent;font-size:14px;font-family:inherit;text-align:right">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </div>
 
-    <div style="font-size:12px;color:#94a3b8;margin-bottom:12px">${list.length} شخصية</div>
+    <div style="font-size:12px;color:#94a3b8;margin-bottom:12px">${list.length} شخصية · صفحة ${page} من ${totalPages}</div>
 
     <!-- List -->
-    ${list.length ? `
-    <div style="display:flex;flex-direction:column;gap:8px">
-      ${list.map(p=>`
-      <div style="background:white;border-radius:12px;border:1px solid ${p.updated?'#dbeafe':p.isNew?'#fef3c7':'#f1f5f9'};padding:14px 16px;display:flex;align-items:center;gap:16px;transition:box-shadow .15s" onmouseover="this.style.boxShadow='0 3px 12px rgba(0,0,0,0.07)'" onmouseout="this.style.boxShadow=''">
+    ${paged.length ? `
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:32px">
+      ${paged.map(p=>`
+      <div style="background:white;border-radius:12px;border:1px solid ${p.updated||['s8','s9','s10'].includes(p.id)?'#dbeafe':['s4','s5','s6','s7'].includes(p.id)?'#fef3c7':'#f1f5f9'};padding:14px 16px;display:flex;align-items:center;gap:16px;transition:box-shadow .15s" onmouseover="this.style.boxShadow='0 3px 12px rgba(0,0,0,0.07)'" onmouseout="this.style.boxShadow=''">
         <img src="${p.photo}" style="width:52px;height:62px;border-radius:8px;object-fit:cover;object-position:top;flex-shrink:0;display:block">
         <div style="flex:1;min-width:0">
           <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px">${labels(p)}</div>
@@ -355,7 +360,21 @@ function sNominees(){
         </div>
         <div style="flex-shrink:0">${voteBtn(p)}</div>
       </div>`).join('')}
-    </div>` : `<div style="text-align:center;padding:64px 0;color:#94a3b8;font-size:15px">لم يتم العثور على شخصية</div>`}
+    </div>
+
+    <!-- Pagination -->
+    ${totalPages > 1 ? `
+    <div style="display:flex;align-items:center;justify-content:center;gap:6px;padding-bottom:40px">
+      <button onclick="S.syriaPage=${Math.max(1,page-1)};draw()" ${page===1?'disabled':''} style="background:${page===1?'#f1f5f9':'white'};color:${page===1?'#94a3b8':'#475569'};border:1px solid ${page===1?'#e2e8f0':'#cbd5e1'};border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:${page===1?'default':'pointer'};font-family:inherit">
+        &larr; السابق
+      </button>
+      ${Array.from({length:totalPages},(_, i)=>i+1).map(n=>`
+      <button onclick="S.syriaPage=${n};draw()" style="background:${n===page?'#4169E1':'white'};color:${n===page?'white':'#475569'};border:1px solid ${n===page?'#4169E1':'#e2e8f0'};border-radius:10px;width:38px;height:38px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">${n}</button>`).join('')}
+      <button onclick="S.syriaPage=${Math.min(totalPages,page+1)};draw()" ${page===totalPages?'disabled':''} style="background:${page===totalPages?'#f1f5f9':'white'};color:${page===totalPages?'#94a3b8':'#475569'};border:1px solid ${page===totalPages?'#e2e8f0':'#cbd5e1'};border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:${page===totalPages?'default':'pointer'};font-family:inherit">
+        التالي &rarr;
+      </button>
+    </div>` : ''}
+    ` : `<div style="text-align:center;padding:64px 0;color:#94a3b8;font-size:15px">لم يتم العثور على شخصية</div>`}
 
   </main>`;
 }
