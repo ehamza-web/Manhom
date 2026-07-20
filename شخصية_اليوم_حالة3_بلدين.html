@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ملفكم سيُنوّر كل صفحات من هم قريباً</title>
+    <!-- تضمين الخطوط لضمان أفضل عرض ممكن في جيميل -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        table { border-collapse: collapse !important; }
+
+        body {
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            background-color: #f4f7f9;
+            font-family: 'Dubai', 'Cairo', Tahoma, Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 10px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e1e8ed;
+        }
+
+        /* Header Section */
+        .header { background-color: #a4e1ff; padding: 25px; text-align: center; }
+        .logo { width: 120px; max-width: 120px; height: auto; display: inline-block; }
+
+        .header-tagline-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+            color: #1e293b;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .verified-badge {
+            width: 20px;
+            height: 20px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        /* Banner Section */
+        .banner {
+            background-color: #f0f9ff;
+            padding: 12px;
+            text-align: center;
+            color: #0d6efd;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px;
+            border-radius: 8px;
+            border: 1px solid #bae6fd;
+        }
+
+        /* Content Section */
+        .content { padding: 10px 30px 30px 30px; text-align: center; color: #333333; line-height: 1.6; }
+
+        .main-text { font-size: 16px; margin-bottom: 10px; }
+        .location-text { font-size: 16px; font-weight: 400; color: #475569; margin-bottom: 15px; display: block; }
+        .feature-box { background-color: #f8fafc; border-right: 4px solid #facc15; padding: 15px; margin: 20px 0; text-align: right; font-size: 15px; color: #475569; }
+
+        .cta-button {
+            background-color: #0d6efd;
+            color: #ffffff !important;
+            padding: 12px 35px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* Footer Section */
+        .footer-wrapper {
+            padding: 25px 20px;
+            text-align: center;
+            background-color: #ffffff;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .footer-team { font-weight: 400; font-size: 14px; color: #475569; margin-bottom: 20px; }
+
+        .address-box {
+            background-color: #f4f9ff;
+            border-radius: 12px;
+            padding: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .address-line { font-weight: 700; font-size: 14px; color: #334155; margin-bottom: 5px; line-height: 1.4; }
+        .copyright-text { font-weight: 400; font-size: 12px; color: #64748b; margin-top: 10px; }
+
+        @media only screen and (max-width: 600px) {
+            .container { width: 100% !important; margin: 0 !important; border-radius: 0 !important; }
+            .content { padding: 20px !important; }
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <div class="container">
+            <!-- الهيدر -->
+            <div class="header">
+                <a href="https://manhom.com" target="_blank">
+                    <img src="https://manhom.com/asset/img/webp/logo.webp" alt="من هم؟" class="logo">
+                </a>
+                <div class="header-tagline-container">
+                    <svg class="verified-badge" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.5 12L20.35 9.55L20.62 6.3L17.44 5.58L15.81 2.8L12.5 4.22L9.19 2.8L7.56 5.58L4.38 6.3L4.65 9.55L2.5 12L4.65 14.45L4.38 17.7L7.56 18.42L9.19 21.2L12.5 19.78L15.81 21.2L17.44 18.42L20.62 17.7L20.35 14.45L22.5 12Z" fill="#3B82F6"/>
+                        <path d="M10 12L12 14L16 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>منصة الحضور العربي الموثق</span>
+                </div>
+            </div>
+
+            <!-- العنوان -->
+            <div class="banner">
+                ملفكم سيُنوّر كل صفحات من هم قريباً
+            </div>
+
+            <!-- المحتوى -->
+            <div class="content">
+                <p class="main-text">
+                    يسرنا إعلامكم بأنه تم اختيار ملفكم الشخصي ليظهر ضمن <strong>"شخصية اليوم"</strong> بتاريخ
+                    <strong style="color:#0d6efd;">{{تاريخ_الظهور}}</strong>
+                </p>
+                <!-- الحالة 3: الجنسية تختلف عن الإقامة -> يُذكر البلدان معاً -->
+                <span class="location-text">لكل زوار من هم داخل الإمارات العربية المتحدة ولبنان.</span>
+
+                <div class="feature-box">
+                    هذه الميزة الحصرية هي جزء من مزايا عضويتكم الموثقة لدينا، لتعزيز ظهوركم أمام مجتمع من هم الواسع.
+                </div>
+
+                <p class="main-text" style="font-size: 14px; color: #64748b;">
+                    إذا كنتم ترغبون في تحديث بيانات ملفكم أو لديكم أي استفسار، يمكنكم الرد مباشرة على هذا البريد الإلكتروني وسيسعدنا التواصل معكم.
+                </p>
+
+                <br>
+                <a href="https://manhom.com" class="cta-button" target="_blank">لتصفح ملفكم الشخصي</a>
+            </div>
+
+            <!-- الفوتر -->
+            <div class="footer-wrapper">
+                <div class="footer-team">فريق عمل من هم</div>
+
+                <div class="address-box">
+                    <div class="address-line">
+                        عنواننا: مجرة، شارع أنس بن مالك، الرياض، المملكة العربية السعودية
+                    </div>
+                    <div class="copyright-text">
+                        جميع الحقوق محفوظة لمنصة من هم © 2026
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+</body>
+</html>
