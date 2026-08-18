@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>من هم – صفحة الشخصية</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --primary-blue: #2563eb;
+  --primary-dark: #0f2f8c;
+  --bg-main: #ffffff;
+  --bg-subtle: #f8fafc;
+  --bg-divider: #f1f5f9;
+  --text-main: #0f172a;
+  --text-sub: #334155;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --accent-gold: #fde68a;
+  --accent-gold-dark: #f59e0b;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #0b1329;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  color: var(--text-main);
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.device-container {
+  position: relative;
+  width: 100%;
+  max-width: 410px;
+  height: 100vh;
+  max-height: 870px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.phone-hardware {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #1e293b;
+  border-radius: 48px;
+  padding: 10px;
+  box-shadow: 
+    0 0 0 2px #334155,
+    0 0 0 5px #0f172a,
+    0 25px 60px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.phone-hardware::before {
+  content: '';
+  position: absolute;
+  top: 110px;
+  right: -3px;
+  width: 3px;
+  height: 55px;
+  background: #475569;
+  border-radius: 2px 0 0 2px;
+}
+
+.phone-hardware::after {
+  content: '';
+  position: absolute;
+  top: 100px;
+  left: -3px;
+  width: 3px;
+  height: 40px;
+  background: #475569;
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 50px 0 #475569;
+}
+
+.phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 38px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-status-bar {
+  height: 44px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  z-index: 50;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.status-time {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.2px;
+  width: 50px;
+}
+
+.dynamic-island {
+  width: 105px;
+  height: 24px;
+  background: #000000;
+  border-radius: 20px;
+  margin: 0 auto;
+}
+
+.status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #0f172a;
+  width: 50px;
+  justify-content: flex-end;
+}
+
+.battery-icon {
+  width: 20px;
+  height: 10px;
+  border: 1.5px solid #0f172a;
+  border-radius: 3px;
+  padding: 1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.battery-icon::after {
+  content: '';
+  position: absolute;
+  right: -3.5px;
+  width: 2px;
+  height: 4px;
+  background: #0f172a;
+  border-radius: 0 1px 1px 0;
+}
+
+.battery-level {
+  width: 75%;
+  height: 100%;
+  background: #0f172a;
+  border-radius: 1px;
+}
+
+.phone-home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130px;
+  height: 4px;
+  background: #0f172a;
+  border-radius: 4px;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--bg-divider);
+  background: #ffffff;
+  flex-shrink: 0;
+  z-index: 40;
+}
+
+.icon-btn {
+  border: none;
+  background: none;
+  color: #1e293b;
+  padding: 6px;
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.icon-btn:active {
+  background-color: var(--bg-divider);
+}
+
+.brand-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--primary-blue);
+  cursor: pointer;
+}
+
+.brand-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary-blue);
+}
+
+.mobile-app-content {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 120px;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+.profile-page-view {
+  width: 100%;
+  display: block;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.profile-page-view.hidden {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0.4; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-spacer {
+  height: 8px;
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--bg-divider);
+  border-bottom: 1px solid var(--bg-divider);
+}
+
+.profile-card {
+  padding: 14px;
+  background: #fff;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.profile-name {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.verified-icon {
+  color: var(--primary-blue);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.profile-role {
+  font-size: 12px;
+  color: #1e293b;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.profile-meta-list {
+  font-size: 11px;
+  color: var(--text-sub);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 4px;
+}
+
+.profile-meta-label {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.social-links a {
+  color: var(--text-muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  color: var(--primary-blue);
+}
+
+.avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.avatar-frame {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--bg-divider);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-update-btn {
+  font-size: 10px;
+  color: var(--primary-blue);
+  font-weight: 700;
+  margin-top: 6px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+
+.action-buttons {
+  padding: 0 14px 14px;
+  background: #fff;
+  display: flex;
+  gap: 8px;
+}
+
+.btn-primary {
+  flex: 1;
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--primary-blue);
+  color: #fff;
+  font-family: inherit;
+}
+
+.btn-primary.following {
+  background: #10b981;
+}
+
+.btn-secondary {
+  flex: 1;
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--bg-divider);
+  color: #1e293b;
+  font-family: inherit;
+}
+
+.bio-section {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+}
+
+.bio-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.bio-subtitle {
+  font-size: 10px;
+  color: var(--text-light);
+  margin: 1px 0 0;
+}
+
+.bio-text {
+  font-size: 11.5px;
+  color: var(--text-sub);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.expandable-content.collapsed {
+  display: none;
+}
+
+.show-more-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--primary-blue);
+  font-weight: 700;
+  text-decoration: underline;
+  font-size: 11px;
+  padding: 0 2px;
+  font-family: inherit;
+}
+
+.user-submitted-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.tag-badge {
+  background: var(--bg-divider);
+  color: var(--text-sub);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid var(--bg-divider);
+  margin-bottom: 10px;
+}
+
+.tab-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 6px 12px 8px;
+  font-size: 12px;
+  font-family: inherit;
+}
+
+.horizontal-scroll-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.related-card {
+  width: 95px;
+  flex-shrink: 0;
+  background: #fff;
+  border: 1px solid var(--bg-divider);
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,.02);
+  cursor: pointer;
+}
+
+.related-card img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 0 auto 6px;
+  display: block;
+}
+
+.list-card {
+  background: #fff;
+  border: 1px solid var(--bg-divider);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rank-badge {
+  background: #dc2626;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.list-visual-box {
+  width: 60px;
+  height: 48px;
+  background: #0f172a;
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  padding: 2px;
+  text-align: center;
+}
+
+.floating-fab {
+  position: absolute;
+  bottom: 22px;
+  left: 12px;
+  right: 12px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: linear-gradient(135deg, #0b1a4a 0%, #0f2f8c 50%, #1d4ed8 100%);
+  color: #ffffff;
+  padding: 10px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 14px 32px -6px rgba(15, 47, 140, 0.55), 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.floating-fab:active {
+  transform: scale(0.97);
+  box-shadow: 0 8px 20px -4px rgba(15, 47, 140, 0.4);
+}
+
+.floating-fab.fab-hidden {
+  display: none !important;
+}
+
+.fab-main-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.fab-avatar-container {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.fab-avatar-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #fbbf24, #fef08a);
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.9; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+.fab-avatar-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  display: block;
+}
+
+.fab-info-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  flex: 1;
+  justify-content: center;
+}
+
+/* Integrated Gold Badge Tag */
+.fab-gold-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 12px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.fab-gold-tag i {
+  font-size: 8px;
+  color: #f59e0b;
+}
+
+.fab-person-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  letter-spacing: -0.01em;
+}
+
+.fab-person-desc {
+  font-size: 12px;
+  color: #e2e8f0;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  margin-top: 1px;
+}
+
+/* Micro-Affordance CTA Arrow */
+.fab-cta-arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 10px;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.floating-fab:hover .fab-cta-arrow {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.person-of-day-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  margin-bottom: 6px;
+  width: fit-content;
+}
+
+.person-of-day-badge i {
+  color: #f59e0b;
+}
+
+.app-toast {
+  position: absolute;
+  top: 54px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: #1e293b;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.app-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+</style>
+</head>
+<body>
+
+<div class="device-container">
+  <div class="phone-hardware">
+    <div class="phone-screen">
+      
+      <!-- Phone System Status Bar -->
+      <div class="phone-status-bar">
+        <span class="status-time" id="liveClock">09:41</span>
+        <div class="dynamic-island"></div>
+        <div class="status-icons">
+          <i class="fa-solid fa-signal" style="font-size:10px"></i>
+          <i class="fa-solid fa-wifi" style="font-size:10px"></i>
+          <div class="battery-icon">
+            <div class="battery-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Notification Box -->
+      <div id="appToast" class="app-toast">تمت العملية بنجاح</div>
+
+      <!-- App Fixed Header -->
+      <header class="app-header">
+        <button class="icon-btn" onclick="handleHeaderBack()" aria-label="رجوع">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <div class="brand-title" onclick="navigateToProfile('ammar')">
+          <span>من هُم</span>
+          <span class="brand-dot"></span>
+        </div>
+        <button class="icon-btn" onclick="showToast('تم حفظ الصفحة في المفضلة')" aria-label="خيارات">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </header>
+
+      <main id="appScrollContainer" class="mobile-app-content no-scrollbar">
+
+        <div id="profile-ammar" class="profile-page-view">
+          
+          <section class="profile-card">
+            <div class="profile-info">
+              <div class="profile-name-row">
+                <h1 class="profile-name">عمار هيكل</h1>
+                <i class="fa-solid fa-circle-check verified-icon"></i>
+              </div>
+              <p class="profile-role">المؤسس المشارك والرئيس التنفيذي - شركة مجرة</p>
+              
+              <div class="profile-meta-list">
+                <p><span class="profile-meta-label">الاسم بالإنجليزي: </span>Ammar Haykal</p>
+                <p><span class="profile-meta-label">الجنسية: </span>سوري</p>
+                <p><span class="profile-meta-label">بلد الإقامة: </span>الإمارات العربية المتحدة</p>
+                
+                <div class="social-links">
+                  <span class="profile-meta-label">الشبكات الاجتماعية:</span>
+                  <a href="#" onclick="showToast('جاري فتح حساب LinkedIn'); return false;" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                  <a href="#" onclick="showToast('جاري فتح حساب X'); return false;" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="avatar-container">
+              <div class="avatar-frame">
+                <img src="https://placehold.co/150x150/2563eb/ffffff?text=AH" alt="عمار هيكل">
+              </div>
+              <button class="avatar-update-btn" onclick="showToast('تم إرسال طلب تحديث المعلومات')">حدث معلومات الملف</button>
+            </div>
+          </section>
+
+          <div class="action-buttons">
+            <button class="btn-primary" onclick="toggleFollow(this)">
+              <i class="fa-solid fa-user-plus" style="font-size:11px"></i>
+              <span>متابعة</span>
+            </button>
+            <button class="btn-secondary" onclick="shareProfile('عمار هيكل')">
+              <i class="fa-solid fa-share-nodes" style="font-size:11px;color:#334155"></i>
+              <span>شارك</span>
+            </button>
+          </div>
+
+          <div class="section-spacer"></div>
+
+          <section class="bio-section">
+            <div>
+              <h2 class="bio-title">سيرة عمار هيكل</h2>
+              <p class="bio-subtitle">معلومات مضافة من منصة "من هم"</p>
+            </div>
+
+            <p class="bio-text">
+              المؤسس المشارك والرئيس التنفيذي في "<span style="color:var(--primary-blue);font-weight:600">شركة مجرة</span>"، شركة المحتوى العربي التي تعمل في المملكة العربية السعودية والإمارات العربية المتحدة.
+              <span id="extra-bio-ammar1" class="expandable-content collapsed"> يتولى إدارة خطط النمو والتوسع الاستراتيجي للمجموعة وتطوير شراكاتها الإقليمية والدولية مع كبرى المؤسسات الإعلامية العالمية.</span>
+              <button class="show-more-btn" onclick="toggleBio('extra-bio-ammar1', this)">عرض المزيد</button>
+            </p>
+
+            <div class="user-submitted-box">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:11px;font-weight:800;color:var(--text-main);margin:0">معلومات بقلم عمار هيكل</h3>
+                <a href="#" onclick="showToast('تم استلام بلاغك، شكراً لمساعدتك'); return false;" style="font-size:9px;color:var(--text-muted);text-decoration:underline">إبلاغ عن معلومات خاطئة</a>
+              </div>
+              <p class="bio-text">
+                يقود منصة "من هم"، التي استطاعت خلال سنوات أن تتحول إلى أكبر قاعدة معلومات عن الشخصيات والمؤسسات باللغة العربية.
+                <span id="extra-bio-ammar2" class="expandable-content collapsed"> بهدف دعم المحتوى العربي وإتاحة موثوقية عالية للبيانات والمعلومات للجمهور العربي.</span>
+                <button class="show-more-btn" onclick="toggleBio('extra-bio-ammar2', this)">عرض المزيد</button>
+              </p>
+            </div>
+
+            <div style="padding-top:2px">
+              <h3 style="font-size:11px;font-weight:700;color:var(--text-main);margin:0 0 6px">تصنيفات ذات صلة</h3>
+              <div class="tags-container">
+                <span class="tag-badge">رؤساء كبرى شركات الإعلام العربية</span>
+                <span class="tag-badge">إعلام</span>
+                <span class="tag-badge">+2</span>
+              </div>
+            </div>
+          </section>
+
+          <div class="section-spacer"></div>
+
+          <section style="padding:14px;background:#fff">
+            <div class="tabs-header no-scrollbar">
+              <button id="relatedTab-ammar" onclick="showRelated('ammar')" class="tab-btn" style="color:var(--text-main);font-weight:800;border-bottom:2.5px solid var(--primary-blue)">شخصيات متعلقة</button>
+              <button id="familyTab-ammar" onclick="showFamily('ammar')" class="tab-btn" style="color:var(--text-muted);font-weight:500;border-bottom:2.5px solid transparent">الأقارب</button>
+            </div>
+
+            <div id="relatedContent-ammar" class="horizontal-scroll-row no-scrollbar">
+              <div class="related-card" onclick="navigateToProfile('jawaher')">
+                <img src="https://manhom.majarracdn.cloud/mgmt/images/107896/1784630694/%D8%AC%D9%88%D8%A7%D9%87%D8%B1-%D8%A8%D9%86%D8%AA-%D9%85%D8%AD%D9%85%D8%AF-%D8%A7%D9%84%D9%82%D8%A7%D8%B3%D9%85%D9%8A_174_201.webp" alt="الشيخة جواهر القاسمي">
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px">
+                  <span style="font-size:10px;font-weight:700;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">جواهر القاسمي</span>
+                  <i class="fa-solid fa-circle-check verified-icon" style="font-size:9px"></i>
+                </div>
+              </div>
+
+              <div class="related-card" onclick="showToast('صفحة صقر بن غالب قيد التحديث')">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=180" alt="صقر بن غالب">
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px">
+                  <span style="font-size:10px;font-weight:700;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">صقر بن غالب</span>
+                  <i class="fa-solid fa-circle-check verified-icon" style="font-size:9px"></i>
+                </div>
+              </div>
+
+              <div class="related-card" onclick="showToast('صفحة إريك زو قيد التحديث')">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=180" alt="إريك زو">
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px">
+                  <span style="font-size:10px;font-weight:700;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">إريك زو</span>
+                </div>
+              </div>
+            </div>
+
+            <div id="familyContent-ammar" style="display:none;font-size:11px;color:var(--text-light);padding:12px 0;text-align:center">لا يوجد أقارب مضافين حالياً.</div>
+          </section>
+
+          <div class="section-spacer"></div>
+
+          <section style="padding:14px;display:flex;flex-direction:column;gap:8px;background:#fff">
+            <h2 class="bio-title">قوائم من هم</h2>
+            <div class="list-card">
+              <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+                <span class="rank-badge">#1</span>
+                <p style="font-size:11px;font-weight:700;color:#1e293b;line-height:1.4;margin:0">نصنّف القائمة أبرز 100 شخصية في قطاع التجارة الإلكترونية في الشرق الأوسط وشمال إفريقيا.</p>
+              </div>
+              <div class="list-visual-box">
+                <span style="font-size:8px;font-weight:700;letter-spacing:1px;color:#cbd5e1">PIONEERS</span>
+                <span style="font-size:9px;font-weight:800;color:#fbbf24">التجارة الإلكترونية</span>
+              </div>
+            </div>
+          </section>
+
+          <div class="section-spacer"></div>
+
+          <section style="padding:14px;display:flex;flex-direction:column;gap:10px;background:#fff">
+            <h2 class="bio-title">المحطات</h2>
+            <div class="tabs-header no-scrollbar">
+              <button id="jobsTab-ammar" onclick="showJobs('ammar')" class="tab-btn" style="color:var(--text-main);font-weight:800;border-bottom:2.5px solid var(--primary-blue)">المناصب السابقة</button>
+              <button id="eduTab-ammar" onclick="showEdu('ammar')" class="tab-btn" style="color:var(--text-muted);font-weight:500;border-bottom:2.5px solid transparent">التعليم</button>
+            </div>
+
+            <div id="jobsContent-ammar" style="display:flex;align-items:center;justify-content:space-between;padding:10px;border-radius:8px;background:var(--bg-subtle)">
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <h3 style="font-size:11px;font-weight:700;color:var(--text-main);margin:0">المدير التنفيذي</h3>
+                <p style="font-size:10px;color:var(--primary-blue);font-weight:700;margin:0">شركة مجرة</p>
+                <p style="font-size:9px;color:var(--text-light);margin:0">فبراير 2017 - حتى الآن</p>
+              </div>
+              <div style="width:36px;height:36px;background:#581c87;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:10px;flex-shrink:0">مجرة</div>
+            </div>
+
+            <div id="eduContent-ammar" style="display:none;font-size:11px;color:var(--text-light);padding:12px 0;text-align:center">بكالوريوس في علوم الحاسوب - جامعة دمشق.</div>
+          </section>
+
+        </div>
+
+        <div id="profile-jawaher" class="profile-page-view hidden">
+          
+          <section class="profile-card">
+            <div class="profile-info">
+              <div class="person-of-day-badge">
+                <i class="fa-solid fa-star"></i>
+                <span>شخصية اليوم</span>
+              </div>
+              <div class="profile-name-row">
+                <h1 class="profile-name">الشيخة جواهر بنت محمد القاسمي</h1>
+                <i class="fa-solid fa-circle-check verified-icon"></i>
+              </div>
+              <p class="profile-role">رئيسة المجلس الأعلى لشؤون الأسرة في الشارقة.</p>
+              
+              <div class="profile-meta-list">
+                <p><span class="profile-meta-label">الاسم بالإنجليزي: </span>Jawaher bint Mohammed Al Qasimi</p>
+                <p><span class="profile-meta-label">الجنسية: </span>إماراتية</p>
+                <p><span class="profile-meta-label">اللقب: </span>قرينة حاكم الشارقة</p>
+                <p><span class="profile-meta-label">بلد الإقامة: </span>الإمارات العربية المتحدة - الشارقة</p>
+                
+                <div class="social-links">
+                  <span class="profile-meta-label">الشبكات الاجتماعية:</span>
+                  <a href="#" onclick="showToast('جاري فتح حساب LinkedIn'); return false;" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                  <a href="#" onclick="showToast('جاري فتح حساب X'); return false;" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="avatar-container">
+              <div class="avatar-frame">
+                <img src="https://manhom.majarracdn.cloud/mgmt/images/107896/1784630694/%D8%AC%D9%88%D8%A7%D9%87%D8%B1-%D8%A8%D9%86%D8%AA-%D9%85%D8%AD%D9%85%D8%AF-%D8%A7%D9%84%D9%82%D8%A7%D8%B3%D9%85%D9%8A_174_201.webp" alt="الشيخة جواهر بنت محمد القاسمي">
+              </div>
+              <button class="avatar-update-btn" onclick="showToast('تم إرسال طلب تحديث المعلومات')">حدث معلومات الملف</button>
+            </div>
+          </section>
+
+          <div class="action-buttons">
+            <button class="btn-primary" onclick="toggleFollow(this)">
+              <i class="fa-solid fa-user-plus" style="font-size:11px"></i>
+              <span>متابعة</span>
+            </button>
+            <button class="btn-secondary" onclick="shareProfile('الشيخة جواهر القاسمي')">
+              <i class="fa-solid fa-share-nodes" style="font-size:11px;color:#334155"></i>
+              <span>شارك</span>
+            </button>
+          </div>
+
+          <div class="section-spacer"></div>
+
+          <section class="bio-section">
+            <div>
+              <h2 class="bio-title">سيرة الشيخة جواهر بنت محمد القاسمي</h2>
+              <p class="bio-subtitle">معلومات مضافة من منصة "من هم"</p>
+            </div>
+
+            <p class="bio-text">
+              قرينة صاحب السمو الشيخ الدكتور سلطان بن محمد القاسمي عضو المجلس الأعلى حاكم الشارقة، ورئيسة <span style="color:var(--primary-blue);font-weight:600">المجلس الأعلى لشؤون الأسرة بالشارقة</span>. تقود العديد من المؤسسات المجتمعية والإنسانية والتنموية في إمارة الشارقة والإمارات العربية المتحدة.
+              <span id="extra-bio-jawaher1" class="expandable-content collapsed"> حيث أسهمت برؤيتها المعطاءة في تمكين المرأة وترسيخ القيم الأسرية ودعم طاقات الشباب والأطفال.</span>
+              <button class="show-more-btn" onclick="toggleBio('extra-bio-jawaher1', this)">عرض المزيد</button>
+            </p>
+
+            <div class="user-submitted-box">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <h3 style="font-size:11px;font-weight:800;color:var(--text-main);margin:0">معلومات بقلم الشيخة جواهر القاسمي</h3>
+                <a href="#" onclick="showToast('تم استلام بلاغك، شكراً لمساعدتك'); return false;" style="font-size:9px;color:var(--text-muted);text-decoration:underline">إبلاغ عن معلومات خاطئة</a>
+              </div>
+              <p class="bio-text">
+                المناصرة البارزة للأطفال اللاجئين لدى المفوضية السامية للأمم المتحدة لشؤون اللاجئين (UNHCR)، ورئيسة "مؤسسة القلب الكبير" للإغاثة والأعمال الإنسانية.
+                <span id="extra-bio-jawaher2" class="expandable-content collapsed"> التي قدمت العون والمساعدة لملايين النازحين واللاجئين في مختلف بقاع العالم.</span>
+                <button class="show-more-btn" onclick="toggleBio('extra-bio-jawaher2', this)">عرض المزيد</button>
+              </p>
+            </div>
+
+            <div style="padding-top:2px">
+              <h3 style="font-size:11px;font-weight:700;color:var(--text-main);margin:0 0 6px">تصنيفات ذات صلة</h3>
+              <div class="tags-container">
+                <span class="tag-badge">الشارقة</span>
+                <span class="tag-badge">العمل الإنساني</span>
+                <span class="tag-badge">القيادات النسائية العربية</span>
+                <span class="tag-badge">+3</span>
+              </div>
+            </div>
+          </section>
+
+          <div class="section-spacer"></div>
+
+          <section style="padding:14px;background:#fff">
+            <div class="tabs-header no-scrollbar">
+              <button id="relatedTab-jawaher" onclick="showRelated('jawaher')" class="tab-btn" style="color:var(--text-main);font-weight:800;border-bottom:2.5px solid var(--primary-blue)">شخصيات متعلقة</button>
+              <button id="familyTab-jawaher" onclick="showFamily('jawaher')" class="tab-btn" style="color:var(--text-muted);font-weight:500;border-bottom:2.5px solid transparent">الأقارب</button>
+            </div>
+
+            <div id="relatedContent-jawaher" class="horizontal-scroll-row no-scrollbar">
+              <div class="related-card" onclick="showToast('صفحة الشيخة بدور القاسمي قيد التحديث')">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=180" alt="الشيخة بدور القاسمي">
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px">
+                  <span style="font-size:10px;font-weight:700;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">بدور القاسمي</span>
+                  <i class="fa-solid fa-circle-check verified-icon" style="font-size:9px"></i>
+                </div>
+              </div>
+
+              <div class="related-card" onclick="showToast('صفحة الشيخ سلطان القاسمي قيد التحديث')">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=180" alt="الشيخ سلطان القاسمي">
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px">
+                  <span style="font-size:10px;font-weight:700;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">سلطان القاسمي</span>
+                  <i class="fa-solid fa-circle-check verified-icon" style="font-size:9px"></i>
+                </div>
+              </div>
+
+              <div class="related-card" onclick="showToast('صفحة شيخة الشامسي قيد التحديث')">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=180" alt="شيخة الشامسي">
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px">
+                  <span style="font-size:10px;font-weight:700;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">شيخة الشامسي</span>
+                </div>
+              </div>
+            </div>
+
+            <div id="familyContent-jawaher" style="display:none;font-size:11px;color:var(--text-light);padding:12px 0;text-align:center">عائلة القاسمي - إمارة الشارقة.</div>
+          </section>
+
+          <div class="section-spacer"></div>
+
+          <section style="padding:14px;display:flex;flex-direction:column;gap:8px;background:#fff">
+            <h2 class="bio-title">قوائم من هم</h2>
+            <div class="list-card">
+              <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+                <span class="rank-badge">#1</span>
+                <p style="font-size:11px;font-weight:700;color:#1e293b;line-height:1.4;margin:0">أبرز الشخصيات القيادية النسائية المؤثرة في العمل الإنساني والمجتمعي بالعالم العربي.</p>
+              </div>
+              <div class="list-visual-box">
+                <span style="font-size:8px;font-weight:700;letter-spacing:1px;color:#cbd5e1">LEADERS</span>
+                <span style="font-size:9px;font-weight:800;color:#fbbf24">العمل الإنساني</span>
+              </div>
+            </div>
+          </section>
+
+          <div class="section-spacer"></div>
+
+          <section style="padding:14px;display:flex;flex-direction:column;gap:10px;background:#fff">
+            <h2 class="bio-title">المحطات</h2>
+            <div class="tabs-header no-scrollbar">
+              <button id="jobsTab-jawaher" onclick="showJobs('jawaher')" class="tab-btn" style="color:var(--text-main);font-weight:800;border-bottom:2.5px solid var(--primary-blue)">المناصب</button>
+              <button id="eduTab-jawaher" onclick="showEdu('jawaher')" class="tab-btn" style="color:var(--text-muted);font-weight:500;border-bottom:2.5px solid transparent">التكريمات والجوائز</button>
+            </div>
+
+            <div id="jobsContent-jawaher" style="display:flex;flex-direction:column;gap:8px">
+              <div style="padding:10px;border-radius:8px;background:var(--bg-subtle);display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <h3 style="font-size:11px;font-weight:700;color:var(--text-main);margin:0">رئيسة المجلس الأعلى لشؤون الأسرة</h3>
+                  <p style="font-size:10px;color:var(--primary-blue);font-weight:700;margin:0">إمارة الشارقة</p>
+                </div>
+                <i class="fa-solid fa-landmark" style="color:var(--primary-blue);font-size:16px"></i>
+              </div>
+
+              <div style="padding:10px;border-radius:8px;background:var(--bg-subtle);display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <h3 style="font-size:11px;font-weight:700;color:var(--text-main);margin:0">رئيسة مؤسسة القلب الكبير</h3>
+                  <p style="font-size:10px;color:var(--primary-blue);font-weight:700;margin:0">العمل الإنساني والتنموي</p>
+                </div>
+                <i class="fa-solid fa-hand-holding-heart" style="color:#e11d48;font-size:16px"></i>
+              </div>
+            </div>
+
+            <div id="eduContent-jawaher" style="display:none;font-size:11px;color:var(--text-sub);padding:10px 0;line-height:1.6">
+              حاصلة على وسام ألمع الشخصيات الإنسانية والمناصرة البارزة للأطفال اللاجئين من الأمم المتحدة والعديد من الأوسمة والجوائز الدولية والإقليمية.
+            </div>
+          </section>
+
+        </div>
+
+      </main>
+
+      <div id="personOfDayFab" class="floating-fab" onclick="navigateToProfile('jawaher')">
+        <div class="fab-main-content">
+          <div class="fab-avatar-container">
+            <div class="fab-avatar-ring"></div>
+            <img class="fab-avatar-img" src="https://manhom.majarracdn.cloud/mgmt/images/107896/1784630694/%D8%AC%D9%88%D8%A7%D9%87%D8%B1-%D8%A8%D9%86%D8%AA-%D9%85%D8%AD%D9%85%D8%AF-%D8%A7%D9%84%D9%82%D8%A7%D8%B3%D9%85%D9%8A_174_201.webp" alt="الشيخة جواهر بنت محمد القاسمي" onerror="this.src='https://placehold.co/100x100/2563eb/ffffff?text=JQ'">
+          </div>
+          <div class="fab-info-column">
+            <div class="fab-gold-tag">
+              <i class="fa-solid fa-star"></i>
+              <span>شخصية اليوم</span>
+            </div>
+            <div class="fab-person-name">الشيخة جواهر بنت محمد القاسمي</div>
+            <div class="fab-person-desc">رئيسة المجلس الأعلى لشؤون الأسرة في الشارقة</div>
+          </div>
+        </div>
+        <div class="fab-cta-arrow">
+          <i class="fa-solid fa-chevron-left"></i>
+        </div>
+      </div>
+
+      <!-- Phone Bottom Home Indicator -->
+      <div class="phone-home-indicator"></div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function updateLiveClock() {
+  const clockEl = document.getElementById('liveClock');
+  if (!clockEl) return;
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  clockEl.textContent = `${hours}:${minutes}`;
+}
+setInterval(updateLiveClock, 1000);
+updateLiveClock();
+
+function navigateToProfile(profileId) {
+  const ammarView = document.getElementById('profile-ammar');
+  const jawaherView = document.getElementById('profile-jawaher');
+  const fabBtn = document.getElementById('personOfDayFab');
+  const scrollContainer = document.getElementById('appScrollContainer');
+
+  if (profileId === 'jawaher') {
+    ammarView.classList.add('hidden');
+    jawaherView.classList.remove('hidden');
+    if (fabBtn) fabBtn.classList.add('fab-hidden');
+    showToast('جاري عرض ملف: الشيخة جواهر القاسمي');
+  } else {
+    jawaherView.classList.add('hidden');
+    ammarView.classList.remove('hidden');
+    if (fabBtn) fabBtn.classList.remove('fab-hidden');
+    showToast('جاري عرض ملف: عمار هيكل');
+  }
+
+  if (scrollContainer) {
+    scrollContainer.scrollTop = 0;
+  }
+}
+
+function handleHeaderBack() {
+  const jawaherView = document.getElementById('profile-jawaher');
+  if (jawaherView && !jawaherView.classList.contains('hidden')) {
+    navigateToProfile('ammar');
+  } else {
+    showToast('أنت في الصفحة الرئيسية للملف الشخصي');
+  }
+}
+
+function toggleFollow(btn) {
+  const isFollowing = btn.classList.contains('following');
+  const span = btn.querySelector('span');
+  const icon = btn.querySelector('i');
+  
+  if (isFollowing) {
+    btn.classList.remove('following');
+    span.textContent = 'متابعة';
+    icon.className = 'fa-solid fa-user-plus';
+    showToast('تم إلغاء المتابعة');
+  } else {
+    btn.classList.add('following');
+    span.textContent = 'تمت المتابعة';
+    icon.className = 'fa-solid fa-check';
+    showToast('تمت المتابعة بنجاح');
+  }
+}
+
+function shareProfile(name) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(window.location.href);
+  }
+  showToast('تم نسخ رابط ملف ' + name + ' للحافظة');
+}
+
+function toggleBio(contentId, btn) {
+  const content = document.getElementById(contentId);
+  if (!content) return;
+  
+  if (content.classList.contains('collapsed')) {
+    content.classList.remove('collapsed');
+    btn.textContent = 'عرض أقل';
+  } else {
+    content.classList.add('collapsed');
+    btn.textContent = 'عرض المزيد';
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('appToast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2400);
+}
+
+function showRelated(id) {
+  document.getElementById(`relatedContent-${id}`).style.display = 'flex';
+  document.getElementById(`familyContent-${id}`).style.display = 'none';
+  document.getElementById(`relatedTab-${id}`).style.cssText = 'color:var(--text-main);font-weight:800;border-bottom:2.5px solid var(--primary-blue)';
+  document.getElementById(`familyTab-${id}`).style.cssText = 'color:var(--text-muted);font-weight:500;border-bottom:2.5px solid transparent';
+}
+
+function showFamily(id) {
+  document.getElementById(`relatedContent-${id}`).style.display = 'none';
+  document.getElementById(`familyContent-${id}`).style.display = 'block';
+  document.getElementById(`familyTab-${id}`).style.cssText = 'color:var(--text-main);font-weight:800;border-bottom:2.5px solid var(--primary-blue)';
+  document.getElementById(`relatedTab-${id}`).style.cssText = 'color:var(--text-muted);font-weight:500;border-bottom:2.5px solid transparent';
+}
+
+function showJobs(id) {
+  document.getElementById(`jobsContent-${id}`).style.display = 'flex';
+  document.getElementById(`eduContent-${id}`).style.display = 'none';
+  document.getElementById(`jobsTab-${id}`).style.cssText = 'color:var(--text-main);font-weight:800;border-bottom:2.5px solid var(--primary-blue)';
+  document.getElementById(`eduTab-${id}`).style.cssText = 'color:var(--text-muted);font-weight:500;border-bottom:2.5px solid transparent';
+}
+
+function showEdu(id) {
+  document.getElementById(`jobsContent-${id}`).style.display = 'none';
+  document.getElementById(`eduContent-${id}`).style.display = 'block';
+  document.getElementById(`jobsTab-${id}`).style.cssText = 'color:var(--text-main);font-weight:800;border-bottom:2.5px solid var(--primary-blue)';
+  document.getElementById(`jobsTab-${id}`).style.cssText = 'color:var(--text-muted);font-weight:500;border-bottom:2.5px solid transparent';
+}
+</script>
+</body>
+</html>
