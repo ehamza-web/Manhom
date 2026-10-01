@@ -1,202 +1,187 @@
-<!doctype html>
-<html lang="en" dir="ltr">
+<!DOCTYPE html>
+
+<html dir="ltr" lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Manjam — Knowledge That Renews Every Day</title>
-<meta name="description" content="Manjam is the intelligent data engine behind Manhom, built in partnership with Lableb AI.">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Manjam AI — Your Organization's Knowledge, One Clear Answer</title>
+<meta content="Manjam AI connects your organization's documents, archives, databases, and other knowledge sources so teams can ask questions in natural language and find answers with source references." name="description"/>
+<meta content="#20209a" name="theme-color"/>
+<link href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAABgCAYAAACUosWzAAAaG0lEQVR42u19eZhU1bXvb629T1X1wOjAIKJgM4gIKEackMkhecmN+byX5LvvJerNhBoJQmuMUVMUihKRSdQEk/fykpubvE/NeF+S9yIIzhqDKE5AN80gEXECm6nqnL3Xen9Ut+nuqm66N8PjD/b31Qddp2qfdX5n7bXX+q21ThGOwjFkyANjVFP3qep4kKYAbf/DRHlSWuF9PGvTpukbjqScgwb9uA8b/QGgVwLarUM5ASEyLxPcrXV11y+now/0hwaLmhVE9lTVpBPfIBBFgLrXY6uXbV03bfuRkLPf2GWVlR/L74nTl6gkOADoTTpioSofMsVX8tEGvCp9izndSdABQKEagzg1Mu3lq0dKzm67k88VQY87BXrx2hyIzHEiZs5RBfyIEdmUKE1RdQF3TAAxZx0pWb2aT3cS7xLwQRhzVAFfKJwwhAjDVH3XL4gAJfngSJkZKF0A+IBvE6D44KgCnpkvJIoyCFMlKPuVR0LO7jvjEQCdpipdh50YIF5xVAHvlacgaLsnqMYf+1hfOBJyOoouJopsiIIovDLJ/zlqgB88eFkPgpwHCdAitgDw6ubN7799RIQlnRy0KsGA4l1T4BeOGuCN8aMAO0BD7SbpKiAnh1vOmpolJwA4J2QfIjIA5OV1W6dtP2qAVzUTiW2QPCpOSPWJIyInm7FEtg8goQqyskn3j4pBAkyCBixfYgC6raoqfvXIaIidBDKB+1DirOcnjxrga2qWnETQMUHLFxYKvPjqqzN3HW45p059xEBoAkK9GUhD9X568yjS+Ggcke0VtnwBQ7r8SEj58svvDQJ0ZJiCGAD63Ort0/YdNcCrYnLRZAS5kXkR9+wRijTOJ46qwjwaBcE83sK/+f9uZtIgvihs+RoosC6dfr/uyOxENAVBgQbDS7KbmZ5vfseGuVOVX1ZKxqqKJZCW10UiwO4gco/V1V3/dHvziY2GIKFhYeE3g0BPvflmLm57ZMiQB8YBqau9ukHUzq6tABGgUF4P+J9s3HjDG+2dqc+o+VXYF0YTEDEU/rUNGx7fGgT8sGE/PNV58zvmaDTUgOhAJySI0LVDhjx4U13dt5aWhc5hPHGUFo1DYl1A/Yq275429EdfUjH/ndhWMUxHzl2TY8SfEXVfPu20H07duPG6VWVpgv09zxDooBCaAGAwaCXwqA8yNYmnOcyp0SJ5qMYHfIkUAEJK1N4z5JQHTy9v32mKUlgUqCIfRFH+pZbvDh163/HqcR+IqkQKUE0O+BIpgGCOV8KCAQMWVJQ/X3wxsQ2gCQiqToWxsk0M21kTM/cEAi7rPE/ejKwHcapKIzOh7aFTTlnUU4nPDbXvgLy8bt2sVokPkerzme2ArlLLxevikel0enD54zwlLM4gQOWdjDVrgoBX7XU2yJwY4koVBS51W6zNjCHwSUFzEoGInig9lU4O9RmomJ4rQXfkoMV9FHw2Qt1Iwl/ffPMbHwUBD6ZJRIZCLkc18YB/uczBiUSGg+aUxAPyZMt3x45dFinj4pB4gMgAqpvy+X2b2h7bR+mxRHyihtIEKivK0GWdCdkOLmIjyKbKyr2vtT6SZQCTQnziopegmyorq1vN2djoakjp9KAVBAaRPr1tW+3+0kM6JZQmEEkKxujTQcDXrNl5KoCRYTu6AUDPrF17896W7w4e3H8AiEaFmRkDgJ5bu/aqva3tu72QKKoIC3AEQGkEPGFC1hJwceg+RCQbRNz6MI2Hnk8cVYeF9AoPLrkgZj+O2PYMmlMVRKXLF6TBAY5qsku1NJGydevxgwEaEaYgDFV6ur5+RiEU+EvCLoigGu+25J4vmZHMZGgoTeD2kPKzbQK77gDOCwtwDAj0ysaN128rXVx8IXGqMiwdKTBcGmd0CvhRo+ZXKfiC0AsC+NUxdSu3tHYjsxkoLgrdBFX19bPO6rW5laFgMwqggWH2nSCEFSgThZPyZGjoKnIfAfxiEPD5fPcRAAaFbliArHq0RcQGAKlU32GADg3eBFmefPTRL7b+srMTiaIwD0kTseRKItYRIx6pBvj8cKXDK3V1174TBLxTP7GY2A2x7olCucTXFvHjiVOpsE3QK6l5oq3hYg73kADZIuLXtj1WKHx0JginhjkVBBA9gXa4rAMCz8qBF2SgqtucS60pPWgnh0SBBIaqvMuMl1sTYj/qr8CYsBVkAKXn6utnNJZeg0wgjkxQNYEmXr2s6sgWtDsGDVrcR0FjQy+IQS9s2fJvu1ov3wW9AZwblNQmA4W+tGHDtLaFS+cS2d6hXpdq2UQKqZqgdGQTXb0liqK1QcBbW4zYQjNDWiYz5PIVYwjcH6HLV2hFGe9yShhNQFBN9gIoSaQMH7iwLwhnhyqdIXlh/fqv7w4CXhVTDiKxu5+08EyJfSeaBLJh1IMksTHJU202wJSCLwqnCej1sWOPayhRkFT6HCI+PnwVlXcjDwj8BKy0Chp/EJmht3r0yNS1pQmUeGIYSAwirYvj99e19ro+GArosOAImGVViYcEQNVODsgTNccZ+4zjZ4OA3zGobjBAZ4TzHvLU6tXTWnHIw4b1Haiqo0KpBwWe2bIll28dAfNFRKnAestESV2JZo7FNyMiufgg3Mg3+24+fWMQ8M7IhUS2MtDlg0JK7HsifB6z7R62fAWEUppACFOCvC4YqMh2a1HCmjYOGV2jCCfbFPLkk5jkgoBXQhjvQQxV/5665G+lrqkEboJFLkUkfrF1BLyoJxTjgm4kMZTor+vWTf+w1MxEFzClKkKVDsIrOhNaloxhw37QDaJhEVsxx/m3TZtu3NHy/QEDFlSo0oWhyWICvdLQsHNba68rM4ZBA8JMF0Dql5d3KmSKBs3IUPU7gMbVQcA7VzkSxKeE8h7lEtCZTMVwJaoJTRYDurJMUepEUEQheVARV1Brnmp7pKZmSXeFnhdu32V1Q8PN7wUBD9iJRJEJAV01SQBbErGRYDxTFIVFgU6I/KoSDwk8KdSNJNL17PMbSumM1JlEPDCUJiCY5Z1VpTIqywfBe2h9obDnrRLwmKaEz+nf9n5Pq6LUwYP7DyCS0UEAkQFBy/LkhiiQJigqnap/Kgj4YcOW9gM0OGIjyDNt02fDh//sOAE+FTanBQEvNDR89+PWbiTGEUU9whIpHqp4vBx6QjI5KKoukm0be/bc8VYQ8M6lziG2x4W6fEDpBRV8/iwi0zeUeiBFKU0ACveQxH0YW/dSOaVT8Jig3iYYQPnZ1atz+0JNTSBN0OTypeIXy7BNkymUJtA4D5ZnWruR2QxBLgreAFlefnv99JJGZHX2U0wmWOlYsbzzaLXiPbIpMMZDw9NnDW+2dvmm4hED8ITgZDHoze7dbX3L91OpE4YrMCR4A1SzHGWMuFC40okkjRzteyEI+DjuWwPV00MLjAT0RFuX75UhH5xCKmcGR4FlqAeR6CKikERKsSuDqJQnHzEim1JgfHAJC/Ha9et3bQ0CXskE9pkSVBKxgpVlgpHziW230CiQVEvtO8mUoL2i6HVtqqjYU1IVXCicMASg4cEpTpVVXWl+4zb+8iUHcUFbhPNry7N8YZugwL+fJNKKehjef+lxpPQphGabqLTGp4lsC25uVnWqmqzs4q1q9ovn9SDQuLA6dQNQafpsbL9llSAKrlBg1dVbttzwbitzmInGEHP/sLZMBbWzAXoN5aYMVP3fnbNrgoA32n0UwCerBraZlDEJO7vHIwANowmIIGWKUsE6GQjzkESSRuZCSY1PsbmZx4VxUwxivLh16/U7g4DXiCYVyyOCNqy91u4pIf7Z2/FEKRu4ZzgDbVWUOnXqIwagiQdBE6zdsOHDLSXr1RRGAXRyKDdVTuk6DbwIXRBcYAR6fd263Q2lto8nHwT1ULIJvvHGeydAMUxDI0tCOaINqmYScXBNTl4ETwcDz0AUYuMIBkT0JJBzbVi+E0B6jiKUetDn2m6CzuUdEQIeZgNAHSAo0/2tBNiJodUEANZnMjs2BAOv6p+gLgcPBEWshuL/LNWi6Gwi7htWTaBlqYcNG276EIrlzKkuKnsKqvJ61Z6qEpqgpub+kzSwuRnEIPZPl2t+OzAD1TQqE3poH+UvZ86MLwqhHQLe3HkmPr+4fuMNpYldjiYVS7TjgOUb72HS58vSW97dRlQYxpw+p6WMin+s1+b/F/8liPptTHL92h1X7S2dstjcHPpUKBWzImQBfgL8a1uv3znwzIeuSO1PpoHoYigq0O7686qgnaT6m4aNO/5X6V16xEA/nHjAtsD2lq/itTF1vbaUa17dvPmGLaecsuhSm6KpBD9aVS2IRBXCLag6btIPAW9Wj0fqGq7fWt4H58lEgXGGug8jm/w1KPbBYRinnfbjGpBfA1B1VzdXohSgyd319dNuw2EeNTXT04oRfyWKRnVV44kiiMbLG+qvuwwBHsRh6uyW84mi6iA3Ek6JjswjrowZOhTKw8LdSDyBMC7kQJVkGrYiSAKjQALUbzfGrzkSwCc+dRGZKB0Yu3iAVoWeu1WplD7yiHH16y9lcZ9XyBn+rjsyfu7sd1X02QTu1xV3zN14oAlHjZpftTe09RwGIlq25KLl2HXPPb2q3f4vkOFL1PnBRKrgqIFV/rIrwR965XK7OnU+1fCqZbgt6bR/LRT4T9Qyf3d2aAQsZsVnwFzcV7Wp258Z4t0HqrjXJLSAcu2zcEOHLvuUFzxXvKldt+8qhekbN173QLtaelfuswy9jw0Nb/YsPgmQAIjoG6JUG92e/b8dnevMgff02pvq9SoTn9zVgIwoBUX+Fxvrrv9KKPAMADo3O9yK/pmZPwPvgSQBnAO8L/4bx2DF8caae8Xqgo5MkFdMCKYJNI6Zk3ajQHf37H+1pI8xYziSpElOX3w1/c2kZzDJbwtzs1/s6Gz7op6jiWhAKDfFnawmaBf47fNrq0RlmTFmMOIO2uVFgMSBDd/o78pd1cHGMDm4chfYoKrryh3fPTc7kkQeAiQD14EH4jwYWmEVD+Wz2eEdqNxECqrJYagme72X5w4K+BMK1f/KxBcj6cQzCprND+S2D7LZ7m0PDxq0uA+AsaFRINppTQSAjMp32Nqe8J24qV7A1hxnrN5c/gNZhmBS+COu8EZDw7ubDgp4Erm6S9/wHoZpSA+LC0qEsumxIBPWyKACovI15bvnzu1Dgk93qOklmu9goZ9pnHvrCaU0cHNzc2BVG8mqttxUl2dhYDS87/K3iPSsMqZvMiG0QsHtBJKyrYlpuKGGcHyXHgYqAkD7ZMgOLhXfjyMKa25WeEDkoOMMFpXqILKPuWfLvycgawkU/AAHAr1SX//tv5c/Lt3AHMA/MEdeqspQcEE1OUQMqH+XyK8+aOBB1BjEqXjfytfeMej4wQBGBEeBpO22JqrHLoh01TcFVHxCtrE1TbAkDZgLw2pnDKD0Un39jPcPGnhlWg3u4t33AmW0uuux4QuJwp5Qp5p4X6bB9xP+0GGDKL3bJTmJIMD2yGQ2tlldpyswNPwZOf6QPNGVoeZ/dAkra+FVXv8g1f2F1lGguSgokUIGgG7lMg2+n3wml/tACP8J24WeJGsA8O/o1ltb5UIFfC5TlAor7U4S1fxThwR44/RRr/pnpFKd0yJVVbKz+93cpkSCUBFIVQHQF8s1+LZyUhDdK4nbAdOJzdsY+MRvjy0tKKUJqCJMQRgErS8U9K1DAjzlcnHsKq8V515FKoV27b1hwBiIyJzo9uyvSyfSJ8NShwCL/8OBPldxxx0bhczXoPRxh5ofWQiwUw1dU3FrbnPp3oTnVRPXVVmLPwCDv5R9kFAoZVCZ++7WfEL/Rbz/DyFOkIoAa4uvKAKiCKLYGjv+WnTHnbPLXm/k/0Ml/gtzBkQRiOwBXhGYMxCNfxv7qt92Rtjo9uwfE9XPieIFWFOUrVnOZpkVz3riz0bfy/2l3Bx1m657iSCLmaNOymnBnIbXwhtAasGhYkZLbns8765zjXOfZZWRIGRE9T210dP7xfyx22237ehospqaJd2JUtMV0SWqSXV7XgqgRLAfEyV/rqjY+6NylV0dbsbZbMZl+FL2cikrTgUUQtSQMJZv3d778aFLy0e/LSPXmpp+V4PMl1TluPYybUVwTAHQF4j84rq66/5+2IA/dCN7ABfk8D9k/2DlzALIHTVyHhvHxrFxbBwbx8axcWwcG8fGsdGVMSt73/HBNUbtBVAzcz+YoMLGWGxccMfNW7ocfmQfqG7kwlgATKKvLczd1OEvTM7ILuppgTGAQ5Rxr85rwx4eaNTeOf8UwJymTvJ7tm946eGHH04OF+CqSrPm3J+LUpmvJvH+Vdjlv7Fo0SHialRTq1Lp6hUimatDJtgHHQq1K63NPEEmdfGBPm+BMbDRStiKlfl8emyXwfDpq2xUtULY/ra639Aeh1PTp82eXaHQf2Pmk0jpv6a7U79DNTdrcYDCCkyQIIGAVFUh3LkskapCFWDmLp+TCEVJA+Xtyng4l9tPwA/Eu7XKtCCNj7cdqrktiFqWlrcat8xb1iMf7+trKLVv4R3fervZVMSFPNl+lfuWziiSUc2/OkNcTOvUZuefyKaqV8HEu+6/7cZ2iLXyuN1yy7weUtXjRKVYfKV7Z1FtuaWtAJEmGsVF8/PAKeo0bSr3bZ9/yy27O22773zwZKNxZeyxY0lu5q7p05ekq6qiStVGmTfvlkYi0u6y8+Gdu3s9ao73jbnaXHzogC9rt3+a2cON30niwtWkph8ghZmz73+SSB4UxYLqbj16JR/lcwB+0vwdUQWc6T1z9uIFyvzfnCY9rOOPa3NL/yzG3r7o9o6ZvevueahXxrvvOaErRZOTAHjal2qonbP4f1b7/ktzuS/GbZaNixjjZuWWzlLVC9SIlbhqW+2c+3+ye1t68cMPT2vX9s+as+QsgO+E+vOdcqUxvH1mbsn9TJx2Rqd7l9lx67wfXgJg527Te0Gme/qKZE9+jSq+QIRDstK4FPQsN9KupSZK54yxg5lQoSqZKJO6QoHHAIxgYwYQcY+WGijeq4jOS6UrZqlIb6hGJor6mFR0DST5/XfvXnpce0JMzy7pni7Ev07Z9E1gHqwqO1WQtyYaaaLMfY30zoNTp041LU0VgN6i+LVNRZ8WlYjAlcw8lG10b2X/wrz2zvXt7PyRAP3JWPtZY2xvBVhVTrU2WuTF3wzgJAUG7lZfLG9UOtEYezID/Q+lGSsBfjf3mkRsvubFwzm3BiqXkfBoFxe+RsSOmY14D22TpiciYqY+rpCfJ05Hq5rzfJI84pxDZFNj41hvaE+IiPXaVDozKYkL+8XF31TV062aM1xSWOCSRNnYrw8Ycd7lLbQdzLaSiPYn+fxXItLRgP8n55J14j2I9du1uUXjymwuxJSabW3U17nEe5fMN4KzrPhzxPlfWBsdJ96D0KLBjdSLeGhYF13nTY0QfSEVRZTEyW4jcs19uRubk9AbZs5eZNhED5ebyFgLce4XC2bPuLX5vZkzF1xDPewwNWY0SD8PYA4QSbN9V0sCgFTpX4q/YaKrChr9KkJiG/PR/nTGLzbkpqYylQNF5QoAf2oJIynduDA341dNf9fdmFu4U5WWRzadcXHhcwBaFUh9a/YD/YgwUYsN0b9ZmJ3xneZj31y27KuV7+4fam10rneHn4L/R59r8w0GBhEYpLquBejNS3yF925f+bwsQUX/2PKdRYtq9wvwJBFBRfvV1s6v9C3qY1hEv5nNVoCon0tiKDAxRX4rEW2urNi/xTJeYzYDmQgQnNa0spSY4cXvdAVpVWrRQz5+SUW3UPFJIiUVZBmRfgL0Knal0Z9aeTDTpiVE5glmg8PuLpXdXJuWlACpqVOnmkcf/cdD98WwYWm/+smAS+ZjRqrJDxERLlGlnY3dtaqnCpOBwL1NRK8TfXIOUUjeuQSG6JXWtxnsUgVT5noihYKptKnJsXhSUgKBvGRKLZFERyoa5rb/IehbCgEzDz955IUTWwEr/AVrTUX5FKXCk3yxpWtam33oRAUuU1WQoc2LFtXup1Y/DGL40UW1+6G6xdgIDKpflJ3xzwu/P+PKhd+fcWU3/9FVqrwsEfmJN/GvmqNJFYExtkeaMle0lGAv976UDA9scvTfav58be38qqJi+G1E9J6SQpimZrNZ23KDJ+inRfzhzId2YONFHkuSeCazTYuXn87KLpljmNYL/CQFfc97gS3z09reORgb/dPM3OKfEfAzAVWLxt9hsoOpGKn9srgChLTpNqsIFf1/+rmIjAfT5bNy998NiX8u4OpGsndFUXS5907YRxcD+Ps/3FchEO6bOWdJd1V6joAzPfB9JrYuifeQuN9cd89DvWbNuf/npnfVsJlzFs9e+P0bfzkrt/gPRDyNmCfvRu9f3nTn/Q+ruLQoZhqbOkO8OzIaT0RMzGhe3otzs/6mondBVdnYkykyP3bAUzZdmRP176j6AjGDmz4vIlR8niDBOVdno9RXwGY5E//O2OgCYkYSF37fv9r/tPnzxAxibvou0M1/9HOfxD8zbIyx9lYhuwbMz9tUdLl45+Hl+/dlv/1sU+RKzAYqfp+qfpRKZeYR9Ck2/CAb0weqjlRvX5i7aUMUx2fbVOpz1pghKvg6AJiMmePiwqvMBmztVFE8Tib9vwFM8Um8kY0BtFXJMxMzEPYTPh1QBqB6Edmkik/IqsWzb7wTqteq9+u9d0LAx0mh8FND+BLIvKmqm0DYVZzBFkBUz0QNzHKTd/52KLaLeIj47V79vU7pqtrmCJTtflVpUJUGtmYfAORyuXhY38w3vHe1ziXrAKRIoeKS1eL8NQtnz5jbwpPcqdBNxLzGEK5MCoXHANrrnfOq/jXv/VcXzr5xCQBofu9aXyg87b3bZYB/B4D5t0x/JxL9vHj/7+L9LhFRUVlPwJctm6XMZhPYNHQjI02a+a4X2SzgbYcS+P8H+DZIRJ5ybxMAAAAASUVORK5CYII=" rel="icon"/>
 <style>
-:root{--ink:#111;--text:#3d3d3d;--muted:#666;--line:#e5e5e5;--accent:#0f6b5c;--bg:#fff;--soft:#f6f6f4}
+:root{--ink:#111;--text:#3d3d3d;--muted:#5f6068;--line:#e4e5ee;--navy:#20209a;--navy-dk:#14145f;--coral:#ff8578;--bg:#fff;--soft:#f5f6fb;--bar:#b9bccd}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font:18px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
 a{color:inherit}
-a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+a:focus-visible{outline:3px solid var(--navy);outline-offset:3px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .w{max-width:720px;margin:0 auto;padding:0 20px}
+.w.wide{max-width:960px}
 h1,h2,h3{color:var(--ink);line-height:1.2;letter-spacing:-.02em;text-wrap:balance}
 p{text-wrap:pretty}
-em{font-style:normal;color:var(--accent)}
+em{font-style:normal;color:var(--navy)}
+strong{color:var(--ink);font-weight:600}
 
 header{position:sticky;top:0;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);z-index:10}
-header .w{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 24px;padding-top:12px;padding-bottom:12px;max-width:960px}
-.logo{font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+header .w{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 24px;padding-top:10px;padding-bottom:10px;max-width:1040px}
+.logo{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+.logo img{width:30px;height:auto;display:block}
 nav{display:flex;flex-wrap:wrap;gap:2px 20px;font-size:15px}
 nav a{text-decoration:none;color:var(--muted);padding:8px 0}
-nav a:hover{color:var(--ink)}
+nav a:hover{color:var(--navy)}
 
-.btn{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;font-weight:600;font-size:16px;padding:14px 24px;border-radius:6px;transition:background .15s}
-.btn:hover{background:var(--accent)}
-.btn.line{background:none;color:var(--ink);border:1.5px solid var(--ink);padding:12px 22px}
-.btn.line:hover{background:var(--ink);color:#fff}
+.btn{display:inline-block;background:var(--navy);color:#fff;text-decoration:none;font-weight:600;font-size:16px;padding:14px 24px;border-radius:6px;transition:background .15s}
+.btn:hover{background:var(--navy-dk)}
+.btn.sm{font-size:15px;padding:10px 18px}
+.btn.line{background:none;color:var(--navy);border:1.5px solid var(--navy);padding:12px 22px}
+.btn.line:hover{background:var(--navy);color:#fff}
+header .btn{order:3}
 
-.hero{padding:96px 0 80px}
-.hero h1{font-size:clamp(36px,7vw,60px)}
-.hero p{font-size:20px;margin-top:22px;max-width:600px}
+.hero{padding:88px 0 56px}
+.hero h1{font-size:clamp(34px,6.4vw,56px)}
+.hero p{font-size:20px;margin-top:22px;max-width:620px}
 .hero .row{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px;margin-top:34px}
 .hero .by{font-size:15px;color:var(--muted)}
 
+/* Documented example */
+
 section{padding:72px 0;border-top:1px solid var(--line);scroll-margin-top:64px}
 section.soft{background:var(--soft)}
-h2{font-size:clamp(28px,5vw,38px);margin-bottom:22px}
-section p+p{margin-top:16px}
-strong{color:var(--ink);font-weight:600}
-.types{display:flex;flex-wrap:wrap;gap:8px 10px;list-style:none;margin-top:28px}
-.types li{border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 16px;font-size:15px;color:var(--ink)}
+h2{font-size:clamp(28px,5vw,38px);margin-bottom:20px}
+h2+p{margin-top:-4px}
+.kicker{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.kicker::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--coral)}
 
-.two{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:36px}
-.two h3{font-size:20px;margin-bottom:6px}
-.two p{font-size:16px}
-.two .btn{margin-top:18px}
-
-ol,ul.list{list-style:none;margin-top:28px}
+.list{list-style:none;margin-top:26px}
 .list li{padding:20px 0;border-top:1px solid var(--line)}
 .list li:last-child{border-bottom:1px solid var(--line)}
 .list h3{font-size:20px;margin-bottom:2px}
 .list p{font-size:16.5px}
-.steps{counter-reset:s;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:36px}
-.steps li{counter-increment:s;border-top:2px solid var(--ink);padding-top:12px;font-weight:600;color:var(--ink);font-size:16px;line-height:1.4}
-.steps li::before{content:"0" counter(s);display:block;font-size:13px;font-weight:500;color:var(--accent);margin-bottom:4px}
+.soft .list li{border-color:#d9dbe8}
 
-.cta{text-align:center;background:var(--ink);color:#d9d9d9;border-top:0}
+.tags{display:flex;flex-wrap:wrap;gap:8px 10px;list-style:none;margin-top:16px}
+.tags li{border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 16px;font-size:15px;color:var(--ink)}
+h3.sub{font-size:18px;margin-top:40px}
+
+.steps{list-style:none;counter-reset:s;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:34px}
+.steps>li{counter-increment:s;border-top:2px solid var(--navy);padding-top:14px}
+.steps>li::before{content:"0" counter(s);display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.steps h3{font-size:20px;margin-bottom:6px}
+.steps p{font-size:16px}
+.trust{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:34px;padding:16px 20px;border-radius:8px;background:#fff;border:1px solid var(--line);font-weight:600;color:var(--ink);font-size:16px}
+.trust span::before{content:"✓";color:var(--navy);margin-right:8px}
+.note{font-size:15.5px;color:var(--muted);margin-top:22px}
+
+.cases{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 40px;margin-top:26px}
+.cases li{padding:16px 0;border-top:1px solid var(--line)}
+.cases h3{font-size:18px}
+.cases p{font-size:16px}
+.cases li.next{border-top:1.5px dashed var(--navy)}
+.cases li.next h3{color:var(--navy)}
+.callout{margin-top:32px;padding:20px 24px;border-radius:8px;background:var(--navy);color:#e8e8ff;font-size:16.5px}
+.callout strong{color:#fff}
+
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:30px}
+.m{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px}
+.m h3{font-size:17px;margin-bottom:14px}
+.m .r{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:10px;font-size:14.5px;margin-top:8px}
+.m .r b{font-weight:700;color:var(--ink);text-align:right;font-size:15.5px}
+.bar{height:12px;border-radius:99px;background:var(--bar)}
+.bar.a{background:var(--navy)}
+.m .d{margin-top:14px;font-weight:700;color:var(--navy);font-size:15px}
+.legend{display:flex;gap:20px;font-size:14.5px;color:var(--muted);margin-top:4px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--bar);margin-right:6px;vertical-align:-1px}
+.legend i.a{background:var(--navy)}
+.src{font-size:14.5px;color:var(--muted);margin-top:16px}
+
+.cta{text-align:center;background:var(--navy-dk);color:#d7d7f2;border-top:0}
 .cta h2{color:#fff;margin-bottom:12px}
-.cta em{color:#7fe0cc}
+.cta em{color:var(--coral)}
 .cta .row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:30px}
-.cta .btn{background:#fff;color:var(--ink)}.cta .btn:hover{background:#7fe0cc}
-.cta .btn.line{background:none;color:#fff;border-color:#fff}.cta .btn.line:hover{background:#fff;color:var(--ink)}
+.cta .btn{background:#fff;color:var(--navy-dk)}.cta .btn:hover{background:var(--coral)}
+.cta .btn.line{background:none;color:#fff;border-color:#fff}.cta .btn.line:hover{background:#fff;color:var(--navy-dk)}
+.cta .mail{margin-top:22px;font-size:17px}
+.cta .mail a{display:inline-block;padding:10px 0;color:#fff;text-underline-offset:4px}.cta .mail a:hover{color:var(--coral)}
+.cta a:focus-visible{outline-color:#fff}
 
 footer{padding:48px 0 36px;font-size:15px;color:var(--muted)}
-footer .w{max-width:960px}
+footer .w{max-width:1040px}
 footer .top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:28px}
-footer .desc{max-width:340px;margin-top:8px}
+footer .desc{max-width:340px;margin-top:10px}
 footer h4{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-bottom:6px}
 footer ul{list-style:none}
 footer ul a{display:inline-block;padding:6px 0}
 footer .bottom{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 24px;font-size:14px}
 
+@media (max-width:860px){.steps{grid-template-columns:1fr}.cases{grid-template-columns:1fr}}
+@media (max-width:760px){header .w{row-gap:0}header .btn{order:2}nav{order:3;width:100%;margin-top:4px}}
 @media (max-width:640px){
   body{font-size:17px}
-  .hero{padding:64px 0 56px}
-  section{padding:56px 0}
-  .two{grid-template-columns:1fr;gap:28px}
-  .steps{grid-template-columns:1fr 1fr}
+  .hero{padding:56px 0 40px}
+        section{padding:56px 0}
   nav{font-size:14px;gap:0 16px}
 }
+
+.kicker{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:8px}
+.lead{max-width:760px;color:var(--muted);margin:0 auto 30px;text-align:center}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:34px}
+.step{padding:24px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(20,20,95,.06)}
+.step-num{display:inline-flex;width:36px;height:36px;border-radius:10px;align-items:center;justify-content:center;background:var(--navy);color:#fff;font-size:13px;font-weight:800;margin-bottom:18px}
+.step h3,.use-card h3,.why-card h3{font-size:20px;color:var(--navy-dk);margin-bottom:7px}
+.step p,.use-card p,.why-card p{font-size:16px;line-height:1.65;color:var(--muted)}
+.source-strip{margin-top:22px;padding:20px 24px;border:1px solid #dfe3f0;border-radius:16px;background:linear-gradient(135deg,#f7f8fc,#fff)}
+.source-strip h3{font-size:17px;color:var(--navy-dk);margin-bottom:4px}
+.source-strip p{font-size:15px;color:var(--muted)}
+.use-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+.use-card{padding:22px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px}
+.why-card{padding:22px;border-radius:16px;background:#fff;border:1px solid #e2e4ef}
+.cta{text-align:center}
+.cta .w{max-width:820px}
+.cta h2{max-width:760px;margin-left:auto;margin-right:auto}
+.cta> .w>p:not(.mail){max-width:700px;margin:0 auto 24px}
+@media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}.why-grid{grid-template-columns:repeat(2,1fr)}.use-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.steps,.use-grid,.why-grid{grid-template-columns:1fr}.step,.use-card,.why-card{padding:20px}.source-strip{padding:18px}.lead{font-size:17px}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="w">
-    <a class="logo" href="#top">Manjam</a>
-    <nav aria-label="Page sections">
-      <a href="#about">About</a><a href="#partnership">Partnership</a><a href="#what-it-does">What It Does</a><a href="#accuracy">Accuracy</a><a href="#who">Who It's For</a>
-    </nav>
-  </div>
+<div class="w">
+<a class="logo" href="#top"><img alt="" height="31" src="data:image/png;base64,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" width="30"/>Manjam AI</a>
+<a class="btn sm" href="mailto:manjamai@lableb.com">Contact Us<span class="sr"> (Email Manjam AI at manjamai@lableb.com)</span></a>
+<nav aria-label="Page sections"><a href="#how-it-works">How It Works</a><a href="#use-cases">Use Cases</a><a href="#why-manjam">Why Manjam</a><a href="#contact">Contact</a></nav>
+</div>
 </header>
-
-<main id="top">
+<main id="top" tabindex="-1">
 <div class="hero">
-  <div class="w">
-    <h1>Manjam: Knowledge That <em>Renews Every Day</em></h1>
-    <p>The intelligent engine that keeps Manhom the most up-to-date reference on influential people and organizations across the Arab world.</p>
-    <div class="row">
-      <a class="btn" href="https://manhom.com" target="_blank" rel="noopener noreferrer">Explore Manhom<span class="sr"> (opens in a new tab)</span></a>
-      <span class="by">Powered by Manhom × Lableb AI</span>
-    </div>
-  </div>
+<div class="w">
+<h1>Your Organization's Knowledge… <em>One Clear Answer</em></h1>
+<p>Manjam AI brings your organization's documents, archives, databases, and other knowledge sources together — so teams can ask questions in natural language and find useful answers with the source content to review.</p>
+<div class="row">
+<a class="btn" href="mailto:manjamai@lableb.com">Contact Us<span class="sr"> (Email Manjam AI at manjamai@lableb.com)</span></a>
+<span class="by">Arabic-focused AI · by Lableb AI</span>
 </div>
 
-<section id="about">
-  <div class="w">
-    <h2>What Is <em>Manjam</em>?</h2>
-    <p>In a world where positions, achievements, and news change every day, accurate information isn't enough — <strong>it has to stay current</strong>. Manjam is the intelligent engine behind Manhom. Every day, it <strong>monitors trusted Arab and international sources</strong> to discover what's new about people, companies, educational institutions, awards, and conferences across the region, and brings it all together in one place.</p>
-    <ul class="types">
-      <li>People</li><li>Companies</li><li>Educational Institutions</li><li>Awards</li><li>Conferences</li>
-    </ul>
-  </div>
-</section>
+</div>
 
-<section id="partnership" class="soft">
-  <div class="w">
-    <h2>A <em>Partnership</em> Between Manhom and Lableb AI</h2>
-    <p>Manjam is the result of a partnership between Manhom and Lableb AI, our technology partner specializing in data extraction and processing. <strong>Lableb leads the technical side — searching sources, extracting information, and analyzing it</strong> — while <strong>the Manhom team handles editing, verification, and publishing</strong> according to our standards. Together, we combine advanced data-processing technology with deep editorial expertise in Arabic content.</p>
-    <div class="two">
-      <div>
-        <h3>Lableb AI — Technology</h3>
-        <p>Discovers, extracts, and analyzes data from trusted sources.</p>
-        <a class="btn line" href="https://lableb.com/en" target="_blank" rel="noopener noreferrer">Visit Lableb<span class="sr"> (opens in a new tab)</span></a>
-      </div>
-      <div>
-        <h3>Manhom — Editorial</h3>
-        <p>Reviews, verifies, and publishes to the highest standards.</p>
-        <a class="btn line" href="https://manhom.com" target="_blank" rel="noopener noreferrer">Visit Manhom<span class="sr"> (opens in a new tab)</span></a>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section id="what-it-does">
-  <div class="w">
-    <h2>What Does <em>Manjam</em> Do?</h2>
-    <p>Manjam works like a tireless prospector, delivering three core services:</p>
-    <ul class="list">
-      <li><h3>Discover the New</h3><p>Identifies people and organizations not yet documented and adds them to our knowledge base.</p></li>
-      <li><h3>Update the Existing</h3><p>Tracks changes to existing profiles — a new position, a career move, or a recent award.</p></li>
-      <li><h3>Connect the Dots</h3><p>Links people, organizations, and events to map the region's professional network.</p></li>
-    </ul>
-  </div>
-</section>
 
-<section id="accuracy" class="soft">
-  <div class="w">
-    <h2>Accuracy You Can <em>Rely On</em></h2>
-    <p>For us, accuracy matters as much as speed. Manjam <strong>cross-checks every piece of information against multiple sources</strong>, evaluates the reliability of each source, and intelligently <strong>distinguishes between people with similar names</strong>. Our <strong>specialist editors</strong> then review anything that needs verification before it's published. The result: current, trustworthy information you can base your decisions, research, and work on.</p>
-    <ol class="steps">
-      <li>Monitor sources</li>
-      <li>Cross-check &amp; score reliability</li>
-      <li>Editorial review</li>
-      <li>Published on Manhom</li>
-    </ol>
-  </div>
-</section>
 
-<section id="who">
-  <div class="w">
-    <h2>Who Is <em>Manjam</em> For?</h2>
-    <p>Whether you're a researcher, journalist, investor, recruiter, or simply interested in the decision-makers of the Arab world, Manjam <strong>saves you the time and effort of searching and verifying</strong> across dozens of sources. Everything you need is up to date and organized in one place.</p>
-    <ul class="types">
-      <li>Researchers</li><li>Journalists</li><li>Investors</li><li>Recruiters</li><li>Curious Minds</li>
-    </ul>
-  </div>
-</section>
-
-<section class="cta">
-  <div class="w">
-    <h2>Start <em>Exploring</em> Today</h2>
-    <p>Discover how Manjam makes knowledge closer, fresher, and more accurate.</p>
-    <div class="row">
-      <a class="btn" href="https://manhom.com" target="_blank" rel="noopener noreferrer">Start Searching on Manhom<span class="sr"> (opens in a new tab)</span></a>
-      <a class="btn line" href="https://lableb.com/en" target="_blank" rel="noopener noreferrer">Learn About Lableb AI<span class="sr"> (opens in a new tab)</span></a>
-    </div>
-  </div>
-</section>
-</main>
-
+</div><section id="how-it-works"><div class="w"><div class="kicker">How It Works</div><h2>From your information to useful answers</h2><p class="lead">A simple path from the knowledge you already have to answers your teams can use.</p><div class="steps"><article class="step"><span class="step-num">01</span><h3>Connect</h3><p>Bring together databases, document archives, audio and video archives, and other content sources.</p></article><article class="step"><span class="step-num">02</span><h3>Understand</h3><p>Manjam AI processes the available content so information can be found and understood more easily.</p></article><article class="step"><span class="step-num">03</span><h3>Ask</h3><p>Ask in Arabic, English, or your usual wording using natural language.</p></article><article class="step"><span class="step-num">04</span><h3>Find &amp; Review</h3><p>Get a useful answer with source references that help you review the underlying content.</p></article></div><div class="source-strip"><div><h3>Knowledge sources</h3><p>Databases · Document archives · Audio &amp; video · Articles and books · Other organizational content</p></div></div></div></section><section id="use-cases"><div class="w"><div class="kicker">Use Cases</div><h2>One knowledge platform, many teams</h2><p class="lead">Different teams can use the same organizational knowledge for different everyday needs — without rebuilding the knowledge base for each use case.</p><div class="use-grid"><article class="use-card"><h3>Support</h3><p>Find relevant information faster.</p></article><article class="use-card"><h3>Customer Service</h3><p>Support responses to customer inquiries.</p></article><article class="use-card"><h3>Human Resources</h3><p>Find policies, procedures, and related information.</p></article><article class="use-card"><h3>Legal Affairs</h3><p>Support contract and policy review.</p></article><article class="use-card"><h3>Finance</h3><p>Support invoice checks and financial information lookup.</p></article><article class="use-card"><h3>Archives &amp; Management</h3><p>Find reports, summaries, and archived knowledge.</p></article></div></div></section><section class="soft" id="why-manjam"><div class="w"><div class="kicker">Why Manjam</div><h2>Built around the way organizations already work</h2><p class="lead">The platform is designed to work with existing organizational knowledge while keeping access and review close to the information itself.</p><div class="why-grid"><article class="why-card"><h3>Flexible deployment</h3><p>Can be deployed on-premise or in a sovereign cloud environment, helping organizations keep their data under their control.</p></article><article class="why-card"><h3>Arabic-focused experience</h3><p>Developed by Arabic speakers with an understanding of regional organizational structures and requirements.</p></article><article class="why-card"><h3>Access control</h3><p>Respects user permissions so employees see answers derived only from information they are authorized to view.</p></article><article class="why-card"><h3>Source-grounded answers</h3><p>Designed to ground answers in available source content and make review easier.</p></article></div></div></section><section class="cta" id="contact"><div class="w"><div class="kicker">Start a Conversation</div><h2>See how Manjam AI can fit your organization</h2><p>If your organization has information spread across documents, archives, databases, or other systems, let us show you how a unified knowledge platform can help teams find and use it more easily.</p><div class="row"><a class="btn" href="mailto:manjamai@lableb.com">Contact Us</a><a class="btn line" href="https://lableb.com/en" rel="noopener noreferrer" target="_blank">Learn About Lableb AI</a></div></div></section></main>
 <footer>
-  <div class="w">
-    <div class="top">
-      <div>
-        <a class="logo" href="#top">Manjam</a>
-        <p class="desc">Manhom — the reference for influential people and organizations in the Arab world.</p>
-      </div>
-      <div><h4>Manhom</h4><ul><li><a href="https://manhom.com" target="_blank" rel="noopener noreferrer">Home<span class="sr"> (opens in a new tab)</span></a></li></ul></div>
-      <div><h4>Partners</h4><ul><li><a href="https://lableb.com/en" target="_blank" rel="noopener noreferrer">Lableb AI<span class="sr"> (opens in a new tab)</span></a></li></ul></div>
-    </div>
-    <div class="bottom"><span>Manjam is a partnership between Manhom and Lableb AI.</span><span>© 2026 Manhom. All rights reserved.</span></div>
-  </div>
+<div class="w">
+<div class="top">
+<div>
+<a class="logo" href="#top"><img alt="" height="31" src="data:image/png;base64,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" width="30"/>Manjam AI</a>
+<p class="desc">Manjam AI — a knowledge platform by Lableb AI, designed to help teams find and use organizational knowledge more easily.</p>
+</div>
+<div><h4>Product</h4><ul><li><a href="#how-it-works">How It Works</a></li><li><a href="#use-cases">Use Cases</a></li><li><a href="#why-manjam">Why Manjam</a></li></ul></div>
+<div><h4>Company</h4><ul><li><a href="https://lableb.com/en" rel="noopener noreferrer" target="_blank">Lableb AI<span class="sr"> (opens in a new tab)</span></a></li><li><a href="mailto:manjamai@lableb.com">manjamai@lableb.com<span class="sr"> (Email Manjam AI at manjamai@lableb.com)</span></a></li></ul></div>
+</div>
+<div class="bottom"><span>One platform · Unified knowledge · Practical support for every team</span><span>© 2026 Lableb AI. All rights reserved.</span></div>
+</div>
 </footer>
-
 </body>
 </html>
