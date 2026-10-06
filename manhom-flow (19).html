@@ -785,11 +785,13 @@ const ScreenProfile = ({ onNav, personId = 'masoud' }) => {
             <PfGallery bar={bar} />
             <h3 id="pf-stations" style={bar}>محطات في حياة {person.name} في العمل والتعليم</h3>
             <div style={sub}>مناصب حالية</div>
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(270px,1fr))', gap: '0 24px' }}>
             {job('الرئيس التنفيذي', 'مجموعة إي آند', '1 أبريل 2026 حتى الآن', 'e&')}
-            {job('الرئيس التنفيذي', 'شركة إي آند الإمارات', 'أغسطس 2021 حتى الآن', 'e&')}
+            {job('الرئيس التنفيذي', 'شركة إي آند الإمارات', 'أغسطس 2021 حتى الآن', 'e&')}</div>
             <div style={sub}>مناصب سابقة</div>
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(270px,1fr))', gap: '0 24px' }}>
             {job('الرئيس التنفيذي', 'شركة الياه للاتصالات الفضائية - الياه سات', '2013 حتى 2021', 'yahsat')}
-            {job('نائب رئيس بقطاع الاستثمار في تقنية المعلومات والاتصالات', 'شركة مبادلة للاستثمار - مبادلة', '2011 حتى 2012', 'MUBADALA')}
+            {job('نائب رئيس بقطاع الاستثمار في تقنية المعلومات والاتصالات', 'شركة مبادلة للاستثمار - مبادلة', '2011 حتى 2012', 'MUBADALA')}</div>
             <div style={sub}>عضويات ومؤتمرات</div>
             <div style={{ marginBottom: 26 }}><div style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', marginBottom: 4 }}>القمة العالمية للحكومات</div><div style={{ fontSize: 15, color: '#475569' }}>متحدث</div></div>
 
@@ -819,7 +821,7 @@ const ScreenProfile = ({ onNav, personId = 'masoud' }) => {
 
             <div>
               <p style={sideT}>رؤساء تنفيذيون</p>
-              {cards(ceos, '#FFF9E4')}
+              {cards(ceos, 'white')}
               {more}
               <div style={{ textAlign: 'center', marginTop: 16 }}><button onClick={() => onNav('membership')} style={{ background: '#E5BC47', color: '#1e293b', border: 0, borderRadius: 100, padding: '14px 28px', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>للاستعلام عن باقة الرؤساء التنفيذيين</button></div>
               <button onClick={() => onNav('membership')} style={{ width: '100%', marginTop: 16, background: '#4169E1', color: 'white', border: 0, borderRadius: 8, padding: 16, fontSize: 15, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>الاشتراك بنشرة الرئيس التنفيذي الأسبوعية</button>
@@ -856,7 +858,7 @@ const ScreenProfile = ({ onNav, personId = 'masoud' }) => {
               </div>
             </div>
 
-            <div><p style={sideT}>عضويات مميزة</p>{cards(mems, '#F1F4FF')}{more}</div>
+            <div><p style={sideT}>عضويات مميزة</p>{cards(mems, 'white')}{more}</div>
             <div><p style={sideT}>الشخصيات الأعلى زيارة</p>{cards(top, 'white', { border: '1px solid #f1f5f9', boxShadow: '0 2px 8px rgba(0,0,0,.04)' })}{more}</div>
 
             <div>
@@ -2627,6 +2629,9 @@ const ScreenProfileLinear = ({ onNav, personId = 'masoud' }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreLinks, setMoreLinks] = useState(false);
   const [nom, setNom] = useState(false);
+  const [pv, setPv] = useState("a");
+  const [pp, setPp] = useState("p1");
+  const [pcol, setPcol] = useState("violet");
   const bar = { fontSize: 19, fontWeight: 800, color: '#1e293b', background: '#F0F0F0', borderRadius: 10, padding: '13px 18px', margin: '0 0 14px' };
   const sub = { fontSize: 14.5, fontWeight: 600, color: '#1e293b', background: '#F5F5F6', borderRadius: 8, padding: '9px 16px', margin: '12px 0 14px' };
   const blue = { color: '#4169E1', fontWeight: 500, textDecoration: 'none' };
@@ -2709,7 +2714,7 @@ const ScreenProfileLinear = ({ onNav, personId = 'masoud' }) => {
           </div>}
         </div>
 
-        <Sec><div id="lp-day" style={{ background: '#F1F4FF', borderRadius: 14, padding: 18, display: 'flex', gap: 18, alignItems: 'center', flexWrap: 'wrap' }}>
+        <PromoFrame v={pv} p={pp} c={pcol}><div id="lp-day" style={{ background: 'rgba(255,255,255,.75)', borderRadius: 14, padding: 18, display: 'flex', gap: 18, alignItems: 'center', flexWrap: 'wrap' }}>
           <img src={PEOPLE[1].photo} onError={(e) => e.target.src = 'https://picsum.photos/seed/rani/100/116'} style={{ width: 96, height: 112, borderRadius: 12, objectFit: 'cover', flexShrink: 0 }} />
           <div style={{ flex: 1, minWidth: 220 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#4169E1', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 5 }}><VerifiedBadge type="blue" size={14} /> شخصية اليوم</div>
@@ -2717,7 +2722,7 @@ const ScreenProfileLinear = ({ onNav, personId = 'masoud' }) => {
             <p style={{ fontSize: 14, color: '#475569', margin: '0 0 10px' }}>{PEOPLE[1].role}.</p>
             <a href="#" onClick={(e) => {e.preventDefault();onNav('add');}} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'white', border: '1px solid #dbe3f5', borderRadius: 100, padding: '6px 16px', fontSize: 12, fontWeight: 600, color: '#4169E1', textDecoration: 'none' }}><VerifiedBadge type="blue" size={12} /> وثّق ملفك لتظهر هنا</a>
           </div>
-        </div></Sec>
+        </div></PromoFrame>
 
 <Sec><h2 id="lp-bio" style={{ ...bar, margin: 0 }}>سيرة {person.name}</h2>
           <div style={sub}>معلومات مضافة من منصة "من هم"</div>
@@ -2726,18 +2731,20 @@ const ScreenProfileLinear = ({ onNav, personId = 'masoud' }) => {
 
 <Sec><h3 id="lp-stations" style={{ ...bar, margin: 0 }}>محطات في حياة {person.name} في العمل والتعليم</h3>
           <div style={sub}>مناصب حالية</div>
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(270px,1fr))', gap: '0 24px' }}>
           {job('الرئيس التنفيذي', 'مجموعة إي آند', '1 أبريل 2026 حتى الآن', 'e&')}
-          {job('الرئيس التنفيذي', 'شركة إي آند الإمارات', 'أغسطس 2021 حتى الآن', 'e&')}
+          {job('الرئيس التنفيذي', 'شركة إي آند الإمارات', 'أغسطس 2021 حتى الآن', 'e&')}</div>
           <div style={sub}>مناصب سابقة</div>
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(270px,1fr))', gap: '0 24px' }}>
           {job('الرئيس التنفيذي', 'شركة الياه للاتصالات الفضائية - الياه سات', '2013 حتى 2021', 'yahsat')}
-          {job('نائب رئيس بقطاع الاستثمار في تقنية المعلومات والاتصالات', 'شركة مبادلة للاستثمار - مبادلة', '2011 حتى 2012', 'MUBADALA')}
+          {job('نائب رئيس بقطاع الاستثمار في تقنية المعلومات والاتصالات', 'شركة مبادلة للاستثمار - مبادلة', '2011 حتى 2012', 'MUBADALA')}</div>
           <div style={sub}>عضويات ومؤتمرات</div>
           <div><div style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', marginBottom: 4 }}>القمة العالمية للحكومات</div><div style={{ fontSize: 15, color: '#475569' }}>متحدث</div></div>
           <PfEduAwards sub={sub} />
         </Sec>
 
-<Sec><h3 id="lp-mawshoor" style={bar}>موشور | خدمة أحدث التغييرات الإدارية</h3>
-          <div style={{ background: '#F3F4F5', borderRadius: 16, padding: '22px 28px 26px' }}>
+<PromoFrame v={pv} p={pp} c={pcol}><h3 id="lp-mawshoor" style={bar}>موشور | خدمة أحدث التغييرات الإدارية</h3>
+          <div style={{ background: 'rgba(255,255,255,.75)', borderRadius: 16, padding: '22px 28px 26px' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
               {[{ who: 'مروان أحمد بن غليطة', what: 'أصبح رئيس مجلس الإدارة في ', co: 'مؤسسة دبي الإنسانية', when: '1 أكتوبر 2026', photo: 'https://i.pravatar.cc/160?img=12' }, { who: 'شربل يزبك', what: 'أصبح الرئيس التنفيذي في ', co: 'شركة دبي الوطنية للتأمين وإعادة التأمين', when: '30 سبتمبر 2026', photo: 'https://i.pravatar.cc/160?img=33' }].map((m, i) =>
               <div key={i} style={{ flex: '1 1 300px', minWidth: 0, display: 'flex', gap: 14, alignItems: 'flex-start', paddingInlineStart: i ? 20 : 0, borderInlineStart: i ? '1px solid rgba(130,130,130,.25)' : 'none' }}>
@@ -2753,15 +2760,15 @@ const ScreenProfileLinear = ({ onNav, personId = 'masoud' }) => {
               <button onClick={() => onNav('mawshoor-list')} style={{ background: 'transparent', border: '2px solid #4169E1', color: '#4169E1', borderRadius: 100, padding: '12px 36px', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: 10 }}>تصفح كافة التعيينات <Icon name="list" size={16} /></button>
             </div>
           </div>
-        </Sec>
+        </PromoFrame>
 
-<Sec><h3 id="lp-ceo" style={bar}>رؤساء تنفيذيون</h3>
+<PromoFrame v={pv} p={pp} c={pcol}><h3 id="lp-ceo" style={bar}>رؤساء تنفيذيون</h3>
           {cards(ceos, '#FFF9E4')}{more}
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 16 }}>
             <button onClick={() => onNav('membership')} style={{ flex: '1 1 260px', background: '#E5BC47', color: '#1e293b', border: 0, borderRadius: 100, padding: '14px 24px', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>للاستعلام عن باقة الرؤساء التنفيذيين</button>
             <button onClick={() => onNav('membership')} style={{ flex: '1 1 260px', background: '#4169E1', color: 'white', border: 0, borderRadius: 100, padding: '14px 24px', fontSize: 15, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>الاشتراك بنشرة الرئيس التنفيذي الأسبوعية</button>
           </div>
-        </Sec>
+        </PromoFrame>
 
 <div id="lp-gallery"><PfGallery bar={bar} /></div>
 
@@ -2774,7 +2781,7 @@ const ScreenProfileLinear = ({ onNav, personId = 'masoud' }) => {
           </a>)}</div>
         </Sec>
 
-<Sec><h3 id="lp-mem" style={bar}>عضويات مميزة</h3>{cards(mems, '#F1F4FF')}{more}</Sec>
+<PromoFrame v={pv} p={pp} c={pcol}><h3 id="lp-mem" style={bar}>عضويات مميزة</h3>{cards(mems, '#F1F4FF')}{more}</PromoFrame>
 
 <Sec><h3 id="lp-links" style={bar}>الروابط الخارجية</h3>
           {(moreLinks ? links : links.slice(0, 3)).map((l, i) => <div key={i} style={{ display: 'flex', gap: 8, padding: '13px 0', borderBottom: '1px solid #f1f5f9' }}>
@@ -2799,18 +2806,63 @@ const ScreenProfileLinear = ({ onNav, personId = 'masoud' }) => {
 
 <Sec><h3 id="lp-top" style={bar}>الشخصيات الأعلى زيارة</h3>{cards(top, 'white', { border: '1px solid #f1f5f9', boxShadow: '0 2px 8px rgba(0,0,0,.04)' })}{more}</Sec>
 
-<Sec><h3 id="lp-arts" style={bar}>مقالات تهمك</h3>
+<PromoFrame v={pv} p={pp} c={pcol}><h3 id="lp-arts" style={bar}>مقالات تهمك</h3>
           <div style={grid(260)}>{arts.map((a) => <a key={a.i} href="#" onClick={(e) => e.preventDefault()} style={{ display: 'flex', gap: 12, alignItems: 'center', background: 'white', border: '1px solid #f1f5f9', borderRadius: 12, padding: 10, textDecoration: 'none' }}>
             <div style={{ minWidth: 0, flex: 1 }}><div style={{ fontSize: 12, color: '#64748b', marginBottom: 4 }}>من هارفارد بزنس ريفيو</div><div style={{ fontSize: 14.5, fontWeight: 800, color: '#1e293b', lineHeight: 1.55 }}>{a.t}</div></div>
             <img src={'https://picsum.photos/seed/' + a.i + '/250/170'} alt="" style={{ width: 92, height: 64, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }} />
           </a>)}</div>
-        </Sec>
+        </PromoFrame>
 
+      <div style={{ position: 'fixed', bottom: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 80, background: '#1e1b2e', color: 'white', borderRadius: 20, padding: '10px 14px', display: 'grid', gap: 4, boxShadow: '0 8px 28px rgba(0,0,0,.28)', maxWidth: '94vw' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}><span style={{ fontSize: 12, opacity: .7, marginInlineEnd: 4 }}>النمط:</span>{[['a', 'شريط علوي ★'], ['b', 'إطار منقّط'], ['c', 'فاصل'], ['d', 'خطوط قطرية'], ['e', 'بطاقة هادئة'], ['f', 'ترويسة مدمجة'], ['off', 'بدون']].map(([k, l]) => <button key={k} onClick={() => setPv(k)} style={{ border: 0, borderRadius: 100, padding: '6px 13px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', background: pv === k ? '#B9A3EC' : 'transparent', color: pv === k ? '#1e1b2e' : 'white' }}>{l}</button>)}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}><span style={{ fontSize: 12, opacity: .7, marginInlineEnd: 4 }}>العبارة:</span>{PROMO_P.map((x) => [x.k, x.n]).map(([k, l]) => <button key={k} onClick={() => setPp(k)} style={{ border: 0, borderRadius: 100, padding: '6px 13px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', background: pp === k ? '#B9A3EC' : 'transparent', color: pp === k ? '#1e1b2e' : 'white' }}>{l}</button>)}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}><span style={{ fontSize: 12, opacity: .7, marginInlineEnd: 4 }}>اللون:</span>{Object.entries(PROMO_C).map(([k, x]) => <button key={k} onClick={() => setPcol(k)} style={{ border: pcol === k ? '2px solid white' : '2px solid transparent', borderRadius: 100, padding: '4px 12px 4px 6px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', background: 'transparent', color: 'white', display: 'inline-flex', alignItems: 'center', gap: 6 }}><span style={{ width: 16, height: 16, borderRadius: '50%', background: x.ink, boxShadow: 'inset 0 0 0 4px ' + x.tint }} />{x.n}</button>)}</div>
+        </div>
       </main>
       <Footer />
     </Page>);
 };
 
+// ═══════════════════ PROMO FRAME ═══════════════════
+const PROMO_P = [
+  { k: 'p1', n: 'مميّز ★', tag: 'مميّز', foot: 'تابع تصفح الملف' },
+  { k: 'p2', n: 'مقترح لك', tag: 'مقترح لك', foot: 'عُد إلى الملف الشخصي' },
+  { k: 'p3', n: 'من شركائنا', tag: 'من شركائنا', foot: 'نواصل الملف من هنا' },
+  { k: 'p4', n: 'مساحة مميّزة', tag: 'مساحة مميّزة', foot: 'تابع القراءة بعد هذه المساحة' },
+  { k: 'p5', n: 'للاستكشاف', tag: 'للاستكشاف', foot: 'ننتقل الآن إلى بقية الملف' }
+];
+const PROMO_C = {
+  violet: { n: 'بنفسجي', ink: '#5B3FB0', line: '#CDBDF2', tint: '#F4EFFF', tint2: '#EDE5FF', mid: '#B9A3EC' },
+  green: { n: 'أخضر', ink: '#166534', line: '#B7DEC4', tint: '#EFFAF2', tint2: '#DDF3E5', mid: '#7CC796' },
+  orange: { n: 'برتقالي', ink: '#B23A0A', line: '#F6C6A3', tint: '#FFF4EA', tint2: '#FFE6D2', mid: '#F2A365' },
+  yellow: { n: 'أصفر', ink: '#7A5700', line: '#E9D58A', tint: '#FFFAE0', tint2: '#FFF0B3', mid: '#E2C03F' }
+};
+const PromoFrame = ({ v, p, c: pc, children }) => {
+  if (v === 'off') return <section style={{ marginBottom: 34 }}>{children}</section>;
+  const t = PROMO_P.find((x) => x.k === p) || PROMO_P[0];
+  const { ink, line, tint, tint2, mid } = PROMO_C[pc] || PROMO_C.violet;
+  const foot = (extra) => <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', marginTop: 16, fontSize: 13, fontWeight: 600, color: ink, ...extra }}><span>{t.foot}</span><span style={{ fontSize: 15 }}>↓</span></div>;
+  const pill = () => <span style={{ position: 'absolute', top: -13, insetInlineStart: 18, background: ink, color: 'white', fontSize: 12.5, fontWeight: 700, borderRadius: 100, padding: '4px 14px', whiteSpace: 'nowrap', lineHeight: 1.4, width: 'max-content' }}>{t.tag}</span>;
+  const dot = <span style={{ width: 7, height: 7, borderRadius: '50%', background: ink, display: 'inline-block' }} />;
+  const rule = <span style={{ flex: 1, height: 1, background: line }} />;
+  if (v === 'a') return <section style={{ marginBottom: 34, borderRadius: 16, overflow: 'hidden', border: '1px solid ' + line, background: tint }}>
+    <div style={{ background: ink, color: 'white', padding: '8px 18px', fontSize: 13, fontWeight: 700 }}>{t.tag}</div>
+    <div style={{ padding: 18 }}>{children}{foot()}</div></section>;
+  if (v === 'b') return <section style={{ marginBottom: 34, position: 'relative', marginTop: 8 }}>
+    <div style={{ background: tint, border: '2px dashed ' + mid, borderRadius: 16, padding: '26px 18px 18px' }}>{children}{foot({ borderTop: '1px dashed ' + mid, paddingTop: 14 })}</div>{pill()}</section>;
+  if (v === 'c') return <section style={{ marginBottom: 34 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10, color: ink, fontSize: 12.5, fontWeight: 700 }}>{rule}<span>{t.tag}</span>{rule}</div>
+    <div style={{ background: tint, borderRadius: 16, padding: 18 }}>{children}</div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10, color: ink, fontSize: 13, fontWeight: 600 }}>{rule}<span>{t.foot} ↓</span>{rule}</div></section>;
+  if (v === 'd') return <section style={{ marginBottom: 34, position: 'relative', marginTop: 8 }}>
+    <div style={{ background: 'repeating-linear-gradient(135deg,' + tint + ' 0 14px,' + tint2 + ' 14px 28px)', borderRadius: 16, padding: '26px 18px 18px', borderInlineStart: '6px solid ' + ink }}>{children}{foot()}</div>{pill()}</section>;
+  if (v === 'e') return <section style={{ marginBottom: 34, background: tint, borderRadius: 18, padding: '14px 18px 16px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: ink, fontSize: 13, fontWeight: 700, marginBottom: 12 }}>{dot}{t.tag}</div>
+    {children}{foot({ marginTop: 14 })}</section>;
+  return <section style={{ marginBottom: 34, background: 'linear-gradient(180deg,' + tint2 + ',' + tint + ' 90px)', borderRadius: 18, border: '1px solid ' + line, padding: '12px 18px 16px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}><span style={{ color: ink, fontSize: 13, fontWeight: 700 }}>{t.tag}</span>{rule}<span style={{ color: ink, fontSize: 12, opacity: .85 }}>{t.foot} ↓</span></div>
+    {children}</section>;
+};
 // ═══════════════════ PROFILE EXTRA SECTIONS ═══════════════════
 const PfLists = ({ bar }) => <section style={{ marginBottom: 28 }}>
   <h3 style={bar}>قوائم من هم</h3>
