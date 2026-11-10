@@ -1,0 +1,1102 @@
+<title>Manhom Admin</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: fixed sidebar + top bar + canvas of cards + footer. Manhom admin design system; single light look by choice (the system defines no dark theme). */
+:root {
+  --primary: #4169e1; --on-primary: #ffffff; --ink: #181c32; --text: #3f4254; --icon: #7e8299; --muted: #a1a5b7;
+  --section-label: #959aaf; --surface: #ffffff; --canvas: #e2e4ed; --border: #e4e6ef; --field: #eff2f5; --success: #50cd89;
+  --success-soft: #e8fff3; --danger: #f44336; --danger-text: #c62828; --secondary: #e4e6ef; --primary-soft: #eef2fd;
+  --table-head: #757575; --table-text: #212121; --table-line: #e0e0e0; --filter-field: #f5f5f5; --info-icon: #b1b2b5;
+  --shadow-card: 0 1.6px 16px 4px rgba(0, 0, 0, .05);
+  --font-sans: "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --space-gutter: 25px; --space-card: 38px; --space-row: 26px; --space-nav: 22px; --space-icon-gap: 17px; --space-body-end: 64px;
+  --radius-card: 8px; --radius-field: 8px; --radius-button: 6px; --radius-pill: 9999px;
+  --sidebar-width: 338px; --topbar-height: 84px; --card-header-height: 88px; --field-height: 55px; --button-height: 52px;
+  --nav-item-height: 51px; --footer-height: 59px; --icon-size: 24px; --avatar-size: 50px;
+  color-scheme: light;
+}
+html, body { height: 100%; }
+body { background: var(--canvas); color: var(--text); font-family: var(--font-sans); font-size: 15px; -webkit-font-smoothing: antialiased; }
+button, input, select { font: inherit; }
+.ico { display: block; flex: none; width: var(--icon-size); height: var(--icon-size); }
+.ln { display: block; flex: none; width: var(--icon-size); height: var(--icon-size); fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.shell { display: grid; grid-template-columns: var(--sidebar-width) minmax(0, 1fr); grid-template-rows: var(--topbar-height) 1fr auto; min-height: 100%; }
+.shell.collapsed { grid-template-columns: 84px minmax(0, 1fr); }
+
+/* Sidebar */
+.sidebar { grid-row: 1 / -1; background: var(--surface); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; height: 100dvh; min-width: 0; z-index: 30; }
+.sidebar-head { height: var(--topbar-height); box-sizing: border-box; flex: none; border-block-end: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding-inline: 24px 26px; gap: 8px; }
+.sidebar-head img { height: 40px; width: auto; display: block; }
+.icon-btn { border: 0; background: none; padding: 6px; color: var(--icon); cursor: pointer; border-radius: var(--radius-button); display: inline-flex; align-items: center; justify-content: center; }
+.icon-btn:hover { color: var(--primary); }
+[dir="rtl"] .flip { transform: scaleX(-1); }
+.nav { padding-block: 18px; overflow-y: auto; flex: 1; }
+.nav-section { font-size: 16px; line-height: 24px; color: var(--section-label); padding: 10px var(--space-nav) 4px; white-space: nowrap; }
+.nav-item { display: flex; align-items: center; gap: var(--space-icon-gap); width: 100%; box-sizing: border-box; height: var(--nav-item-height); padding-inline: var(--space-nav) 26px; border: 0; background: none; font-size: 15px; line-height: 22px; color: var(--text); text-align: start; cursor: pointer; text-decoration: none; }
+.nav-item .ico { color: var(--icon); }
+.nav-item .label { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-item .chev { width: 16px; height: 16px; color: var(--muted); transition: transform .15s ease; }
+.nav-item[aria-expanded="true"] .chev { transform: rotate(90deg); }
+.nav-item:hover .label, .nav-item.active, .nav-item.active .ico, .nav-item.here .ico { color: var(--primary); }
+.nav-item.here .label { color: var(--ink); font-weight: 500; }
+.new-tag { font-size: 11px; line-height: 18px; padding-inline: 7px; border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary); font-weight: 600; flex: none; }
+.subnav { padding-inline-start: calc(var(--space-nav) + var(--icon-size) + var(--space-icon-gap)); padding-block-end: 4px; }
+.subnav .nav-item { height: 38px; padding-inline-start: 0; font-size: 14px; gap: 12px; }
+.subnav .dot { width: 5px; height: 5px; border-radius: var(--radius-pill); background: var(--muted); flex: none; }
+.subnav .nav-item.active .dot { background: var(--primary); }
+.collapsed .nav-section, .collapsed .nav-item .label, .collapsed .nav-item .chev, .collapsed .new-tag, .collapsed .subnav, .collapsed .sidebar-head img { display: none; }
+.collapsed .sidebar-head { justify-content: center; padding-inline: 0; }
+.collapsed .collapse-btn .ln { transform: scaleX(-1); }
+[dir="rtl"] .collapsed .collapse-btn .ln { transform: none; }
+.collapsed .nav-item { justify-content: center; padding-inline: 0; }
+
+/* Top bar */
+.topbar { background: var(--surface); border-block-end: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-inline: var(--space-gutter); position: sticky; top: 0; z-index: 20; min-width: 0; }
+.topbar-start { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.crumb { color: var(--icon); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.crumb b { color: var(--ink); font-weight: 500; }
+.menu-btn { display: none; }
+.topbar-end { display: flex; align-items: center; gap: 18px; }
+.lang { border: 0; background: var(--field); color: var(--text); border-radius: var(--radius-button); height: 36px; padding-inline: 12px; cursor: pointer; font-size: 14px; }
+.bell { color: var(--primary); }
+.avatar { width: var(--avatar-size); height: var(--avatar-size); border-radius: var(--radius-field); background: var(--field); color: var(--icon); display: grid; place-items: center; flex: none; }
+
+/* Content */
+main { padding: var(--space-gutter); display: flex; flex-direction: column; gap: var(--space-gutter); min-width: 0; }
+.card { background: var(--surface); border-radius: var(--radius-card); min-width: 0; }
+.card.raised { box-shadow: var(--shadow-card); }
+.card-head { min-height: var(--card-header-height); box-sizing: border-box; padding: 16px var(--space-card); display: flex; align-items: center; justify-content: space-between; gap: var(--space-row); flex-wrap: wrap; border-block-end: 1px solid var(--border); }
+.card-title { margin: 0; font-size: 20px; line-height: 28px; font-weight: 600; color: var(--ink); text-wrap: balance; display: flex; align-items: center; gap: 10px; }
+.card-title.primary { color: var(--primary); }
+.card-sub { margin: 4px 0 0; font-size: 14px; line-height: 21px; color: var(--icon); max-width: 70ch; }
+.card-body { padding: var(--space-card) var(--space-card) var(--space-body-end); display: flex; flex-direction: column; gap: var(--space-row); }
+.card-body.tight { padding-block-end: var(--space-card); }
+.card-foot { border-block-start: 1px solid var(--border); padding: var(--space-row) var(--space-card) 25px; display: flex; align-items: center; justify-content: flex-end; gap: 12px; flex-wrap: wrap; }
+.status { color: var(--icon); font-size: 14px; margin-inline-end: auto; }
+.status.bad { color: var(--danger-text); }
+
+.row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: start; }
+.row > .lbl { font-size: 16px; line-height: 24px; color: var(--text); padding-inline-end: var(--space-row); padding-block-start: 15px; }
+.star { color: var(--danger-text); margin-inline-start: 3px; }
+[hidden] { display: none !important; }
+.lbl .hint, .hint { display: block; font-size: 13px; line-height: 19px; color: var(--icon); margin-top: 3px; font-weight: 400; }
+.field { position: relative; min-width: 0; }
+.ctl { width: 100%; box-sizing: border-box; height: var(--field-height); border: 0; border-radius: var(--radius-field); background: var(--field); padding-inline: var(--space-row) 20px; font-size: 17px; line-height: 24px; color: var(--ink); outline: none; font-variant-numeric: tabular-nums; }
+.ctl:focus-visible { box-shadow: 0 0 0 2px var(--primary); outline: none; }
+.ctl::placeholder { color: var(--text); opacity: .7; }
+select.ctl { appearance: none; padding-inline-end: 48px; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237e8299' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 18px; background-position: right 18px center; }
+[dir="rtl"] select.ctl { background-position: left 18px center; }
+.with-check .ctl { padding-inline-end: 58px; }
+.with-check .ok { position: absolute; inset-inline-end: 14px; top: calc(var(--field-height) / 2 - 13px); width: 26px; height: 26px; stroke-width: 2.5; color: var(--success); pointer-events: none; }
+.invalid .ctl, .invalid .tags { box-shadow: 0 0 0 2px var(--danger); }
+.invalid .ok { display: none; }
+.err { color: var(--danger-text); font-size: 13px; line-height: 18px; margin-top: 6px; }
+.err:empty { display: none; }
+.info-dot { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: var(--radius-pill); background: var(--field); color: var(--icon); font-size: 12px; font-weight: 700; margin-inline-start: 6px; cursor: help; vertical-align: 2px; }
+
+/* Chips (multi-select) */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding-inline: 14px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-size: 15px; }
+.chip .ln { width: 16px; height: 16px; stroke-width: 2.5; }
+.chip .box { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--muted); box-sizing: border-box; display: grid; place-items: center; }
+.chip[aria-pressed="true"] { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+.chip[aria-pressed="true"] .box { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.chip:hover { border-color: var(--primary); }
+.invalid .chips .chip { border-color: var(--danger); }
+.counts { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 14px; }
+.count { background: var(--field); border-radius: var(--radius-field); padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
+.count label { font-size: 13px; color: var(--text); }
+.count input { height: 40px; border: 0; border-radius: var(--radius-button); background: var(--surface); padding-inline: 12px; font-size: 16px; color: var(--ink); width: 100%; box-sizing: border-box; font-variant-numeric: tabular-nums; outline: none; }
+.count input:focus-visible { box-shadow: 0 0 0 2px var(--primary); }
+.count.invalid input { box-shadow: 0 0 0 2px var(--danger); }
+.count .hint { margin: 0; }
+
+/* Multi-select dropdown (Material-style) */
+.ms { position: relative; }
+.ms-btn { display: flex; align-items: center; text-align: start; cursor: pointer; padding-inline-end: 48px; }
+.ms-btn .ms-val { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ms-btn .ms-ph { color: var(--text); opacity: .7; }
+.ms-btn .ms-arrow { position: absolute; inset-inline-end: 18px; top: 50%; width: 18px; height: 18px; margin-top: -9px; color: var(--icon); stroke-width: 2; transition: transform .15s ease; }
+.ms-btn[aria-expanded="true"] .ms-arrow { transform: rotate(180deg); }
+.ms-btn[aria-expanded="true"] { box-shadow: 0 0 0 2px var(--primary); }
+.ms-panel { position: absolute; inset-inline: 0; top: calc(100% + 4px); z-index: 15; background: var(--surface); border-radius: 4px; box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12); padding-block: 8px; max-height: 280px; overflow-y: auto; }
+.ms-opt { display: flex; align-items: center; gap: 14px; width: 100%; height: 48px; padding-inline: 16px; border: 0; background: none; font-size: 16px; color: var(--table-text); cursor: pointer; text-align: start; box-sizing: border-box; }
+.ms-opt:hover, .ms-opt:focus-visible { background: rgba(0,0,0,.04); outline: none; }
+.ms-opt .cbx { width: 18px; height: 18px; border: 2px solid rgba(0,0,0,.54); border-radius: 2px; box-sizing: border-box; display: grid; place-items: center; flex: none; color: var(--on-primary); }
+.ms-opt .cbx .ln { width: 14px; height: 14px; stroke-width: 3; }
+.ms-opt[aria-selected="true"] .cbx { background: var(--primary); border-color: var(--primary); }
+.ms-opt[aria-selected="true"] { color: var(--primary); }
+.invalid .ms-btn { box-shadow: 0 0 0 2px var(--danger); }
+
+/* IP tag input */
+.tags { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: var(--field-height); box-sizing: border-box; padding: 8px 12px; border-radius: var(--radius-field); background: var(--field); cursor: text; }
+.tags:focus-within { box-shadow: 0 0 0 2px var(--primary); }
+.tag { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding-inline: 12px 4px; border-radius: var(--radius-button); background: var(--surface); color: var(--ink); font-size: 14px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; direction: ltr; }
+.tag button { border: 0; background: none; color: var(--icon); width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: grid; place-items: center; padding: 0; }
+.tag button:hover { color: var(--danger); background: var(--field); }
+.tag button .ln { width: 14px; height: 14px; stroke-width: 2.25; }
+.tags input { flex: 1; min-width: 160px; border: 0; background: none; outline: none; height: 36px; font-size: 15px; color: var(--ink); direction: ltr; text-align: start; }
+[dir="rtl"] .tags input { text-align: right; }
+.ip-msg { font-size: 13px; line-height: 18px; color: var(--danger-text); margin-top: 6px; }
+.ip-msg:empty { display: none; }
+
+/* Plain-language summary */
+.summary { margin: 0; padding: 14px 16px; border-radius: var(--radius-field); background: var(--primary-soft); color: var(--ink); font-size: 14px; line-height: 22px; display: flex; gap: 10px; align-items: flex-start; }
+.summary .ln { width: 20px; height: 20px; color: var(--primary); margin-top: 1px; }
+
+/* IP rules */
+.rules { display: flex; flex-direction: column; gap: 16px; }
+.rule { border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--surface); }
+.rule.has-error { border-color: var(--danger); }
+.rule-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px 10px 16px; }
+[dir="rtl"] .rule-head { padding: 10px 16px 10px 12px; }
+.rule-toggle { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; border: 0; background: none; text-align: start; cursor: pointer; padding: 6px 0; color: var(--ink); }
+.rule-toggle .chev { width: 18px; height: 18px; color: var(--icon); transition: transform .15s ease; }
+.rule-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+.rule-name { font-weight: 600; font-size: 16px; white-space: nowrap; }
+.rule-meta { color: var(--icon); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.rule-body { border-block-start: 1px solid var(--border); padding: 24px 24px 24px; display: flex; flex-direction: column; gap: 22px; }
+.rule-body .row > .lbl { font-size: 15px; }
+.rule-tools { display: flex; gap: 8px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+.link-btn { border: 0; background: none; color: var(--primary); cursor: pointer; padding: 6px 0; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.link-btn .ln { width: 18px; height: 18px; }
+.del-btn { color: var(--icon); }
+.del-btn:hover { color: var(--danger); }
+.add-rule { border: 1.5px dashed var(--muted); background: none; border-radius: var(--radius-card); height: 56px; color: var(--primary); font-weight: 500; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+.add-rule:hover { border-color: var(--primary); background: var(--primary-soft); }
+.empty-rules { text-align: center; color: var(--icon); padding: 8px 0 4px; font-size: 14px; line-height: 22px; }
+.callout { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: var(--field); border-radius: var(--radius-field); color: var(--text); font-size: 14px; line-height: 22px; }
+.callout .ln { width: 20px; height: 20px; color: var(--icon); margin-top: 1px; }
+
+/* Buttons */
+.btn { height: var(--button-height); padding-inline: 27px; border-radius: var(--radius-button); border: 0; font-size: 16px; line-height: 24px; font-weight: 500; cursor: pointer; background: var(--primary); color: var(--on-primary); display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; }
+.btn .ln { width: 18px; height: 18px; }
+.btn:hover:not(:disabled) { filter: brightness(.92); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn.secondary { background: var(--secondary); color: var(--text); }
+.btn.sm { height: 46px; padding-inline: 20px; }
+.btn.danger { background: var(--danger-text); }
+.actions-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.actions-bar .status { margin-inline-end: 0; margin-inline-start: 8px; }
+
+/* Plans list */
+.list-head { display: flex; align-items: center; gap: 16px 20px; padding: 12px 20px 12px 12px; flex-wrap: wrap; }
+[dir="rtl"] .list-head { padding: 12px 12px 12px 20px; }
+.list-title { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 21px; font-weight: 500; color: var(--primary); margin-inline-end: auto; }
+.list-title .ln { width: 34px; height: 34px; stroke-width: 1.5; }
+.date-filter { position: relative; display: flex; align-items: center; gap: 12px; height: 64px; min-width: 150px; padding-inline: 13px 18px; background: var(--filter-field); border-radius: 4px 4px 0 0; color: var(--primary); font-size: 15px; cursor: pointer; box-sizing: border-box; flex: 0 1 220px; }
+.date-filter span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.date-filter .ln { width: 22px; height: 22px; }
+.date-filter input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.date-filter.set { box-shadow: inset 0 -2px 0 var(--primary); }
+.head-btns { display: flex; gap: 8px; }
+.search { display: flex; flex-direction: column; max-width: 908px; width: 100%; }
+.search label { font-size: 15px; color: var(--primary); }
+.search input { border: 0; border-bottom: 1px solid var(--primary); background: none; height: 34px; font-size: 16px; color: var(--table-text); outline: none; padding: 0; }
+.search input:focus-visible { border-bottom-width: 2px; }
+.filter-panel { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; padding: 20px; }
+.filter-panel .fp { display: flex; flex-direction: column; gap: 6px; min-width: 200px; flex: 1; }
+.filter-panel label { font-size: 13px; color: var(--text); }
+.filter-panel .ctl { height: 46px; font-size: 15px; }
+.active-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.af { display: inline-flex; align-items: center; gap: 4px; height: 30px; padding-inline: 12px 4px; background: var(--surface); border-radius: var(--radius-pill); font-size: 13px; color: var(--text); border: 1px solid var(--border); }
+.af button { border: 0; background: none; color: var(--icon); cursor: pointer; width: 22px; height: 22px; display: grid; place-items: center; padding: 0; }
+.af .ln { width: 14px; height: 14px; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 960px; font-size: 16px; }
+th { text-align: start; font-weight: 400; font-size: 15px; color: var(--table-head); height: 70px; padding-inline: 16px; border-bottom: 1px solid var(--table-line); white-space: nowrap; }
+td { height: 59px; padding-inline: 16px; border-bottom: 1px solid var(--table-line); color: var(--table-text); white-space: nowrap; font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { padding-inline-start: 28px; width: 36px; }
+td.title-cell { max-width: 220px; overflow: hidden; text-overflow: ellipsis; direction: rtl; text-align: right; }
+[dir="ltr"] td.title-cell { text-align: left; }
+.badge { display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 14px; font-weight: 600; line-height: 22px; }
+.badge.active { background: var(--success-soft); color: var(--success); }
+.badge.inactive { background: var(--field); color: var(--icon); }
+.method-chip { display: inline-flex; align-items: center; gap: 6px; }
+.pw-flag { font-size: 12px; line-height: 18px; padding-inline: 8px; border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+.row-actions { display: flex; gap: 4px; align-items: center; justify-content: center; }
+.row-actions .icon-btn { padding: 4px; }
+.a-edit { color: var(--primary); }
+.a-del { color: var(--danger); }
+.a-info { color: var(--info-icon); }
+.a-info .ico, .a-del .ico, .a-edit .ico { width: 26px; height: 26px; }
+tr.detail td { background: var(--field); height: auto; padding-block: 16px; white-space: normal; }
+.detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 24px; font-size: 14px; }
+.detail-grid b { display: block; font-weight: 500; color: var(--icon); font-size: 13px; }
+tr.confirm td { background: #fff5f5; height: auto; padding-block: 14px; }
+.confirm-box { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 15px; color: var(--ink); }
+.confirm-box .btn { height: 40px; padding-inline: 18px; font-size: 15px; }
+.no-rows { text-align: center; color: var(--icon); padding: 40px 0; }
+
+/* Plan edit */
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-gutter); }
+.type-card .card-head { min-height: 64px; }
+.type-card .card-title { font-size: 18px; color: var(--primary); }
+.type-card .card-body { padding: 24px; gap: 18px; }
+.type-card .row { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+.type-card .row > .lbl { font-size: 15px; padding-block-start: 12px; }
+.type-card .ctl { height: 48px; }
+.type-card .with-check .ctl { padding-inline-end: 48px; }
+.type-card .with-check .ok { top: 11px; inset-inline-end: 12px; }
+.grid3.nested { gap: 16px; }
+.grid3.nested .type-card { border: 1px solid var(--border); }
+.rule-body .grid3.nested, .card-body > .grid3.nested { margin-block: -4px; }
+.pw-card { outline: 2px solid var(--primary); outline-offset: -2px; }
+.pw-badge { font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary); line-height: 20px; }
+.sub-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.sub-head h3 { margin: 0; font-size: 17px; color: var(--ink); font-weight: 600; }
+.sub-head p { margin: 4px 0 0; color: var(--icon); font-size: 14px; line-height: 21px; max-width: 70ch; }
+.divider { height: 1px; background: var(--border); margin: 6px 0; }
+
+/* Switch */
+.switch { display: inline-flex; align-items: center; gap: 12px; cursor: pointer; font-size: 15px; color: var(--ink); position: relative; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.track { width: 55px; height: 35px; border-radius: var(--radius-pill); background: var(--field); position: relative; transition: background .15s ease; flex: none; }
+.track::after { content: ""; position: absolute; top: 4px; inset-inline-start: 4px; width: 27px; height: 27px; border-radius: var(--radius-pill); background: var(--surface); box-shadow: 0 1px 2px rgba(24, 28, 50, .14); transition: inset-inline-start .15s ease; }
+.switch input:checked + .track { background: var(--primary); }
+.switch input:checked + .track::after { inset-inline-start: 24px; }
+.switch input:focus-visible + .track { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--primary); }
+
+.empty { padding: 72px var(--space-card); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; }
+.empty .badge-ico { width: 64px; height: 64px; border-radius: var(--radius-card); background: var(--field); color: var(--primary); display: grid; place-items: center; }
+.empty h3 { margin: 4px 0 0; font-size: 18px; color: var(--ink); font-weight: 600; }
+.empty p { margin: 0; max-width: 46ch; color: var(--text); line-height: 1.6; }
+
+footer { grid-column: 2; background: var(--surface); min-height: var(--footer-height); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--ink); }
+.toast { position: fixed; inset-block-end: calc(24px + env(safe-area-inset-bottom, 0px)); inset-inline-end: calc(24px + env(safe-area-inset-right, 0px)); background: var(--ink); color: var(--surface); padding: 12px 18px; border-radius: var(--radius-button); display: flex; align-items: center; gap: 10px; font-size: 15px; z-index: 50; transform: translateY(16px); opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; max-width: calc(100vw - 48px); }
+.toast.show { opacity: 1; transform: none; }
+.toast .ln { color: var(--success); width: 20px; height: 20px; stroke-width: 2.5; }
+.toast.bad .ln { color: #ff8a80; }
+.scrim { display: none; }
+
+@media (max-width: 1200px) { .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 960px) {
+  .shell, .shell.collapsed { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { position: fixed; inset-block: 0; inset-inline-start: 0; width: min(var(--sidebar-width), 86vw); transform: translateX(-100%); transition: transform .2s ease; padding-top: env(safe-area-inset-top, 0px); box-sizing: border-box; }
+  [dir="rtl"] .sidebar { transform: translateX(100%); }
+  .shell.open .sidebar { transform: none; }
+  .shell.open .scrim { display: block; position: fixed; inset: 0; background: rgba(24, 28, 50, .35); z-index: 25; }
+  .collapse-btn { display: none !important; }
+  .menu-btn { display: flex; }
+  .topbar { grid-row: 1; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); top: env(safe-area-inset-top, 0px); }
+  main { padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); gap: 16px; }
+  footer { grid-column: 1; }
+  .collapsed .nav-section, .collapsed .nav-item .label, .collapsed .nav-item .chev, .collapsed .sidebar-head img, .collapsed .subnav, .collapsed .new-tag { display: revert; }
+  .grid3 { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  :root { --space-card: 18px; --space-row: 20px; --space-body-end: 28px; --card-header-height: 72px; }
+  .row { grid-template-columns: 1fr; gap: 8px; }
+  .row > .lbl { padding-inline-end: 0; padding-block-start: 0; }
+  .crumb { display: none; }
+  .rule-body { padding: 18px 14px; }
+  .date-filter { flex: 1 1 100%; }
+  .head-btns { width: 100%; }
+  .head-btns .btn { flex: 1; }
+  .actions-bar .btn { flex: 1; }
+  .rule-meta { display: none; }
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-collapse" viewBox="0 0 24 24"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5L19.5 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4.5 20a7.5 7.5 0 0115 0"/></symbol>
+  <symbol id="i-diamond" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9l4-6zM2 9h20M9.5 3L8 9l4 12 4-12-1.5-6"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zM4 10h16M8 3v4M16 3v4"/><path d="M13 14h3v3h-3z" fill="currentColor"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16l-6 8v6l-4-2v-4L4 5z" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><path d="M9 9h10v10H9zM5 15V5h10"/></symbol>
+  <symbol id="i-trash-ln" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0012 3z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><path d="M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v5M12 8v.5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 7v6M12 16.5v.5M12 21a9 9 0 100-18 9 9 0 000 18z"/></symbol>
+  <symbol id="i-build" viewBox="0 0 24 24"><path d="M4 20h16M6 20V9l6-5 6 5v11M10 20v-6h4v6"/></symbol>
+</svg>
+
+<div class="shell" id="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <a href="#dashboard"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGkAAAAqCAYAAACwTnX4AAAN6UlEQVR4Xu2beYxe1XXAf+e+977ZveAFY8ALxow93j0z3sAhBoQaAiJNiJRmoaEBBYNU8l+rqlLVP6pGbZX8UdGEYkxClAQUkiiIkDQNAdUGLzNje+zxMmCwYwPB2GAbz/a97717qvs+z/Kt881gHCP5Z40t+b1377n3nHvuOefegctc5jIfHfnoTVwizDlSzRRbRXTuOgK/EeNdB2YKQhVqFUuIxu9hOYykDyD6Dh0tZy8R6cvyyVfS6n1XYnUB6q9CacULpiCx4IameWMfHq2i8VGs7sTYDvr1DfYtPX2pKuyTq6TGrQ1MmtQC/gasWY5o/bgm2epZDNsg3MIk3cvvlvWOq52PkU+mklZsnYk/7V6MrgSZWrBixooSI3qCKHyR3g+fpfumc2NtoihNXfVUpxvxUrMRvwH1BKJ+NP0W8bnX2P2pk5X041fy0iXFmt1zsHUPoqxEL5D8gofITDyZgJfJd5Jjx+2PU8/cgvi3o6mZoDUoXuJ/1bNQM0BQfYo1+7dgzW/ZufD9cp18slbS2q7riYO/BRaPfebKohBtJ5N+lN0r3/lIba86eAN43wLbCDL6/Kq+h7X/RkfTrlL9jt5IJdy0dzKhmYX48xG7HGvmoOqBidDwGJ6/i4jXqMm8xdZxbtDNXbMQ75sYfy3YSqSqDCVCMzuJw8fZvfKPQx8t7ayjOlU9mpUPcXtnHWfNjUhwL1ZmVta5wwBxhkz0JKczv+XoijP53340JX26q55+loPZAGYNiFvWebglLorohxC3IfIHdjRtr3wQwI1bG4inP4LVWyr6TqUH9P3ESkV6QS1i6rE6E8MVCE5ON3YX5b2C7dtER8uxobbduHq9vwImEvX/kN0rR987Wrvuwvj3gkwZ1x5p6UOj54nDp9mTq6jx70nLd0+iV+7E+HdgmY4kJlGEJBp2f00E/1ZUm2h5fT7t839U0YQ74ilfwsqGwph6BJr8eQ8Tv4gEx9HwBAM9f8Kc7WHWEuXtw3XItFmoNwM/XoJ4rUSZdqLMU3S2vJ2joH7zDYzcgdJPKnUUeLasrCv3LUSCLwDjU1B2QdVCcCueHAd+PbK/8a+k5gP3Y/y7EG2oeLIHsdIH0W9ob3p01G+b2+fhN/wnSnXpdzWD6stYnuf9d1/n6IaBsu0692yrZ/PB6eMcWj28aa/YNY2q1N+AdxvWeMnsCMeQ9LfZtvRQyTZbD/0j4oyoxHya83uTqjOkcihiu7DRf9C2xCkrYXwrqWXvbRj/i6DBqJNcDKO1iPdZlna9z97FT5dtI6j/e9SvhqjwNTeJMQMYeYa2BT+sWJbsvpibvN60ZTJh1cMgN6LiJW0lE2quhWANUFxJ63bNJmbdefdZHNVeNDqOahq8azH+ZOeBiyCI10SVLAKGlFTCRZVh2Z6rMdWPjFtBgyhV1Hi309LWWLK35s6ViJ2arSAUHVJEYF9gZ2NpBT3VWZf8lMO57oEr70f89VjPQ0d0J2rA+zxru68u2kSm6h5USqxyySBsAfMgOxdtpG3xt7C9XyPO/BgonjRb9QhlJWuP14x/JVWn7ka1tuSYhRjLh0AfgpucCedDmHwElavx6m8Guou2FwSfIfLqES3uJFT3U/3upoJvn+qcTpxqIg5nE/ozUc+w6cAxxB7B6us8sOREzjf1dVcQySxskW6sKkYayEQtwPDeNYR/Q6n1A3E3hI+zY9lbQ+90tPTR3P4s1NWCd2eBsSfhjG2kLkwB/e67sbm71q4Z4K0t6XvRHqx9EWU/xpzB2sl43nys/gUiRco2EhDrApbvnsOeFW6DHqa5fSqxmZokmsXwNAPhZl7O238e27OBtH8zhrWYqhHjMy5t6UfZyeP7fsYDSw4ONbv1hjdpOfwCxlwDdmJBd05R4n8O+FWhKDKheECjETZ8lfYRChrEFXZbD3Qi9iaQaTltighipnGuz63OpAA8Nndng+uB4oGC2Bj6nyb1wWbam37PzgXttDf9L7PefxK1P0GlyKbiJDBz8GsKXYl4jaAzSlgpkHmZbUv35Tz//s5bSVU9jPHWI1JogCo1YG4C/2EePzQ359t0sB2r3UmMWAyRaxPDKcRZfCFWYnz/SEn5NfMBluLlJxcNm9SQ/GNTkmfnYUsIlbFvUHvmF7ySV/f62bp+1Ps9qq+WELgG301eHlI/F7xik+JiKKUv/nnOF4+1T8Wr/wIqk8vGrEY9jGmE8Ks53++bfRqi44iWMCY8gtpZhXKWeF/EEOv0kkrygnoMheN2OEPx46HIYmxKcpVmOR/55BOYXQWuZ2h5N55C9HBRgV0kZaln7avDArts35p6kOLyCSH11X/Kac/UfhHfziu98kbgggFTdTObd+W6mih+DUy6dBu6KufZp1+qBts/FGKPxGgKz9uQM64c1HmlKQV9uTA9ln76qvoGn41tT7JlAk1TYoUNomKyc54feqqH6lfJTP5LWg9q4oGT/CSaVLK3yPZSHee6JXGJpF/5eJyiMuImfThxbEh3kU71AIX7p9uX8D/Lqu412fDZKP3W7XMzss/ycP9jvfmYKfex/sAv2dKUNarm9ol4E9ajehcUmTM3x0Y78VPh+JQkXg+qMUJhfhT6ywoEHcQlicLCojW3bDXiCkSuyDW0kq0B0SnOpYe1/Z1XazAyxpzNzXkwP6eXcGJvdm8dzJEKcNFq3dACd9F5OUTrQO4mbeaw6uAejETEOguxt5QM243ESLybbdcmkZ2jcstzSNwAvikazRidQ0vXPbQvLiyhBIGLYlaULeuMjVy5J6fd8Xi2Glcx4up2uaYQGcFzSVJZCxkb6hJ+rwVsS+JEXPGhWPOJ9xBB9W1UcxLnypXUuv9WrL8OKVFlEFf1Dr7Mqv1TOZt+jrVnP+BgzUSiiV9BZB1qU6WqJmNG5QoaqofN+L4NA2w+kMkWcitWlRBn9ub2fXoi0uBfSB1lqaBqr8ZVokPi+CVOnRiqNlS+klYfbAbzDVSvLJ0jJU8mYYPP01B1J10NMYiHyVShnleRoJXip+rI2Nx1E2fexA/WoaZMje88STFWY+LUnpwuvaqlqNRd0JVUGZrMj2UXNad+k197HD26W757PuhDaJKzjO5QjPqYuBZjG5J/xVxYBTmM+IQDueGwzfwqObOqBLGWuP+XPJR3tiXB9ahWVdLEBUXFQtyJDZ9gS+GRenklrTgwG796I+rNrUQ/F43YCib4ek5/32zpw5z7AdijJRNSh9o0sXZgzXM537tbR+o29TFsAR+VJHHWUxj5AwOZb9Ox5I1iTZZeGav23AA17i7BsjH4+cpwwrmeBws+g1n+yP0k68az8hXbaH2JOHfiQfatfzOn0+91Lsb3bsMz65J7d9nvs3uVxqex8UtE8a/ZmFeGWn3oHtT8NbiIrAQuiR406/zKRKm9MD7/5vBzV+hSIj0JugdsG22LXiw3ccUDhzX7FmJT98PHoSBXro+eQf13hwQrZipOSV68Hg1aQfPlVDLhVmpShZcbNy7r4tGuo9Twf1h7FXE0Ed8TjJwhE7+LDQ+zMe9S5NruBVj5TBkFKTb6MeK9M6SkYjLn1yqc1M4QLVXEdgLW+AScI2PPENuTRPZYJff9Crta2nkNVdUPAa0li5tDaBq17YjMw5gZicWXjF5d9GKPoOFm6k6Vrk6M5MZDjUTmX1AdkUOpS3RfwfBdti3+oLKlW4YleyeTMv+EHywpGsS7sBg9AeEj7Mirnl8kci3UFRC94CvA6tGDBAnBvoDte4JUqISpZqT2S5jgmvNOQZLqgYlirH2LTN9PmHSmMuUM8sqCblbvP4JJTcEm5wguBGonGvgvOlpyFeSuUR2dW/5ENh93l+FD+6/JtWSXZxVD1RLFz7Drz6Mgx7CSXLnC1H8ZzC3u5khZI0kq2u64uvenyflIlq3Jz+rtEwgm1TMQ+VSHEVHYQ9sad740PsL0dwl4FAlq0aiNML2JPS3Ddbt1ndPJpL6GHZjB9L2/oKenmwPryq+wGw/NJG0X0ccDBMHUkgpK0NcxUef4hL8wDCvDnYJ61f+clD3Kkb3t+TJ9mU10XSTrat77OXx/ZXKi2b5s+IBw1Y4pSP194C4h4qO2J7nfLXIQ0ZOonsMLXS0OYqlHahtArwLbCmZRcpm/HCKn0PAJdi7+nwsz3eNjWEkL26+ivvb+5Cym1M1QV3xxK2hy+r/53bL3xtflOGndd+3IyxnJNa/MpI2Idxtq8gILyaD2HEgPotmV7k6TjdShximq+BlQLmls/Dxe8CN2zB+/J7gA5Lo1dwHR976OmE9hC3Ko7B0133uMbY1FjpEvIs3P1eJd9w/JtSxMcEHLOOICE3H3FbcQxI/y6kU2xiLkJrMdi49h0k+gti2v4KRY20k68+SfXUFNL9VD49+Bvwa9wApKch8j2LCd3pP/fikoyFGYJ21b/jYrdn2fVK0PsjybBmo3nvyAvctKHwdfLMJ+Q626mzbOjY3v112K4y6cnCGKX6FjyXcu1nAqoXQUt3j7ldRMehjRWcTh9+hYtqOSBi8KLtyeNnAHPndjjQv5y0ejoyLutwAPY+Kfs2PxS6O+fpEpP7jGXTOZWDWPnYu2XGS5KmP13ma06mZUWpHkPsHYlJU9KD6OsVuhbyvbm4dvEF1CjG1QlyIuL9PJc5FoCWpWYsxS1BikRK7nzpxUzyCZbiRoI5U+SG/6jyPyvUuOT76SRuIqCHFYQ+jNQ6rmoXYa2AasdXfZehDzDpEeAf8Npgz0X4q/enmZy1zm4+L/AUfiVw54ZUg4AAAAAElFTkSuQmCC" alt="من هم" width="100" height="40"></a>
+      <button class="icon-btn collapse-btn" id="collapseBtn" type="button" aria-label="Collapse sidebar"><svg class="ln flip"><use href="#i-collapse"/></svg></button>
+    </div>
+    <nav class="nav" id="nav" aria-label="Main"></nav>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <header class="topbar">
+    <div class="topbar-start">
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu"><svg class="ln"><use href="#i-menu"/></svg></button>
+      <span class="crumb" id="crumb"></span>
+    </div>
+    <div class="topbar-end">
+      <button class="lang" id="langBtn" type="button">عربي</button>
+      <button class="icon-btn bell" type="button" aria-label="Notifications"><svg class="ico" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22a2.5 2.5 0 002.45-2h-4.9A2.5 2.5 0 0012 22zm7-6V11a7 7 0 00-5.5-6.84V3.5a1.5 1.5 0 00-3 0v.66A7 7 0 005 11v5l-2 2v1h18v-1l-2-2z"/></svg></button>
+      <span class="avatar" aria-label="Admin"><svg class="ln" style="width:30px;height:30px"><use href="#i-user"/></svg></span>
+    </div>
+  </header>
+  <main id="main"></main>
+  <footer>Majarra© 2026</footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><svg class="ln" id="toastIco"><use href="#i-check"/></svg><span id="toastText"></span></div>
+
+<script>
+(function () {
+'use strict';
+var DATA = {"nav": [{"t": "Dashboard", "h": "#/", "c": []}, {"section": "Content"}, {"t": "Categories Management", "h": "/categories", "c": [{"t": "Profiles Categories", "h": "#/categories/all/characters", "g": []}, {"t": "Companies Categories", "h": "#/categories/all/companies", "g": []}, {"t": "Tags", "h": "#/tags/all", "g": []}]}, {"t": "Companies Management", "h": "/companies", "c": [{"t": "Comapanies", "h": "#/companies/list-companies", "g": []}, {"t": "Suggested Companies", "h": "#/suggested-companies", "g": []}, {"t": "Companies Types", "h": "#/companies-types/all", "g": []}, {"t": "Addition Requests", "h": "#/companies/join-requests", "g": []}, {"t": "Claim Requests", "h": "#/companies/verify-requests", "g": []}]}, {"t": "Profiles Management", "h": "/profiles", "c": [{"t": "Profiles", "h": "#/profiles/list-profiles", "g": []}, {"t": "Website Profiles", "h": "#/site-characters", "g": []}, {"t": "Suggested Profiles", "h": "#/suggested-profiles", "g": []}, {"t": "Addition Requests", "h": "#/profiles/join-requests", "g": []}, {"t": "Nominated profiles", "h": "#/profiles/nominations", "g": []}, {"t": "Claim Requests", "h": "#/profiles/verify-requests", "g": []}, {"t": "Visit Email Log", "h": "#/profiles/visit-email-log", "g": []}, {"t": "Default image settings", "h": "#/profiles/default-image-config", "g": []}, {"t": "Most visit settings", "h": "#/profiles/most-visit-config", "g": []}, {"t": "Character of the day", "h": null, "g": ["Character of the day report", "Exclusions Report"]}, {"t": "Spotlight", "h": null, "g": ["Sent visit profiles", "Stored visit profiles", "Spotlight Exclusions"]}]}, {"t": "Capabilities Management", "h": null, "c": [{"t": "Saudi Capabilities", "h": null, "g": ["Saudi abilities log", "Saudi abilities requests", "Saudi capabilities nominees"]}, {"t": "Syrian Capabilities", "h": null, "g": ["Syrian abilities log", "Syrian abilities requests", "Syrian tag management", "Syrian capabilities nominees"]}]}, {"t": "Awards Management", "h": "/award", "c": [{"t": "Awards", "h": "#/award", "g": []}, {"t": "Grant To Management", "h": "#/awards-grant-to/all", "g": []}]}, {"t": "Conferences Management", "h": "/conferences", "c": [{"t": "Conference", "h": "#/conferences", "g": []}]}, {"t": "Educational Management", "h": "/educational", "c": [{"t": "Educational Institutions", "h": "#/educational", "g": []}]}, {"t": "Images management", "h": "#/image", "c": []}, {"t": "Videos management", "h": "#/video", "c": []}, {"t": "Services management", "h": "/services", "c": [{"t": "Services", "h": "#/services/all", "g": []}, {"t": "Sectors", "h": "#/sectors/all", "g": []}, {"t": "Rating Users", "h": "#/services/rating-users", "g": []}, {"t": "Requesting users", "h": "#/services/requesting-users", "g": []}]}, {"t": "Lists management", "h": "/lists", "c": [{"t": "Lists", "h": "#/lists", "g": []}, {"t": "Domains management", "h": "#/domains", "g": []}]}, {"t": "Partners & Sponsors", "h": "#/partners-sponsors", "c": []}, {"t": "Widget poll management", "h": "#/widget-poll", "c": []}, {"t": "Text Ads Management", "h": "#/text-ads/all", "c": []}, {"t": "Relations Management", "h": "/relations", "c": [{"t": "Relations", "h": "#/relations/all", "g": []}, {"t": "Lableb Relations", "h": "#/relations/lableb", "g": []}, {"t": "Specialization management", "h": "#/relations/specializations", "g": []}, {"t": "Positions management", "h": "#/positions/positions-all", "g": []}, {"t": "Group of positions management", "h": "#/positions/group-positions-all", "g": []}]}, {"t": "Entities Management", "h": "/entities", "c": [{"t": "Entities", "h": "#/entities/all-entities", "g": []}]}, {"t": "Entity management requests", "h": "#/entity-by-users/all", "c": []}, {"t": "Majarra Articles", "h": "#/majarra-articles/all", "c": []}, {"t": "News Engine", "h": "/news-engine", "c": [{"t": "Overview", "h": "#/news-engine/overview", "g": []}, {"t": "News", "h": "#/news-engine/news", "g": []}, {"t": "People", "h": "#/news-engine/people", "g": []}, {"t": "Companies", "h": "#/news-engine/companies", "g": []}, {"t": "Scrape news", "h": "#/news-engine/scrape-news", "g": []}]}, {"t": "Manhom news", "h": "/manhom-news", "c": [{"t": "News senders", "h": "#/manhom-news/news-senders/all", "g": []}, {"t": "News", "h": "#/manhom-news/news/all", "g": []}]}, {"t": "Redirect Management", "h": "#/redirect/all", "c": []}, {"t": "Newsletters management", "h": "/newsletter", "c": [{"t": "Newsletters", "h": "#/newsletter/all", "g": []}, {"t": "Sent Newsletters", "h": "#/newsletter/created-newsletters-list", "g": []}]}, {"t": "Bots config", "h": "#/bots/all", "c": []}, {"section": "Country"}, {"t": "Countries Management", "h": "#/countries", "c": []}, {"t": "Currencies Management", "h": "#/currency/list-currencies", "c": []}, {"section": "Website"}, {"t": "Content Management", "h": "#/content/list-content", "c": []}, {"t": "Subscription Management", "h": "/subscription", "c": [{"t": "Packages", "h": "#/subscription/packages", "g": []}, {"t": "Packages Features", "h": "#/subscription/packages/list-features", "g": []}, {"t": "Plans", "h": "#/subscription/plans", "g": []}, {"t": "Members", "h": "#/subscription/membership/all", "g": []}, {"t": "Manual Paid Members", "h": "#/subscription/membership/manual-cash/all", "g": []}, {"t": "Payment Requests", "h": "#/subscription/payments", "g": []}, {"t": "Subscription page settings", "h": "#/subscription/subscription-page/settings", "g": []}, {"t": "Compliance & approval Log", "h": "#/subscription/membership/compliance-log", "g": []}, {"t": "British visitors", "h": "#/subscription/membership/british-visitor", "g": []}, {"t": "Identity verification requests", "h": "#/subscription/membership/identity-requests", "g": []}]}, {"t": "Mawshour management", "h": "/mawshor", "c": [{"t": "Settings", "h": "#/mawshor/settings", "g": []}, {"t": "Updates", "h": "#/mawshor/updates", "g": []}, {"t": "Newsletter subscribers", "h": "#/mawshor/subscribers", "g": []}, {"t": "Cancel requests", "h": "#/mawshor/cancel-requests", "g": []}]}, {"t": "Manjam", "h": "/manjam", "c": [{"t": "Manjam Configurations", "h": "#/manjam/manjam-config", "g": []}, {"t": "Notifications Configurations", "h": "#/manjam-notifications/manjam-notification-config", "g": []}, {"t": "Manjam info", "h": "#/manjam/manjam-info", "g": []}, {"t": "Manjam Sources", "h": "#/manjam/manjam-sources", "g": []}, {"t": "Manjam block list", "h": "#/manjam/black-list", "g": []}]}, {"t": "Advertisement Management", "h": "#/ads/list-ads", "c": []}, {"t": "Advanced Search Management", "h": "/advanced-search", "c": [{"t": "Filters Management", "h": "#/advanced-search/all", "g": []}]}, {"t": "Feedback", "h": "#/feedback", "c": []}, {"t": "Admin Log", "h": "#/log", "c": []}, {"section": "User"}, {"t": "Users Management", "h": "/users", "c": [{"t": "Admins", "h": "#/users/all/admins", "g": []}, {"t": "Subscribers", "h": "#/users/all/subscribers", "g": []}]}, {"t": "Roles Management", "h": "/roles", "c": [{"t": "Roles", "h": "#/roles/list-roles", "g": []}, {"t": "Permissions", "h": "#/roles/list-permission", "g": []}]}, {"section": "System Configurations"}, {"t": "Sign Up configuration", "h": "/system", "c": [{"t": "Custom Texts", "h": "#/system/custom-texts", "g": []}, {"t": "Action Codes", "h": "#/system/action-codes", "g": []}]}, {"t": "User Configuration", "h": "#/system/users-configuration", "c": []}, {"t": "Login wall settings", "h": "#/login-wall-settings", "c": []}, {"t": "Blocked words settings", "h": "#/blocked-words-settings", "c": []}, {"t": "Entities extraction settings", "h": "#/entities-extractions-config", "c": []}, {"t": "Reporting settings", "h": "#/reporting-settings", "c": []}, {"t": "Languages Management", "h": "#/languages/all", "c": []}, {"t": "Translation providers config", "h": "#/translation-providers/edit-config", "c": []}, {"t": "Impressions configurations", "h": "#/manifestation-config/configurations", "c": []}, {"t": "Reports", "h": null, "c": [{"t": "Users Reports", "h": null, "g": ["Login Log", "Following Log", "Sharing Log"]}, {"t": "Entities Reports", "h": null, "g": ["Following Log", "Sharing Log", "Visits Log"]}]}], "icons": {"Dashboard": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <rect x=\"2\" y=\"2\" width=\"9\" height=\"9\" rx=\"2\" fill=\"currentColor\"><\/rect> <rect opacity=\"0.3\" x=\"13\" y=\"2\" width=\"9\" height=\"9\" rx=\"2\" fill=\"currentColor\"><\/rect> <rect opacity=\"0.3\" x=\"13\" y=\"13\" width=\"9\" height=\"9\" rx=\"2\" fill=\"currentColor\"><\/rect> <rect opacity=\"0.3\" x=\"2\" y=\"13\" width=\"9\" height=\"9\" rx=\"2\" fill=\"currentColor\"><\/rect> <\/svg>", "Categories Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M21 7H3C2.4 7 2 6.6 2 6V4C2 3.4 2.4 3 3 3H21C21.6 3 22 3.4 22 4V6C22 6.6 21.6 7 21 7Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z\" fill=\"currentColor\"><\/path> <\/svg>", "Companies Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M20 19.725V18.725C20 18.125 19.6 17.725 19 17.725H5C4.4 17.725 4 18.125 4 18.725V19.725H3C2.4 19.725 2 20.125 2 20.725V21.725H22V20.725C22 20.125 21.6 19.725 21 19.725H20Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M22 6.725V7.725C22 8.325 21.6 8.725 21 8.725H18C18.6 8.725 19 9.125 19 9.725C19 10.325 18.6 10.725 18 10.725V15.725C18.6 15.725 19 16.125 19 16.725V17.725H15V16.725C15 16.125 15.4 15.725 16 15.725V10.725C15.4 10.725 15 10.325 15 9.725C15 9.125 15.4 8.725 16 8.725H13C13.6 8.725 14 9.125 14 9.725C14 10.325 13.6 10.725 13 10.725V15.725C13.6 15.725 14 16.125 14 16.725V17.725H10V16.725C10 16.125 10.4 15.725 11 15.725V10.725C10.4 10.725 10 10.325 10 9.725C10 9.125 10.4 8.725 11 8.725H8C8.6 8.725 9 9.125 9 9.725C9 10.325 8.6 10.725 8 10.725V15.725C8.6 15.725 9 16.125 9 16.725V17.725H5V16.725C5 16.125 5.4 15.725 6 15.725V10.725C5.4 10.725 5 10.325 5 9.725C5 9.125 5.4 8.725 6 8.725H3C2.4 8.725 2 8.325 2 7.725V6.725L11 2.225C11.6 1.925 12.4 1.925 13.1 2.225L22 6.725ZM12 3.725C11.2 3.725 10.5 4.425 10.5 5.225C10.5 6.025 11.2 6.725 12 6.725C12.8 6.725 13.5 6.025 13.5 5.225C13.5 4.425 12.8 3.725 12 3.725Z\" fill=\"currentColor\"><\/path> <\/svg>", "Profiles Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M13.0079 2.6L15.7079 7.2L21.0079 8.4C21.9079 8.6 22.3079 9.7 21.7079 10.4L18.1079 14.4L18.6079 19.8C18.7079 20.7 17.7079 21.4 16.9079 21L12.0079 18.8L7.10785 21C6.20785 21.4 5.30786 20.7 5.40786 19.8L5.90786 14.4L2.30785 10.4C1.70785 9.7 2.00786 8.6 3.00786 8.4L8.30785 7.2L11.0079 2.6C11.3079 1.8 12.5079 1.8 13.0079 2.6Z\" fill=\"currentColor\"><\/path> <\/svg>", "Capabilities Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"> <path d=\"M10.0813 3.7242C10.8849 2.16438 13.1151 2.16438 13.9187 3.7242V3.7242C14.4016 4.66147 15.4909 5.1127 16.4951 4.79139V4.79139C18.1663 4.25668 19.7433 5.83365 19.2086 7.50485V7.50485C18.8873 8.50905 19.3385 9.59842 20.2758 10.0813V10.0813C21.8356 10.8849 21.8356 13.1151 20.2758 13.9187V13.9187C19.3385 14.4016 18.8873 15.491 19.2086 16.4951V16.4951C19.7433 18.1663 18.1663 19.7433 16.4951 19.2086V19.2086C15.491 18.8873 14.4016 19.3385 13.9187 20.2758V20.2758C13.1151 21.8356 10.8849 21.8356 10.0813 20.2758V20.2758C9.59842 19.3385 8.50905 18.8873 7.50485 19.2086V19.2086C5.83365 19.7433 4.25668 18.1663 4.79139 16.4951V16.4951C5.1127 15.491 4.66147 14.4016 3.7242 13.9187V13.9187C2.16438 13.1151 2.16438 10.8849 3.7242 10.0813V10.0813C4.66147 9.59842 5.1127 8.50905 4.79139 7.50485V7.50485C4.25668 5.83365 5.83365 4.25668 7.50485 4.79139V4.79139C8.50905 5.1127 9.59842 4.66147 10.0813 3.7242V3.7242Z\" fill=\"currentColor\"><\/path> <path d=\"M14.8563 9.1903C15.0606 8.94984 15.3771 8.9385 15.6175 9.14289C15.858 9.34728 15.8229 9.66433 15.6185 9.9048L11.863 14.6558C11.6554 14.9001 11.2876 14.9258 11.048 14.7128L8.47656 12.4271C8.24068 12.2174 8.21944 11.8563 8.42911 11.6204C8.63877 11.3845 8.99996 11.3633 9.23583 11.5729L11.3706 13.4705L14.8563 9.1903Z\" fill=\"white\"><\/path> <\/svg>", "Awards Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M14 18V16H10V18L9 20H15L14 18Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M20 4H17V3C17 2.4 16.6 2 16 2H8C7.4 2 7 2.4 7 3V4H4C3.4 4 3 4.4 3 5V9C3 11.2 4.8 13 7 13C8.2 14.2 8.8 14.8 10 16H14C15.2 14.8 15.8 14.2 17 13C19.2 13 21 11.2 21 9V5C21 4.4 20.6 4 20 4ZM5 9V6H7V11C5.9 11 5 10.1 5 9ZM19 9C19 10.1 18.1 11 17 11V6H19V9ZM17 21V22H7V21C7 20.4 7.4 20 8 20H16C16.6 20 17 20.4 17 21ZM10 9C9.4 9 9 8.6 9 8V5C9 4.4 9.4 4 10 4C10.6 4 11 4.4 11 5V8C11 8.6 10.6 9 10 9ZM10 13C9.4 13 9 12.6 9 12V11C9 10.4 9.4 10 10 10C10.6 10 11 10.4 11 11V12C11 12.6 10.6 13 10 13Z\" fill=\"currentColor\"><\/path> <\/svg>", "Conferences Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 470 470\"> <g> <circle cx=\"235\" cy=\"34.901\" r=\"34.901\" fill=\"currentColor\"><\/circle> <path fill=\"currentColor\" d=\"M235,99.803c-38.551,0-69.803,31.252-69.803,69.803h139.606C304.803,131.055,273.551,99.803,235,99.803z\"><\/path> <polygon points=\"362.796,199.606 107.204,199.606 107.204,229.606 131.819,229.606 150.533,470 319.467,470 338.181,229.606 362.796,229.606 \" fill=\"currentColor\"><\/polygon> <\/g> <\/svg>", "Educational Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 48 48\" xmlns=\"http://www.w3.org/2000/svg\"><path fill=\"currentColor\" d=\"M8.278,35.973c0,3.048,2.48,5.527,5.528,5.527h22.488c0.276,0,0.5-0.224,0.5-0.5v-1.53 c0-0.104-0.039-0.195-0.093-0.274c-0.006-0.009-0.004-0.021-0.01-0.03c-0.705-0.92-1.078-2.024-1.078-3.193s0.373-2.273,1.078-3.194 c0.006-0.008,0.004-0.02,0.01-0.029c0.054-0.08,0.093-0.171,0.093-0.275v-1.03h2.237c0.276,0,0.5-0.224,0.5-0.5v-1.53 c0-0.104-0.039-0.195-0.093-0.275c-0.006-0.009-0.003-0.021-0.01-0.029c-0.705-0.921-1.077-2.025-1.077-3.194 s0.373-2.273,1.077-3.194c0.006-0.008,0.004-0.02,0.01-0.029c0.054-0.08,0.093-0.171,0.093-0.275v-1.53c0-0.276-0.224-0.5-0.5-0.5 h-5.227v-4.659l3.947-1.862v3.428c-0.563,0.206-0.969,0.742-0.969,1.376c0,0.81,0.659,1.469,1.469,1.469 c0.811,0,1.47-0.659,1.47-1.469c0-0.634-0.406-1.17-0.97-1.376V13.08c0-0.088-0.029-0.166-0.068-0.238 c-0.01-0.019-0.022-0.034-0.035-0.051c-0.043-0.059-0.095-0.107-0.159-0.142c-0.008-0.005-0.012-0.015-0.021-0.019L25.854,6.55 c-0.138-0.066-0.297-0.066-0.435,0l-12.615,6.08c-0.173,0.083-0.284,0.26-0.283,0.452c0.001,0.193,0.112,0.368,0.287,0.45 l4.661,2.198v4.659h-0.926c-1.48,0-2.87,0.574-3.912,1.616c-1.042,1.042-1.615,2.431-1.615,3.912c0,1.894,0.958,3.567,2.415,4.564 c-1.337,0.09-2.585,0.627-3.536,1.579C8.852,33.102,8.278,34.491,8.278,35.973z M34.652,35.473H13.15c-0.276,0-0.5,0.224-0.5,0.5 s0.224,0.5,0.5,0.5h21.502c0.069,0.884,0.314,1.729,0.735,2.497H13.972c-1.653,0-2.998-1.344-2.998-2.997 c0-0.803,0.312-1.556,0.874-2.119c0.575-0.567,1.329-0.879,2.124-0.879h21.416C34.966,33.744,34.722,34.588,34.652,35.473z M37.39,25.417H15.887c-0.276,0-0.5,0.224-0.5,0.5s0.224,0.5,0.5,0.5H37.39c0.069,0.885,0.314,1.729,0.735,2.498H16.709 c-1.653,0-2.998-1.345-2.998-2.998c0-0.802,0.312-1.556,0.874-2.119c0.575-0.567,1.329-0.879,2.124-0.879h21.415 C37.703,23.688,37.459,24.533,37.39,25.417z M38.252,19.142c-0.259,0-0.469-0.21-0.469-0.469s0.21-0.469,0.469-0.469 s0.47,0.21,0.47,0.469S38.511,19.142,38.252,19.142z M14.184,13.075l11.454-5.52l11.453,5.52l-3.286,1.55v-1.448 c0-0.065-0.014-0.127-0.037-0.185c-0.008-0.021-0.022-0.037-0.033-0.057c-0.019-0.034-0.038-0.068-0.065-0.096 c-0.017-0.018-0.038-0.032-0.057-0.048c-0.028-0.022-0.056-0.044-0.089-0.06c-0.024-0.012-0.05-0.019-0.076-0.027 c-0.022-0.007-0.041-0.019-0.064-0.022l-1.819-0.291c-3.933-0.632-7.921-0.633-11.854,0l-1.82,0.291 c-0.023,0.004-0.042,0.016-0.064,0.022c-0.026,0.008-0.052,0.015-0.076,0.027c-0.033,0.016-0.06,0.037-0.089,0.06 c-0.02,0.016-0.04,0.029-0.057,0.048c-0.027,0.029-0.046,0.062-0.065,0.096c-0.011,0.019-0.025,0.036-0.033,0.057 c-0.023,0.058-0.037,0.119-0.037,0.185v1.448L14.184,13.075z M18.469,15.414v-1.81l1.4-0.224c3.827-0.615,7.708-0.615,11.537,0 l1.398,0.223v1.811v4.976H18.469V15.414z M12.016,25.917c0-1.214,0.47-2.353,1.322-3.205c0.854-0.853,1.992-1.323,3.205-1.323h1.426 h15.335h5.227v0.53H16.709c-1.059,0-2.063,0.415-2.828,1.169c-0.754,0.755-1.169,1.759-1.169,2.828c0,2.204,1.793,3.998,3.998,3.998 h21.822v0.53h-2.237H16.543C14.046,30.445,12.016,28.414,12.016,25.917z M13.806,31.445h2.737h19.251v0.53H13.972 c-1.059,0-2.062,0.415-2.828,1.169c-0.754,0.754-1.169,1.758-1.169,2.828c0,2.204,1.793,3.997,3.998,3.997h21.822v0.53H13.806 c-2.497,0-4.528-2.031-4.528-4.527c0-1.214,0.47-2.353,1.323-3.205C11.454,31.915,12.592,31.445,13.806,31.445z\"><\/path><\/svg>", "Images management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M22 5V19C22 19.6 21.6 20 21 20H19.5L11.9 12.4C11.5 12 10.9 12 10.5 12.4L3 20C2.5 20 2 19.5 2 19V5C2 4.4 2.4 4 3 4H21C21.6 4 22 4.4 22 5ZM7.5 7C6.7 7 6 7.7 6 8.5C6 9.3 6.7 10 7.5 10C8.3 10 9 9.3 9 8.5C9 7.7 8.3 7 7.5 7Z\" fill=\"currentColor\"><\/path> <path d=\"M19.1 10C18.7 9.60001 18.1 9.60001 17.7 10L10.7 17H2V19C2 19.6 2.4 20 3 20H21C21.6 20 22 19.6 22 19V12.9L19.1 10Z\" fill=\"currentColor\"><\/path> <\/svg>", "Videos management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M21 6.30005C20.5 5.30005 19.9 5.19998 18.7 5.09998C17.5 4.99998 14.5 5 11.9 5C9.29999 5 6.29998 4.99998 5.09998 5.09998C3.89998 5.19998 3.29999 5.30005 2.79999 6.30005C2.19999 7.30005 2 8.90002 2 11.9C2 14.8 2.29999 16.5 2.79999 17.5C3.29999 18.5 3.89998 18.6001 5.09998 18.7001C6.29998 18.8001 9.29999 18.8 11.9 18.8C14.5 18.8 17.5 18.8001 18.7 18.7001C19.9 18.6001 20.5 18.4 21 17.5C21.6 16.5 21.8 14.9 21.8 11.9C21.8 9.00002 21.5 7.30005 21 6.30005ZM9.89999 15.7001V8.20007L14.5 11C15.3 11.5 15.3 12.5 14.5 13L9.89999 15.7001Z\" fill=\"currentColor\"><\/path> <\/svg>", "Services management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M20.0381 4V10C20.0381 10.6 19.6381 11 19.0381 11H17.0381C16.4381 11 16.0381 10.6 16.0381 10V4C16.0381 2.9 16.9381 2 18.0381 2C19.1381 2 20.0381 2.9 20.0381 4ZM9.73808 18.9C10.7381 18.5 11.2381 17.3 10.8381 16.3L5.83808 3.29999C5.43808 2.29999 4.23808 1.80001 3.23808 2.20001C2.23808 2.60001 1.73809 3.79999 2.13809 4.79999L7.13809 17.8C7.43809 18.6 8.23808 19.1 9.03808 19.1C9.23808 19 9.53808 19 9.73808 18.9ZM19.0381 18H17.0381V20H19.0381V18Z\" fill=\"currentColor\"><\/path> <path d=\"M18.0381 6H4.03809C2.93809 6 2.03809 5.1 2.03809 4C2.03809 2.9 2.93809 2 4.03809 2H18.0381C19.1381 2 20.0381 2.9 20.0381 4C20.0381 5.1 19.1381 6 18.0381 6ZM4.03809 3C3.43809 3 3.03809 3.4 3.03809 4C3.03809 4.6 3.43809 5 4.03809 5C4.63809 5 5.03809 4.6 5.03809 4C5.03809 3.4 4.63809 3 4.03809 3ZM18.0381 3C17.4381 3 17.0381 3.4 17.0381 4C17.0381 4.6 17.4381 5 18.0381 5C18.6381 5 19.0381 4.6 19.0381 4C19.0381 3.4 18.6381 3 18.0381 3ZM12.0381 17V22H6.03809V17C6.03809 15.3 7.33809 14 9.03809 14C10.7381 14 12.0381 15.3 12.0381 17ZM9.03809 15.5C8.23809 15.5 7.53809 16.2 7.53809 17C7.53809 17.8 8.23809 18.5 9.03809 18.5C9.83809 18.5 10.5381 17.8 10.5381 17C10.5381 16.2 9.83809 15.5 9.03809 15.5ZM15.0381 15H17.0381V13H16.0381V8L14.0381 10V14C14.0381 14.6 14.4381 15 15.0381 15ZM19.0381 15H21.0381C21.6381 15 22.0381 14.6 22.0381 14V10L20.0381 8V13H19.0381V15ZM21.0381 20H15.0381V22H21.0381V20Z\" fill=\"currentColor\"><\/path> <\/svg>", "Lists management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M4.5 7C5.88071 7 7 5.88071 7 4.5C7 3.11929 5.88071 2 4.5 2C3.11929 2 2 3.11929 2 4.5C2 5.88071 3.11929 7 4.5 7Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M14 4.5C14 5.9 12.9 7 11.5 7C10.1 7 9 5.9 9 4.5C9 3.1 10.1 2 11.5 2C12.9 2 14 3.1 14 4.5ZM18.5 2C17.1 2 16 3.1 16 4.5C16 5.9 17.1 7 18.5 7C19.9 7 21 5.9 21 4.5C21 3.1 19.9 2 18.5 2ZM4.5 9C3.1 9 2 10.1 2 11.5C2 12.9 3.1 14 4.5 14C5.9 14 7 12.9 7 11.5C7 10.1 5.9 9 4.5 9ZM11.5 9C10.1 9 9 10.1 9 11.5C9 12.9 10.1 14 11.5 14C12.9 14 14 12.9 14 11.5C14 10.1 12.9 9 11.5 9ZM18.5 9C17.1 9 16 10.1 16 11.5C16 12.9 17.1 14 18.5 14C19.9 14 21 12.9 21 11.5C21 10.1 19.9 9 18.5 9ZM4.5 16C3.1 16 2 17.1 2 18.5C2 19.9 3.1 21 4.5 21C5.9 21 7 19.9 7 18.5C7 17.1 5.9 16 4.5 16ZM11.5 16C10.1 16 9 17.1 9 18.5C9 19.9 10.1 21 11.5 21C12.9 21 14 19.9 14 18.5C14 17.1 12.9 16 11.5 16ZM18.5 16C17.1 16 16 17.1 16 18.5C16 19.9 17.1 21 18.5 21C19.9 21 21 19.9 21 18.5C21 17.1 19.9 16 18.5 16Z\" fill=\"currentColor\"><\/path> <\/svg>", "Partners & Sponsors": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M3 18C3 15.3945 4.66081 13.1768 6.98156 12.348C7.61232 12.1227 8.29183 12 9 12C9.70817 12 10.3877 12.1227 11.0184 12.348C11.3611 12.4703 11.6893 12.623 12 12.8027C12.3107 12.623 12.6389 12.4703 12.9816 12.348C13.6123 12.1227 14.2918 12 15 12C15.7082 12 16.3877 12.1227 17.0184 12.348C19.3392 13.1768 21 15.3945 21 18V21H15.75V19.5H19.5V18C19.5 15.5147 17.4853 13.5 15 13.5C14.4029 13.5 13.833 13.6163 13.3116 13.8275C14.3568 14.9073 15 16.3785 15 18V21H3V18ZM9 11.25C8.31104 11.25 7.66548 11.0642 7.11068 10.74C5.9977 10.0896 5.25 8.88211 5.25 7.5C5.25 5.42893 6.92893 3.75 9 3.75C10.2267 3.75 11.3158 4.33901 12 5.24963C12.6842 4.33901 13.7733 3.75 15 3.75C17.0711 3.75 18.75 5.42893 18.75 7.5C18.75 8.88211 18.0023 10.0896 16.8893 10.74C16.3345 11.0642 15.689 11.25 15 11.25C14.311 11.25 13.6655 11.0642 13.1107 10.74C12.6776 10.4869 12.2999 10.1495 12 9.75036C11.7001 10.1496 11.3224 10.4869 10.8893 10.74C10.3345 11.0642 9.68896 11.25 9 11.25ZM13.5 18V19.5H4.5V18C4.5 15.5147 6.51472 13.5 9 13.5C11.4853 13.5 13.5 15.5147 13.5 18ZM11.25 7.5C11.25 8.74264 10.2426 9.75 9 9.75C7.75736 9.75 6.75 8.74264 6.75 7.5C6.75 6.25736 7.75736 5.25 9 5.25C10.2426 5.25 11.25 6.25736 11.25 7.5ZM15 5.25C13.7574 5.25 12.75 6.25736 12.75 7.5C12.75 8.74264 13.7574 9.75 15 9.75C16.2426 9.75 17.25 8.74264 17.25 7.5C17.25 6.25736 16.2426 5.25 15 5.25Z\" fill=\"currentColor\"><\/path> <\/svg>", "Widget poll management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M6.5 11C8.98528 11 11 8.98528 11 6.5C11 4.01472 8.98528 2 6.5 2C4.01472 2 2 4.01472 2 6.5C2 8.98528 4.01472 11 6.5 11Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M13 6.5C13 4 15 2 17.5 2C20 2 22 4 22 6.5C22 9 20 11 17.5 11C15 11 13 9 13 6.5ZM6.5 22C9 22 11 20 11 17.5C11 15 9 13 6.5 13C4 13 2 15 2 17.5C2 20 4 22 6.5 22ZM17.5 22C20 22 22 20 22 17.5C22 15 20 13 17.5 13C15 13 13 15 13 17.5C13 20 15 22 17.5 22Z\" fill=\"currentColor\"><\/path> <\/svg>", "Text Ads Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M19 22H5C4.4 22 4 21.6 4 21V3C4 2.4 4.4 2 5 2H14L20 8V21C20 21.6 19.6 22 19 22ZM12.5 18C12.5 17.4 12.6 17.5 12 17.5H8.5C7.9 17.5 8 17.4 8 18C8 18.6 7.9 18.5 8.5 18.5L12 18C12.6 18 12.5 18.6 12.5 18ZM16.5 13C16.5 12.4 16.6 12.5 16 12.5H8.5C7.9 12.5 8 12.4 8 13C8 13.6 7.9 13.5 8.5 13.5H15.5C16.1 13.5 16.5 13.6 16.5 13ZM12.5 8C12.5 7.4 12.6 7.5 12 7.5H8C7.4 7.5 7.5 7.4 7.5 8C7.5 8.6 7.4 8.5 8 8.5H12C12.6 8.5 12.5 8.6 12.5 8Z\" fill=\"currentColor\"><\/path> <rect x=\"7\" y=\"17\" width=\"6\" height=\"2\" rx=\"1\" fill=\"currentColor\"><\/rect> <rect x=\"7\" y=\"12\" width=\"10\" height=\"2\" rx=\"1\" fill=\"currentColor\"><\/rect> <rect x=\"7\" y=\"7\" width=\"6\" height=\"2\" rx=\"1\" fill=\"currentColor\"><\/rect> <path d=\"M15 8H20L14 2V7C14 7.6 14.4 8 15 8Z\" fill=\"currentColor\"><\/path> <\/svg>", "Relations Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M18.4 5.59998C18.7766 5.9772 18.9881 6.48846 18.9881 7.02148C18.9881 7.55451 18.7766 8.06577 18.4 8.44299L14.843 12C14.466 12.377 13.9547 12.5887 13.4215 12.5887C12.8883 12.5887 12.377 12.377 12 12C11.623 11.623 11.4112 11.1117 11.4112 10.5785C11.4112 10.0453 11.623 9.53399 12 9.15698L15.553 5.604C15.9302 5.22741 16.4415 5.01587 16.9745 5.01587C17.5075 5.01587 18.0188 5.22741 18.396 5.604L18.4 5.59998ZM20.528 3.47205C20.0614 3.00535 19.5074 2.63503 18.8977 2.38245C18.288 2.12987 17.6344 1.99988 16.9745 1.99988C16.3145 1.99988 15.661 2.12987 15.0513 2.38245C14.4416 2.63503 13.8876 3.00535 13.421 3.47205L9.86801 7.02502C9.40136 7.49168 9.03118 8.04568 8.77863 8.6554C8.52608 9.26511 8.39609 9.91855 8.39609 10.5785C8.39609 11.2384 8.52608 11.8919 8.77863 12.5016C9.03118 13.1113 9.40136 13.6653 9.86801 14.132C10.3347 14.5986 10.8886 14.9688 11.4984 15.2213C12.1081 15.4739 12.7616 15.6039 13.4215 15.6039C14.0815 15.6039 14.7349 15.4739 15.3446 15.2213C15.9543 14.9688 16.5084 14.5986 16.975 14.132L20.528 10.579C20.9947 10.1124 21.3649 9.55844 21.6175 8.94873C21.8701 8.33902 22.0001 7.68547 22.0001 7.02551C22.0001 6.36555 21.8701 5.71201 21.6175 5.10229C21.3649 4.49258 20.9947 3.93867 20.528 3.47205Z\" fill=\"currentColor\"><\/path> <path d=\"M14.132 9.86804C13.6421 9.37931 13.0561 8.99749 12.411 8.74695L12 9.15698C11.6234 9.53421 11.4119 10.0455 11.4119 10.5785C11.4119 11.1115 11.6234 11.6228 12 12C12.3766 12.3772 12.5881 12.8885 12.5881 13.4215C12.5881 13.9545 12.3766 14.4658 12 14.843L8.44699 18.396C8.06999 18.773 7.55868 18.9849 7.02551 18.9849C6.49235 18.9849 5.98101 18.773 5.604 18.396C5.227 18.019 5.0152 17.5077 5.0152 16.9745C5.0152 16.4413 5.227 15.93 5.604 15.553L8.74701 12.411C8.28705 11.233 8.28705 9.92498 8.74701 8.74695C8.10159 8.99737 7.5152 9.37919 7.02499 9.86804L3.47198 13.421C2.52954 14.3635 2.00009 15.6417 2.00009 16.9745C2.00009 18.3073 2.52957 19.5855 3.47202 20.528C4.41446 21.4704 5.69269 21.9999 7.02551 21.9999C8.35833 21.9999 9.63656 21.4704 10.579 20.528L14.132 16.975C14.5987 16.5084 14.9689 15.9544 15.2215 15.3447C15.4741 14.735 15.6041 14.0815 15.6041 13.4215C15.6041 12.7615 15.4741 12.108 15.2215 11.4983C14.9689 10.8886 14.5987 10.3347 14.132 9.86804Z\" fill=\"currentColor\"><\/path> <\/svg>", "Entities Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M11.2929 2.70711C11.6834 2.31658 12.3166 2.31658 12.7071 2.70711L15.2929 5.29289C15.6834 5.68342 15.6834 6.31658 15.2929 6.70711L12.7071 9.29289C12.3166 9.68342 11.6834 9.68342 11.2929 9.29289L8.70711 6.70711C8.31658 6.31658 8.31658 5.68342 8.70711 5.29289L11.2929 2.70711Z\" fill=\"currentColor\"><\/path> <path d=\"M11.2929 14.7071C11.6834 14.3166 12.3166 14.3166 12.7071 14.7071L15.2929 17.2929C15.6834 17.6834 15.6834 18.3166 15.2929 18.7071L12.7071 21.2929C12.3166 21.6834 11.6834 21.6834 11.2929 21.2929L8.70711 18.7071C8.31658 18.3166 8.31658 17.6834 8.70711 17.2929L11.2929 14.7071Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M5.29289 8.70711C5.68342 8.31658 6.31658 8.31658 6.70711 8.70711L9.29289 11.2929C9.68342 11.6834 9.68342 12.3166 9.29289 12.7071L6.70711 15.2929C6.31658 15.6834 5.68342 15.6834 5.29289 15.2929L2.70711 12.7071C2.31658 12.3166 2.31658 11.6834 2.70711 11.2929L5.29289 8.70711Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M17.2929 8.70711C17.6834 8.31658 18.3166 8.31658 18.7071 8.70711L21.2929 11.2929C21.6834 11.6834 21.6834 12.3166 21.2929 12.7071L18.7071 15.2929C18.3166 15.6834 17.6834 15.6834 17.2929 15.2929L14.7071 12.7071C14.3166 12.3166 14.3166 11.6834 14.7071 11.2929L17.2929 8.70711Z\" fill=\"currentColor\"><\/path> <\/svg>", "Entity management requests": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 1024 1024\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M841.2 841.1H182.9V182.9h292.5v-73.2H109.7v804.6h804.6V621.7h-73.1z\" fill=\"#0F1F3C\"><\/path><path d=\"M402.3 585.1h73.1c0-100.8 82-182.9 182.9-182.9s182.9 82 182.9 182.9h73.1c0-102.2-60.2-190.6-147-231.6 23.2-25.9 37.3-60.1 37.3-97.5 0-80.8-65.5-146.3-146.3-146.3-80.8 0-146.3 65.5-146.3 146.3 0 37.5 14.1 71.7 37.3 97.5-86.8 41.1-147 129.4-147 231.6z m256-402.2c40.3 0 73.1 32.8 73.1 73.1s-32.8 73.1-73.1 73.1-73.1-32.8-73.1-73.1 32.8-73.1 73.1-73.1zM219.4 256h219.4v73.1H219.4zM219.4 658.3h585.1v73.1H219.4zM219.4 402.3h146.3v73.1H219.4z\" fill=\"#0F1F3C\"><\/path><\/svg>", "Majarra Articles": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M18 22C19.7 22 21 20.7 21 19C21 18.5 20.9 18.1 20.7 17.7L15.3 6.30005C15.1 5.90005 15 5.5 15 5C15 3.3 16.3 2 18 2H6C4.3 2 3 3.3 3 5C3 5.5 3.1 5.90005 3.3 6.30005L8.7 17.7C8.9 18.1 9 18.5 9 19C9 20.7 7.7 22 6 22H18Z\" fill=\"currentColor\"><\/path> <path d=\"M18 2C19.7 2 21 3.3 21 5H9C9 3.3 7.7 2 6 2H18Z\" fill=\"currentColor\"><\/path> <path d=\"M9 19C9 20.7 7.7 22 6 22C4.3 22 3 20.7 3 19H9Z\" fill=\"currentColor\"><\/path> <\/svg>", "News Engine": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M8 8C8 7.4 8.4 7 9 7H16V3C16 2.4 15.6 2 15 2H3C2.4 2 2 2.4 2 3V13C2 13.6 2.4 14 3 14H5V16.1C5 16.8 5.79999 17.1 6.29999 16.6L8 14.9V8Z\" fill=\"currentColor\"><\/path> <path d=\"M22 8V18C22 18.6 21.6 19 21 19H19V21.1C19 21.8 18.2 22.1 17.7 21.6L15 18.9H9C8.4 18.9 8 18.5 8 17.9V7.90002C8 7.30002 8.4 6.90002 9 6.90002H21C21.6 7.00002 22 7.4 22 8ZM19 11C19 10.4 18.6 10 18 10H12C11.4 10 11 10.4 11 11C11 11.6 11.4 12 12 12H18C18.6 12 19 11.6 19 11ZM17 15C17 14.4 16.6 14 16 14H12C11.4 14 11 14.4 11 15C11 15.6 11.4 16 12 16H16C16.6 16 17 15.6 17 15Z\" fill=\"currentColor\"><\/path> <\/svg>", "Manhom news": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\"> <g id=\"icomoon-ignore\"> <\/g> <path d=\"M9.069 2.672v14.928h-6.397c0 0 0 6.589 0 8.718s1.983 3.010 3.452 3.010c1.469 0 16.26 0 20.006 0 1.616 0 3.199-1.572 3.199-3.199 0-1.175 0-23.457 0-23.457h-20.259zM6.124 28.262c-0.664 0-2.385-0.349-2.385-1.944v-7.652h5.331v7.192c0 0.714-0.933 2.404-2.404 2.404h-0.542zM28.262 26.129c0 1.036-1.096 2.133-2.133 2.133h-17.113c0.718-0.748 1.119-1.731 1.119-2.404v-22.12h18.126v22.391z\" fill=\"#000000\"> <\/path> <path d=\"M12.268 5.871h13.861v1.066h-13.861v-1.066z\" fill=\"#000000\"> <\/path> <path d=\"M12.268 20.265h13.861v1.066h-13.861v-1.066z\" fill=\"#000000\"> <\/path> <path d=\"M12.268 23.997h13.861v1.066h-13.861v-1.066z\" fill=\"#000000\"> <\/path> <path d=\"M26.129 9.602h-13.861v7.997h13.861v-7.997zM25.063 16.533h-11.729v-5.864h11.729v5.864z\" fill=\"#000000\"> <\/path> <\/svg>", "Redirect Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M18.4 18H16C15.7 18 15.5 17.9 15.3 17.7L12.5 14.9C12.1 14.5 12.1 13.9 12.5 13.5C12.9 13.1 13.5 13.1 13.9 13.5L16.4 16H18.4V18ZM16 6C15.7 6 15.5 6.09999 15.3 6.29999L11 10.6L6.70001 6.29999C6.50001 6.09999 6.3 6 6 6H3C2.4 6 2 6.4 2 7C2 7.6 2.4 8 3 8H5.60001L9.60001 12L5.60001 16H3C2.4 16 2 16.4 2 17C2 17.6 2.4 18 3 18H6C6.3 18 6.50001 17.9 6.70001 17.7L16.4 8H18.4V6H16Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M21.7 6.29999C22.1 6.69999 22.1 7.30001 21.7 7.70001L18.4 11V3L21.7 6.29999ZM18.4 13V21L21.7 17.7C22.1 17.3 22.1 16.7 21.7 16.3L18.4 13Z\" fill=\"currentColor\"><\/path> <\/svg>", "Newsletters management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M6 8.725C6 8.125 6.4 7.725 7 7.725H14L18 11.725V12.925L22 9.725L12.6 2.225C12.2 1.925 11.7 1.925 11.4 2.225L2 9.725L6 12.925V8.725Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M22 9.72498V20.725C22 21.325 21.6 21.725 21 21.725H3C2.4 21.725 2 21.325 2 20.725V9.72498L11.4 17.225C11.8 17.525 12.3 17.525 12.6 17.225L22 9.72498ZM15 11.725H18L14 7.72498V10.725C14 11.325 14.4 11.725 15 11.725Z\" fill=\"currentColor\"><\/path> <\/svg>", "Bots config": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M5 11.3V11C5 9.9 5.9 9 7 9H17C18.1 9 19 9.9 19 11V11.3C18.7 11.1 18.4 11 18 11H6C5.6 11 5.3 11.1 5 11.3ZM4 13H3C2.4 13 2 13.4 2 14V18C2 18.6 2.4 19 3 19H4V13ZM22 18V14C22 13.4 21.6 13 21 13H20V19H21C21.6 19 22 18.6 22 18Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M18 21H6C4.9 21 4 20.1 4 19V13C4 11.9 4.9 11 6 11H18C19.1 11 20 11.9 20 13V19C20 20.1 19.1 21 18 21ZM14 3C14 2.4 13.6 2 13 2H11C10.4 2 10 2.4 10 3V9H14V3ZM6 12C5.4 12 5 12.4 5 13C5 13.6 5.4 14 6 14C6.6 14 7 13.6 7 13C7 12.4 6.6 12 6 12ZM18 12C17.4 12 17 12.4 17 13C17 13.6 17.4 14 18 14C18.6 14 19 13.6 19 13C19 12.4 18.6 12 18 12ZM6 18C5.4 18 5 18.4 5 19C5 19.6 5.4 20 6 20C6.6 20 7 19.6 7 19C7 18.4 6.6 18 6 18ZM18 18C17.4 18 17 18.4 17 19C17 19.6 17.4 20 18 20C18.6 20 19 19.6 19 19C19 18.4 18.6 18 18 18Z\" fill=\"currentColor\"><\/path> <\/svg>", "Countries Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M6 22H4V3C4 2.4 4.4 2 5 2C5.6 2 6 2.4 6 3V22Z\" fill=\"currentColor\"><\/path> <path d=\"M18 14H4V4H18C18.8 4 19.2 4.9 18.7 5.5L16 9L18.8 12.5C19.3 13.1 18.8 14 18 14Z\" fill=\"currentColor\"><\/path> <\/svg>", "Currencies Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M20 18H4C3.4 18 3 17.6 3 17V7C3 6.4 3.4 6 4 6H20C20.6 6 21 6.4 21 7V17C21 17.6 20.6 18 20 18ZM12 8C10.3 8 9 9.8 9 12C9 14.2 10.3 16 12 16C13.7 16 15 14.2 15 12C15 9.8 13.7 8 12 8Z\" fill=\"currentColor\"><\/path> <path d=\"M18 6H20C20.6 6 21 6.4 21 7V9C19.3 9 18 7.7 18 6ZM6 6H4C3.4 6 3 6.4 3 7V9C4.7 9 6 7.7 6 6ZM21 17V15C19.3 15 18 16.3 18 18H20C20.6 18 21 17.6 21 17ZM3 15V17C3 17.6 3.4 18 4 18H6C6 16.3 4.7 15 3 15Z\" fill=\"currentColor\"><\/path> <\/svg>", "Content Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M20 7H3C2.4 7 2 6.6 2 6V3C2 2.4 2.4 2 3 2H20C20.6 2 21 2.4 21 3V6C21 6.6 20.6 7 20 7ZM7 9H3C2.4 9 2 9.4 2 10V20C2 20.6 2.4 21 3 21H7C7.6 21 8 20.6 8 20V10C8 9.4 7.6 9 7 9Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M20 21H11C10.4 21 10 20.6 10 20V10C10 9.4 10.4 9 11 9H20C20.6 9 21 9.4 21 10V20C21 20.6 20.6 21 20 21Z\" fill=\"currentColor\"><\/path> <\/svg>", "Subscription Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M21.6 11.2L19.3 8.89998V5.59993C19.3 4.99993 18.9 4.59993 18.3 4.59993H14.9L12.6 2.3C12.2 1.9 11.6 1.9 11.2 2.3L8.9 4.59993H5.6C5 4.59993 4.6 4.99993 4.6 5.59993V8.89998L2.3 11.2C1.9 11.6 1.9 12.1999 2.3 12.5999L4.6 14.9V18.2C4.6 18.8 5 19.2 5.6 19.2H8.9L11.2 21.5C11.6 21.9 12.2 21.9 12.6 21.5L14.9 19.2H18.2C18.8 19.2 19.2 18.8 19.2 18.2V14.9L21.5 12.5999C22 12.1999 22 11.6 21.6 11.2Z\" fill=\"currentColor\"><\/path> <path d=\"M11.3 9.40002C11.3 10.2 11.1 10.9 10.7 11.3C10.3 11.7 9.8 11.9 9.2 11.9C8.8 11.9 8.40001 11.8 8.10001 11.6C7.80001 11.4 7.50001 11.2 7.40001 10.8C7.20001 10.4 7.10001 10 7.10001 9.40002C7.10001 8.80002 7.20001 8.4 7.30001 8C7.40001 7.6 7.7 7.29998 8 7.09998C8.3 6.89998 8.7 6.80005 9.2 6.80005C9.5 6.80005 9.80001 6.9 10.1 7C10.4 7.1 10.6 7.3 10.8 7.5C11 7.7 11.1 8.00005 11.2 8.30005C11.3 8.60005 11.3 9.00002 11.3 9.40002ZM10.1 9.40002C10.1 8.80002 10 8.39998 9.90001 8.09998C9.80001 7.79998 9.6 7.70007 9.2 7.70007C9 7.70007 8.8 7.80002 8.7 7.90002C8.6 8.00002 8.50001 8.2 8.40001 8.5C8.40001 8.7 8.30001 9.10002 8.30001 9.40002C8.30001 9.80002 8.30001 10.1 8.40001 10.4C8.40001 10.6 8.5 10.8 8.7 11C8.8 11.1 9 11.2001 9.2 11.2001C9.5 11.2001 9.70001 11.1 9.90001 10.8C10 10.4 10.1 10 10.1 9.40002ZM14.9 7.80005L9.40001 16.7001C9.30001 16.9001 9.10001 17.1 8.90001 17.1C8.80001 17.1 8.70001 17.1 8.60001 17C8.50001 16.9 8.40001 16.8001 8.40001 16.7001C8.40001 16.6001 8.4 16.5 8.5 16.4L14 7.5C14.1 7.3 14.2 7.19998 14.3 7.09998C14.4 6.99998 14.5 7 14.6 7C14.7 7 14.8 6.99998 14.9 7.09998C15 7.19998 15 7.30002 15 7.40002C15.2 7.30002 15.1 7.50005 14.9 7.80005ZM16.6 14.2001C16.6 15.0001 16.4 15.7 16 16.1C15.6 16.5 15.1 16.7001 14.5 16.7001C14.1 16.7001 13.7 16.6 13.4 16.4C13.1 16.2 12.8 16 12.7 15.6C12.5 15.2 12.4 14.8001 12.4 14.2001C12.4 13.3001 12.6 12.7 12.9 12.3C13.2 11.9 13.7 11.7001 14.5 11.7001C14.8 11.7001 15.1 11.8 15.4 11.9C15.7 12 15.9 12.2 16.1 12.4C16.3 12.6 16.4 12.9001 16.5 13.2001C16.6 13.4001 16.6 13.8001 16.6 14.2001ZM15.4 14.1C15.4 13.5 15.3 13.1 15.2 12.9C15.1 12.6 14.9 12.5 14.5 12.5C14.3 12.5 14.1 12.6001 14 12.7001C13.9 12.8001 13.8 13.0001 13.7 13.2001C13.6 13.4001 13.6 13.8 13.6 14.1C13.6 14.7 13.7 15.1 13.8 15.4C13.9 15.7 14.1 15.8 14.5 15.8C14.8 15.8 15 15.7 15.2 15.4C15.3 15.2 15.4 14.7 15.4 14.1Z\" fill=\"currentColor\"><\/path> <\/svg>", "Mawshour management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 16 15\" xmlns=\"http://www.w3.org/2000/svg\"> <rect y=\"6\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"><\/rect> <rect opacity=\"0.3\" y=\"12\" width=\"8\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"><\/rect> <rect opacity=\"0.3\" width=\"12\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"><\/rect> <\/svg>", "Manjam": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\"><path fill=\"#000000\" d=\"M403.818 33.117l-369.554 15.4v46.012L426.97 79.425l-23.152-46.31zM385.334 99.04l-30.408 1.17 9.78 185.806 38.554-7.71L385.334 99.04zm-135.152 5.198l-18.39.71-2.694 15.61-26.578 18.75.13.866-.273-.047-3.063 17.738 6.188 1.07 4.617 30.395 31.532 5.445 14.543-27.088 6.186 1.07 3.063-17.74-.273-.046.416-.773-18.75-26.578 3.346-19.382zm-77.444 2.98l-22.82.878-39.47 54.775-1.692 33.138 63.982-88.79zm-77.625 2.985l-31.275 1.203-28.72 272.832 45.66 6.733 14.335-280.767zM236.928 128.1l14.457 20.49-34.947-6.035 20.49-14.455zm-20.516 32.718l28.87 4.985-7.012 13.064-19.63-3.39-2.228-14.66zM437.12 289.89l-76.434 15.288-44.99-14.998-28.706 28.703h169.457L437.12 289.89zm-260.05 2.268l-9.42 20.725h-16.386v18h8.205l-7.275 16h-22.93v18h14.75l-8.183 18h-26.568v18h18.386l-13.636 30h-24.75v18h16.568l-8.762 19.275 16.387 7.45 12.147-26.725h143.423l-6.75-18H133.785l13.637-30h103.605l-6.75-18h-88.673l8.18-18h73.74l-6.75-18h-58.807l7.273-16h45.535l-4.498-12h41.258l6-6h-80.113l6.035-13.276-16.387-7.45zm69.182 44.725l40.36 107.635c6.022-8.242 15.748-13.635 26.652-13.635 11.916 0 22.43 6.438 28.234 16h55.53c5.804-9.562 16.32-16 28.236-16 10.424 0 19.768 4.93 25.832 12.564l26.64-106.564H246.252zm67.012 112c-8.39 0-15 6.61-15 15s6.61 15 15 15 15-6.61 15-15-6.61-15-15-15zm112 0c-8.39 0-15 6.61-15 15s6.61 15 15 15 15-6.61 15-15-6.61-15-15-15z\"><\/path><\/svg>", "Advertisement Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M18 22H6C5.4 22 5 21.6 5 21V8C6.6 6.4 7.4 5.6 9 4H15C16.6 5.6 17.4 6.4 19 8V21C19 21.6 18.6 22 18 22ZM12 5.5C11.2 5.5 10.5 6.2 10.5 7C10.5 7.8 11.2 8.5 12 8.5C12.8 8.5 13.5 7.8 13.5 7C13.5 6.2 12.8 5.5 12 5.5Z\" fill=\"currentColor\"><\/path> <path d=\"M12 7C11.4 7 11 6.6 11 6V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V6C13 6.6 12.6 7 12 7ZM15.1 10.6C15.1 10.5 15.1 10.4 15 10.3C14.9 10.2 14.8 10.2 14.7 10.2C14.6 10.2 14.5 10.2 14.4 10.3C14.3 10.4 14.3 10.5 14.2 10.6L9 19.1C8.9 19.2 8.89999 19.3 8.89999 19.4C8.89999 19.5 8.9 19.6 9 19.7C9.1 19.8 9.2 19.8 9.3 19.8C9.5 19.8 9.6 19.7 9.8 19.5L15 11.1C15 10.8 15.1 10.7 15.1 10.6ZM11 11.6C10.9 11.3 10.8 11.1 10.6 10.8C10.4 10.6 10.2 10.4 10 10.3C9.8 10.2 9.50001 10.1 9.10001 10.1C8.60001 10.1 8.3 10.2 8 10.4C7.7 10.6 7.49999 10.9 7.39999 11.2C7.29999 11.6 7.2 12 7.2 12.6C7.2 13.1 7.3 13.5 7.5 13.9C7.7 14.3 7.9 14.5 8.2 14.7C8.5 14.9 8.8 14.9 9.2 14.9C9.8 14.9 10.3 14.7 10.6 14.3C11 13.9 11.1 13.3 11.1 12.5C11.1 12.3 11.1 11.9 11 11.6ZM9.8 13.8C9.7 14.1 9.5 14.2 9.2 14.2C9 14.2 8.8 14.1 8.7 14C8.6 13.9 8.5 13.7 8.5 13.5C8.5 13.3 8.39999 13 8.39999 12.6C8.39999 12.2 8.4 11.9 8.5 11.7C8.5 11.5 8.6 11.3 8.7 11.2C8.8 11.1 9 11 9.2 11C9.5 11 9.7 11.1 9.8 11.4C9.9 11.7 10 12 10 12.6C10 13.2 9.9 13.6 9.8 13.8ZM16.5 16.1C16.4 15.8 16.3 15.6 16.1 15.4C15.9 15.2 15.7 15 15.5 14.9C15.3 14.8 15 14.7 14.6 14.7C13.9 14.7 13.4 14.9 13.1 15.3C12.8 15.7 12.6 16.3 12.6 17.1C12.6 17.6 12.7 18 12.9 18.4C13.1 18.7 13.3 19 13.6 19.2C13.9 19.4 14.2 19.5 14.6 19.5C15.2 19.5 15.7 19.3 16 18.9C16.4 18.5 16.5 17.9 16.5 17.1C16.7 16.8 16.6 16.4 16.5 16.1ZM15.3 18.4C15.2 18.7 15 18.8 14.7 18.8C14.4 18.8 14.2 18.7 14.1 18.4C14 18.1 13.9 17.7 13.9 17.2C13.9 16.8 13.9 16.5 14 16.3C14.1 16.1 14.1 15.9 14.2 15.8C14.3 15.7 14.5 15.6 14.7 15.6C15 15.6 15.2 15.7 15.3 16C15.4 16.2 15.5 16.6 15.5 17.2C15.5 17.7 15.4 18.1 15.3 18.4Z\" fill=\"currentColor\"><\/path> <\/svg>", "Advanced Search Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M21.7 18.9L18.6 15.8C17.9 16.9 16.9 17.9 15.8 18.6L18.9 21.7C19.3 22.1 19.9 22.1 20.3 21.7L21.7 20.3C22.1 19.9 22.1 19.3 21.7 18.9Z\" fill=\"currentColor\"><\/path> <path opacity=\"0.3\" d=\"M11 20C6 20 2 16 2 11C2 6 6 2 11 2C16 2 20 6 20 11C20 16 16 20 11 20ZM11 4C7.1 4 4 7.1 4 11C4 14.9 7.1 18 11 18C14.9 18 18 14.9 18 11C18 7.1 14.9 4 11 4ZM8 11C8 9.3 9.3 8 11 8C11.6 8 12 7.6 12 7C12 6.4 11.6 6 11 6C8.2 6 6 8.2 6 11C6 11.6 6.4 12 7 12C7.6 12 8 11.6 8 11Z\" fill=\"currentColor\"><\/path> <\/svg>", "Feedback": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M8 8C8 7.4 8.4 7 9 7H16V3C16 2.4 15.6 2 15 2H3C2.4 2 2 2.4 2 3V13C2 13.6 2.4 14 3 14H5V16.1C5 16.8 5.79999 17.1 6.29999 16.6L8 14.9V8Z\" fill=\"currentColor\"><\/path> <path d=\"M22 8V18C22 18.6 21.6 19 21 19H19V21.1C19 21.8 18.2 22.1 17.7 21.6L15 18.9H9C8.4 18.9 8 18.5 8 17.9V7.90002C8 7.30002 8.4 6.90002 9 6.90002H21C21.6 7.00002 22 7.4 22 8ZM19 11C19 10.4 18.6 10 18 10H12C11.4 10 11 10.4 11 11C11 11.6 11.4 12 12 12H18C18.6 12 19 11.6 19 11ZM17 15C17 14.4 16.6 14 16 14H12C11.4 14 11 14.4 11 15C11 15.6 11.4 16 12 16H16C16.6 16 17 15.6 17 15Z\" fill=\"currentColor\"><\/path> <\/svg>", "Admin Log": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.5\" d=\"M18 2H9C7.34315 2 6 3.34315 6 5H8C8 4.44772 8.44772 4 9 4H18C18.5523 4 19 4.44772 19 5V16C19 16.5523 18.5523 17 18 17V19C19.6569 19 21 17.6569 21 16V5C21 3.34315 19.6569 2 18 2Z\" fill=\"currentColor\"><\/path> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M14.7857 7.125H6.21429C5.62255 7.125 5.14286 7.6007 5.14286 8.1875V18.8125C5.14286 19.3993 5.62255 19.875 6.21429 19.875H14.7857C15.3774 19.875 15.8571 19.3993 15.8571 18.8125V8.1875C15.8571 7.6007 15.3774 7.125 14.7857 7.125ZM6.21429 5C4.43908 5 3 6.42709 3 8.1875V18.8125C3 20.5729 4.43909 22 6.21429 22H14.7857C16.5609 22 18 20.5729 18 18.8125V8.1875C18 6.42709 16.5609 5 14.7857 5H6.21429Z\" fill=\"currentColor\"><\/path> <\/svg>", "Users Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M22 12C22 17.5 17.5 22 12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2C17.5 2 22 6.5 22 12ZM12 7C10.3 7 9 8.3 9 10C9 11.7 10.3 13 12 13C13.7 13 15 11.7 15 10C15 8.3 13.7 7 12 7Z\" fill=\"currentColor\"><\/path> <path d=\"M12 22C14.6 22 17 21 18.7 19.4C17.9 16.9 15.2 15 12 15C8.8 15 6.09999 16.9 5.29999 19.4C6.99999 21 9.4 22 12 22Z\" fill=\"currentColor\"><\/path> <\/svg>", "Roles Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M20.5543 4.37824L12.1798 2.02473C12.0626 1.99176 11.9376 1.99176 11.8203 2.02473L3.44572 4.37824C3.18118 4.45258 3 4.6807 3 4.93945V13.569C3 14.6914 3.48509 15.8404 4.4417 16.984C5.17231 17.8575 6.18314 18.7345 7.446 19.5909C9.56752 21.0295 11.6566 21.912 11.7445 21.9488C11.8258 21.9829 11.9129 22 12.0001 22C12.0872 22 12.1744 21.983 12.2557 21.9488C12.3435 21.912 14.4326 21.0295 16.5541 19.5909C17.8169 18.7345 18.8277 17.8575 19.5584 16.984C20.515 15.8404 21 14.6914 21 13.569V4.93945C21 4.6807 20.8189 4.45258 20.5543 4.37824Z\" fill=\"currentColor\"><\/path> <path d=\"M12.0006 11.1542C13.1434 11.1542 14.0777 10.22 14.0777 9.0771C14.0777 7.93424 13.1434 7 12.0006 7C10.8577 7 9.92348 7.93424 9.92348 9.0771C9.92348 10.22 10.8577 11.1542 12.0006 11.1542Z\" fill=\"currentColor\"><\/path> <path d=\"M15.5652 13.814C15.5108 13.6779 15.4382 13.551 15.3566 13.4331C14.9393 12.8163 14.2954 12.4081 13.5697 12.3083C13.479 12.2993 13.3793 12.3174 13.3067 12.3718C12.9257 12.653 12.4722 12.7981 12.0006 12.7981C11.5289 12.7981 11.0754 12.653 10.6944 12.3718C10.6219 12.3174 10.5221 12.2902 10.4314 12.3083C9.70578 12.4081 9.05272 12.8163 8.64456 13.4331C8.56293 13.551 8.49036 13.687 8.43595 13.814C8.40875 13.8684 8.41781 13.9319 8.44502 13.9864C8.51759 14.1133 8.60828 14.2403 8.68991 14.3492C8.81689 14.5215 8.95295 14.6757 9.10715 14.8208C9.23413 14.9478 9.37925 15.0657 9.52439 15.1836C10.2409 15.7188 11.1026 15.9999 11.9915 15.9999C12.8804 15.9999 13.7421 15.7188 14.4586 15.1836C14.6038 15.0748 14.7489 14.9478 14.8759 14.8208C15.021 14.6757 15.1661 14.5215 15.2931 14.3492C15.3838 14.2312 15.4655 14.1133 15.538 13.9864C15.5833 13.9319 15.5924 13.8684 15.5652 13.814Z\" fill=\"currentColor\"><\/path> <\/svg>", "Sign Up configuration": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M19 22H5C4.4 22 4 21.6 4 21V3C4 2.4 4.4 2 5 2H14L20 8V21C20 21.6 19.6 22 19 22Z\" fill=\"currentColor\"><\/path> <path d=\"M15 8H20L14 2V7C14 7.6 14.4 8 15 8Z\" fill=\"currentColor\"><\/path> <\/svg>", "User Configuration": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path d=\"M16.0173 9H15.3945C14.2833 9 13.263 9.61425 12.7431 10.5963L12.154 11.7091C12.0645 11.8781 12.1072 12.0868 12.2559 12.2071L12.6402 12.5183C13.2631 13.0225 13.7556 13.6691 14.0764 14.4035L14.2321 14.7601C14.2957 14.9058 14.4396 15 14.5987 15H18.6747C19.7297 15 20.4057 13.8774 19.912 12.945L18.6686 10.5963C18.1487 9.61425 17.1285 9 16.0173 9Z\" fill=\"currentColor\"><\/path> <rect opacity=\"0.3\" x=\"14\" y=\"4\" width=\"4\" height=\"4\" rx=\"2\" fill=\"currentColor\"><\/rect> <path d=\"M4.65486 14.8559C5.40389 13.1224 7.11161 12 9 12C10.8884 12 12.5961 13.1224 13.3451 14.8559L14.793 18.2067C15.3636 19.5271 14.3955 21 12.9571 21H5.04292C3.60453 21 2.63644 19.5271 3.20698 18.2067L4.65486 14.8559Z\" fill=\"currentColor\"><\/path> <rect opacity=\"0.3\" x=\"6\" y=\"5\" width=\"6\" height=\"6\" rx=\"3\" fill=\"currentColor\"><\/rect> <\/svg>", "Login wall settings": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M22.0318 8.59998C22.0318 10.4 21.4318 12.2 20.0318 13.5C18.4318 15.1 16.3318 15.7 14.2318 15.4C13.3318 15.3 12.3318 15.6 11.7318 16.3L6.93177 21.1C5.73177 22.3 3.83179 22.2 2.73179 21C1.63179 19.8 1.83177 18 2.93177 16.9L7.53178 12.3C8.23178 11.6 8.53177 10.7 8.43177 9.80005C8.13177 7.80005 8.73176 5.6 10.3318 4C11.7318 2.6 13.5318 2 15.2318 2C16.1318 2 16.6318 3.20005 15.9318 3.80005L13.0318 6.70007C12.5318 7.20007 12.4318 7.9 12.7318 8.5C13.3318 9.7 14.2318 10.6001 15.4318 11.2001C16.0318 11.5001 16.7318 11.3 17.2318 10.9L20.1318 8C20.8318 7.2 22.0318 7.59998 22.0318 8.59998Z\" fill=\"currentColor\"><\/path> <path d=\"M4.23179 19.7C3.83179 19.3 3.83179 18.7 4.23179 18.3L9.73179 12.8C10.1318 12.4 10.7318 12.4 11.1318 12.8C11.5318 13.2 11.5318 13.8 11.1318 14.2L5.63179 19.7C5.23179 20.1 4.53179 20.1 4.23179 19.7Z\" fill=\"currentColor\"><\/path> <\/svg>", "Blocked words settings": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M4.96810063,6.38231419 C3.73647287,7.92198502 3,9.87498629 3,12 C3,16.9705627 7.02943725,21 12,21 C14.1250137,21 16.078015,20.2635271 17.6176858,19.0318994 L4.96810063,6.38231419 Z M6.38231419,4.96810063 L19.0318994,17.6176858 C20.2635271,16.078015 21,14.1250137 21,12 C21,7.02943725 16.9705627,3 12,3 C9.87498629,3 7.92198502,3.73647287 6.38231419,4.96810063 Z M12,23 C5.92486775,23 1,18.0751322 1,12 C1,5.92486775 5.92486775,1 12,1 C18.0751322,1 23,5.92486775 23,12 C23,18.0751322 18.0751322,23 12,23 Z\"><\/path> <\/svg>", "Entities extraction settings": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 494.918 494.918\"> <path fill=\"currentColor\" d=\"M443.169,88.903l-74.944-56.019c-5.478-4.093-14.765-7.18-21.602-7.18c0,0-48.508,0-64.678,0c-3.834,0-3.327-3.6-3.327-3.6 V16c0-8.822-7.178-16-16-16h-25.472c-8.822,0-16,7.178-16,16v5.064c0,0,0.131,4.641-4.869,4.641c-16.996,0-67.982,0-67.982,0 c-6.837,0-16.124,3.087-21.602,7.181L51.749,88.902c-4.328,3.234-8.804,6.579-7.184,11.455c0.838,2.521,3.217,4.215,5.92,4.215 c0.797,0,1.614-0.143,2.498-0.439c2.521-0.843,8.805-3.473,13.423-5.528l68.192-30.353c4.247-1.89,12.049-3.548,16.696-3.548 c0,0,48.736,0,64.982,0c4.875,0,4.869,3.979,4.869,3.979v12.991c0,5.533,2.824,10.419,7.107,13.293 c1.262,0.847,4.129,2.219,4.129,5.552v181.583c0,4.833-3.757,7.393-5.314,8.659c-3.611,2.935-5.922,7.411-5.922,12.417v175.739 c0,8.822,7.178,16,16,16h25.472c8.822,0,16-7.178,16-16V303.179c0-5.278-2.569-9.969-6.523-12.885 c-1.412-1.042-4.713-3.525-4.713-8.858V100.521c0-2.917,2.86-4.7,4.119-5.544c4.288-2.873,7.117-7.764,7.117-13.302V67.856 c0,0,0.327-3.152,3.327-3.152c15.42,0,61.678,0,61.678,0c4.648,0,12.449,1.658,16.696,3.548l68.192,30.353 c4.618,2.056,10.901,4.686,13.423,5.528c0.884,0.296,1.701,0.439,2.498,0.439h0.001c2.702,0,5.081-1.694,5.919-4.215 C451.973,95.481,447.497,92.138,443.169,88.903z\"><\/path> <\/svg>", "Reporting settings": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 463 463\" enable-background=\"new 0 0 463 463\"> <g> <g> <path fill=\"currentColor\" d=\"m359.5,16h-96c-0.089,0-0.176,0.01-0.264,0.013-7.203-9.708-18.746-16.013-31.736-16.013s-24.533,6.305-31.736,16.013c-0.088-0.003-0.175-0.013-0.264-0.013h-96c-26.191,0-47.5,21.309-47.5,47.5v352c0,26.191 21.309,47.5 47.5,47.5h256c26.191,0 47.5-21.309 47.5-47.5v-352c0-26.191-21.309-47.5-47.5-47.5zm-128-1c13.51,0 24.5,10.991 24.5,24.5v8c0,4.142 3.357,7.5 7.5,7.5h32c4.687,0 8.5,3.813 8.5,8.5s-3.813,8.5-8.5,8.5h-128c-4.687,0-8.5-3.813-8.5-8.5s3.813-8.5 8.5-8.5h32c4.143,0 7.5-3.358 7.5-7.5v-8c0-13.509 10.99-24.5 24.5-24.5zm-64,72h128c12.958,0 23.5-10.542 23.5-23.5 0-0.168-0.009-0.333-0.013-0.5h40.513c0.275,0 0.5,0.224 0.5,0.5v352c0,0.276-0.225,0.5-0.5,0.5h-256c-0.275,0-0.5-0.224-0.5-0.5v-352c0-0.276 0.225-0.5 0.5-0.5h40.513c-0.004,0.167-0.013,0.332-0.013,0.5 0,12.958 10.542,23.5 23.5,23.5zm224.5,328.5c0,17.92-14.579,32.5-32.5,32.5h-256c-17.921,0-32.5-14.58-32.5-32.5v-352c0-17.92 14.579-32.5 32.5-32.5h89.431c-0.604,2.74-0.931,5.582-0.931,8.5v0.5h-24.5c-7.023,0-13.332,3.101-17.641,8h-46.359c-8.547,0-15.5,6.953-15.5,15.5v352c0,8.547 6.953,15.5 15.5,15.5h256c8.547,0 15.5-6.953 15.5-15.5v-352c0-8.547-6.953-15.5-15.5-15.5h-46.359c-4.31-4.899-10.619-8-17.641-8h-24.5v-0.5c0-2.918-0.328-5.76-0.931-8.5h89.431c17.921,0 32.5,14.58 32.5,32.5v352z\"><\/path> <path fill=\"currentColor\" d=\"m231.5,63c4.143,0 7.5-3.358 7.5-7.5v-16c0-4.142-3.357-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v16c0,4.142 3.357,7.5 7.5,7.5z\"><\/path> <path fill=\"currentColor\" d=\"m223.5,175h96c4.143,0 7.5-3.358 7.5-7.5s-3.357-7.5-7.5-7.5h-96c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5 7.5,7.5z\"><\/path> <path fill=\"currentColor\" d=\"m138.196,162.197c-2.929,2.929-2.929,7.678 0,10.606l16,16c1.465,1.464 3.385,2.197 5.304,2.197s3.839-0.732 5.304-2.197l32-32c2.929-2.929 2.929-7.678 0-10.606-2.93-2.929-7.678-2.929-10.607,0l-26.697,26.697-10.696-10.697c-2.93-2.929-7.678-2.929-10.608,0z\"><\/path> <path fill=\"currentColor\" d=\"m223.5,255h96c4.143,0 7.5-3.358 7.5-7.5s-3.357-7.5-7.5-7.5h-96c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5 7.5,7.5z\"><\/path> <path fill=\"currentColor\" d=\"m186.196,226.197l-26.696,26.697-10.696-10.697c-2.93-2.929-7.678-2.929-10.607,0s-2.929,7.678 0,10.606l16,16c1.465,1.464 3.385,2.197 5.304,2.197s3.839-0.732 5.304-2.197l32-32c2.929-2.929 2.929-7.678 0-10.606-2.931-2.929-7.679-2.929-10.609,0z\"><\/path> <path fill=\"currentColor\" d=\"m223.5,335h96c4.143,0 7.5-3.358 7.5-7.5s-3.357-7.5-7.5-7.5h-96c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5 7.5,7.5z\"><\/path> <path fill=\"currentColor\" d=\"m186.196,306.197l-26.696,26.697-10.696-10.697c-2.93-2.929-7.678-2.929-10.607,0s-2.929,7.678 0,10.606l16,16c1.465,1.464 3.385,2.197 5.304,2.197s3.839-0.732 5.304-2.197l32-32c2.929-2.929 2.929-7.678 0-10.606-2.931-2.929-7.679-2.929-10.609,0z\"><\/path> <\/g> <\/g> <\/svg>", "Languages Management": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" _ngcontent-wck-c211=\"\" viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\"><title _ngcontent-wck-c211=\"\">googletranslate<\/title><path fill=\"currentColor\" _ngcontent-wck-c211=\"\" d=\"M22.266 19.895c-0.368 0.38-0.752 0.737-1.155 1.072l-0.024 0.019-0.010 0.005-1.824-5.683h5.953c-0.464 1.402-1.169 2.612-2.073 3.641l0.010-0.012c-1.47-1.739-1.475-2.304-1.475-2.304h-1.527s0.062 0.847 2.124 3.262zM30.368 29.031c-0.010 0.742-0.614 1.34-1.358 1.34-0.005 0-0.009-0-0.014-0h-11.090l4.56-5.036h0.006l-0.925-2.877 0.008-0.006s0.71-0.61 1.596-1.55c0.89 0.963 2.037 2.123 3.521 3.505l0.963-0.965c-1.59-1.442-2.754-2.587-3.611-3.505 1.192-1.262 2.081-2.823 2.544-4.558l0.017-0.074 2.544 0.002v-1.175h-5.663v-1.899h-1.838v1.899h-2.754l-2.089-6.511 0.007 0.027h12.205c0.004-0 0.010-0 0.015-0 0.743 0 1.347 0.598 1.356 1.339v0.001zM9.428 17.872c-0.003 0-0.006 0-0.010 0-2.588 0-4.686-2.098-4.686-4.686s2.098-4.686 4.686-4.686c0.003 0 0.007 0 0.010 0h-0.001c0.013-0 0.028-0 0.043-0 1.198 0 2.287 0.464 3.098 1.222l-0.003-0.002-1.237 1.19c-0.487-0.452-1.143-0.73-1.863-0.73-0.014 0-0.028 0-0.041 0l0.002-0c-1.638 0.032-2.954 1.368-2.954 3.010s1.315 2.978 2.95 3.010l0.003 0c0.057 0.004 0.123 0.007 0.19 0.007 1.311 0 2.393-0.984 2.546-2.254l0.001-0.012-2.734-0.003v-1.604h4.386c0.071 0.287 0.112 0.616 0.112 0.954v0.001c0.005 0.079 0.008 0.172 0.008 0.265 0 2.388-1.936 4.324-4.324 4.324-0.065 0-0.13-0.001-0.195-0.004l0.009 0zM28.997 7.025h-12.405l-1.933-6.021h-11.657c-1.102 0.004-1.994 0.896-1.996 1.998v20.338c0.004 1.101 0.895 1.992 1.995 1.996h12.497l1.841 5.66h11.657c0.003 0 0.006 0 0.010 0 1.089 0 1.974-0.877 1.986-1.963v-20.043c-0.013-1.088-0.897-1.964-1.987-1.964-0.003 0-0.006 0-0.009 0h0z\"><\/path><\/svg>", "Translation providers config": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M22.1 11.5V12.6C22.1 13.2 21.7 13.6 21.2 13.7L19.9 13.9C19.7 14.7 19.4 15.5 18.9 16.2L19.7 17.2999C20 17.6999 20 18.3999 19.6 18.7999L18.8 19.6C18.4 20 17.8 20 17.3 19.7L16.2 18.9C15.5 19.3 14.7 19.7 13.9 19.9L13.7 21.2C13.6 21.7 13.1 22.1 12.6 22.1H11.5C10.9 22.1 10.5 21.7 10.4 21.2L10.2 19.9C9.4 19.7 8.6 19.4 7.9 18.9L6.8 19.7C6.4 20 5.7 20 5.3 19.6L4.5 18.7999C4.1 18.3999 4.1 17.7999 4.4 17.2999L5.2 16.2C4.8 15.5 4.4 14.7 4.2 13.9L2.9 13.7C2.4 13.6 2 13.1 2 12.6V11.5C2 10.9 2.4 10.5 2.9 10.4L4.2 10.2C4.4 9.39995 4.7 8.60002 5.2 7.90002L4.4 6.79993C4.1 6.39993 4.1 5.69993 4.5 5.29993L5.3 4.5C5.7 4.1 6.3 4.10002 6.8 4.40002L7.9 5.19995C8.6 4.79995 9.4 4.39995 10.2 4.19995L10.4 2.90002C10.5 2.40002 11 2 11.5 2H12.6C13.2 2 13.6 2.40002 13.7 2.90002L13.9 4.19995C14.7 4.39995 15.5 4.69995 16.2 5.19995L17.3 4.40002C17.7 4.10002 18.4 4.1 18.8 4.5L19.6 5.29993C20 5.69993 20 6.29993 19.7 6.79993L18.9 7.90002C19.3 8.60002 19.7 9.39995 19.9 10.2L21.2 10.4C21.7 10.5 22.1 11 22.1 11.5ZM12.1 8.59998C10.2 8.59998 8.6 10.2 8.6 12.1C8.6 14 10.2 15.6 12.1 15.6C14 15.6 15.6 14 15.6 12.1C15.6 10.2 14 8.59998 12.1 8.59998Z\" fill=\"currentColor\"><\/path> <path d=\"M17.1 12.1C17.1 14.9 14.9 17.1 12.1 17.1C9.30001 17.1 7.10001 14.9 7.10001 12.1C7.10001 9.29998 9.30001 7.09998 12.1 7.09998C14.9 7.09998 17.1 9.29998 17.1 12.1ZM12.1 10.1C11 10.1 10.1 11 10.1 12.1C10.1 13.2 11 14.1 12.1 14.1C13.2 14.1 14.1 13.2 14.1 12.1C14.1 11 13.2 10.1 12.1 10.1Z\" fill=\"currentColor\"><\/path> <\/svg>", "Impressions configurations": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M20 14H11C10.4 14 10 13.6 10 13V10C10 9.4 10.4 9 11 9H20C20.6 9 21 9.4 21 10V13C21 13.6 20.6 14 20 14ZM21 20V17C21 16.4 20.6 16 20 16H11C10.4 16 10 16.4 10 17V20C10 20.6 10.4 21 11 21H20C20.6 21 21 20.6 21 20Z\" fill=\"currentColor\"><\/path> <path d=\"M20 7H3C2.4 7 2 6.6 2 6V3C2 2.4 2.4 2 3 2H20C20.6 2 21 2.4 21 3V6C21 6.6 20.6 7 20 7ZM7 9H3C2.4 9 2 9.4 2 10V20C2 20.6 2.4 21 3 21H7C7.6 21 8 20.6 8 20V10C8 9.4 7.6 9 7 9Z\" fill=\"currentColor\"><\/path> <\/svg>", "Reports": "<svg class=\"ico\" aria-hidden=\"true\" fill=\"none\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"> <path opacity=\"0.3\" d=\"M19 22H5C4.4 22 4 21.6 4 21V3C4 2.4 4.4 2 5 2H14L20 8V21C20 21.6 19.6 22 19 22ZM12.5 18C12.5 17.4 12.6 17.5 12 17.5H8.5C7.9 17.5 8 17.4 8 18C8 18.6 7.9 18.5 8.5 18.5L12 18C12.6 18 12.5 18.6 12.5 18ZM16.5 13C16.5 12.4 16.6 12.5 16 12.5H8.5C7.9 12.5 8 12.4 8 13C8 13.6 7.9 13.5 8.5 13.5H15.5C16.1 13.5 16.5 13.6 16.5 13ZM12.5 8C12.5 7.4 12.6 7.5 12 7.5H8C7.4 7.5 7.5 7.4 7.5 8C7.5 8.6 7.4 8.5 8 8.5H12C12.6 8.5 12.5 8.6 12.5 8Z\" fill=\"currentColor\"><\/path> <rect x=\"7\" y=\"17\" width=\"6\" height=\"2\" rx=\"1\" fill=\"currentColor\"><\/rect> <rect x=\"7\" y=\"12\" width=\"10\" height=\"2\" rx=\"1\" fill=\"currentColor\"><\/rect> <rect x=\"7\" y=\"7\" width=\"6\" height=\"2\" rx=\"1\" fill=\"currentColor\"><\/rect> <path d=\"M15 8H20L14 2V7C14 7.6 14.4 8 15 8Z\" fill=\"currentColor\"><\/path> <\/svg>"}};
+var PAYWALL_ICON = '<svg class="ico" aria-hidden="true" viewBox="0 0 24 24" fill="none"><rect opacity="0.3" x="3" y="10" width="18" height="11" rx="2" fill="currentColor"/><path d="M7 10V7a5 5 0 0110 0v3h-2V7a3 3 0 00-6 0v3H7z" fill="currentColor"/><rect x="11" y="13.5" width="2" height="4.5" rx="1" fill="currentColor"/></svg>';
+var EDIT_ICON = '<svg class="ico" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
+var DEL_ICON = '<svg class="ico" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>';
+var INFO_ICON = '<svg class="ico" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
+
+/* ---------- Translations ---------- */
+var AR = {
+  'Dashboard':'الرئيسية','Content':'المحتوى','Country':'الدول','Website':'الموقع','User':'المستخدمون','System Configurations':'إعدادات النظام',
+  'Categories Management':'إدارة التصنيفات','Profiles Categories':'تصنيفات الشخصيات','Companies Categories':'تصنيفات الشركات','Tags':'الوسوم',
+  'Companies Management':'إدارة الشركات','Comapanies':'الشركات','Suggested Companies':'الشركات المقترحة','Companies Types':'أنواع الشركات','Addition Requests':'طلبات الإضافة','Claim Requests':'طلبات المطالبة',
+  'Profiles Management':'إدارة الشخصيات','Profiles':'الشخصيات','Website Profiles':'شخصيات الموقع','Suggested Profiles':'الشخصيات المقترحة','Nominated profiles':'الشخصيات المرشحة','Visit Email Log':'سجل بريد الزيارات','Default image settings':'إعدادات الصورة الافتراضية','Most visit settings':'إعدادات الأكثر زيارة','Character of the day':'شخصية اليوم','Spotlight':'تحت الضوء',
+  'Capabilities Management':'إدارة الكفاءات','Saudi Capabilities':'الكفاءات السعودية','Syrian Capabilities':'الكفاءات السورية',
+  'Awards Management':'إدارة الجوائز','Awards':'الجوائز','Grant To Management':'إدارة الجهات الممنوحة',
+  'Conferences Management':'إدارة المؤتمرات','Conference':'المؤتمرات','Educational Management':'إدارة التعليم','Educational Institutions':'المؤسسات التعليمية',
+  'Images management':'إدارة الصور','Videos management':'إدارة الفيديو','Services management':'إدارة الخدمات','Services':'الخدمات','Sectors':'القطاعات','Rating Users':'المقيّمون','Requesting users':'طالبو الخدمات',
+  'Lists management':'إدارة القوائم','Lists':'القوائم','Domains management':'إدارة النطاقات','Partners & Sponsors':'الشركاء والرعاة','Widget poll management':'إدارة الاستطلاعات','Text Ads Management':'إدارة الإعلانات النصية',
+  'Relations Management':'إدارة العلاقات','Relations':'العلاقات','Lableb Relations':'علاقات لبلب','Specialization management':'إدارة التخصصات','Positions management':'إدارة المناصب','Group of positions management':'إدارة مجموعات المناصب',
+  'Entities Management':'إدارة الكيانات','Entities':'الكيانات','Entity management requests':'طلبات إدارة الكيانات','Majarra Articles':'مقالات مجرة',
+  'News Engine':'محرك الأخبار','Overview':'نظرة عامة','News':'الأخبار','People':'الأشخاص','Companies':'الشركات','Scrape news':'جلب الأخبار','Manhom news':'أخبار من هم','News senders':'مرسلو الأخبار',
+  'Redirect Management':'إدارة التحويلات','Newsletters management':'إدارة النشرات','Newsletters':'النشرات','Sent Newsletters':'النشرات المرسلة','Bots config':'إعدادات البوتات',
+  'Countries Management':'إدارة الدول','Currencies Management':'إدارة العملات','Content Management':'إدارة المحتوى',
+  'Subscription Management':'إدارة الاشتراكات','Packages':'الباقات','Packages Features':'ميزات الباقات','Plans':'الخطط','Members':'الأعضاء','Manual Paid Members':'أعضاء الدفع اليدوي','Payment Requests':'طلبات الدفع','Subscription page settings':'إعدادات صفحة الاشتراك','Compliance & approval Log':'سجل الامتثال والموافقة','British visitors':'الزوار البريطانيون','Identity verification requests':'طلبات التحقق من الهوية',
+  'Mawshour management':'إدارة موشور','Settings':'الإعدادات','Updates':'التحديثات','Newsletter subscribers':'مشتركو النشرة','Cancel requests':'طلبات الإلغاء',
+  'Manjam':'منجم','Manjam Configurations':'إعدادات منجم','Notifications Configurations':'إعدادات الإشعارات','Manjam info':'معلومات منجم','Manjam Sources':'مصادر منجم','Manjam block list':'قائمة حظر منجم',
+  'Advertisement Management':'إدارة الإعلانات','Advanced Search Management':'إدارة البحث المتقدم','Filters Management':'إدارة الفلاتر','Feedback':'الملاحظات','Admin Log':'سجل المشرفين',
+  'Users Management':'إدارة المستخدمين','Admins':'المشرفون','Subscribers':'المشتركون','Roles Management':'إدارة الأدوار','Roles':'الأدوار','Permissions':'الصلاحيات',
+  'Sign Up configuration':'إعدادات التسجيل','Custom Texts':'النصوص المخصصة','Action Codes':'رموز الإجراءات','User Configuration':'إعدادات المستخدم','Login wall settings':'إعدادات جدار الدخول','Paywall settings':'إعدادات حائط الدفع',
+  'Blocked words settings':'إعدادات الكلمات المحظورة','Entities extraction settings':'إعدادات استخراج الكيانات','Reporting settings':'إعدادات البلاغات','Languages Management':'إدارة اللغات','Translation providers config':'إعدادات مزودي الترجمة','Impressions configurations':'إعدادات المشاهدات','Reports':'التقارير','Users Reports':'تقارير المستخدمين','Entities Reports':'تقارير الكيانات'
+};
+var UI = {
+  en: { dir:'ltr', lang:'عربي', collapse:'Collapse sidebar', menu:'Open menu', home:'Dashboard', isNew:'New',
+    save:'Save Changes', discard:'Discard', saved:'Changes saved', unsaved:'You have unsaved changes', allSaved:'All changes saved', fixN:function(n){return n===1?'Fix 1 field to save':'Fix '+n+' fields to save';},
+    types:{profiles:'Profiles',companies:'Companies',awards:'Awards',conferences:'Conferences',education:'Educational institutions'},
+    typesShort:{profiles:'profiles',companies:'companies',awards:'awards',conferences:'conferences',education:'educational institutions'},
+    req:'This field is required.', int:'Enter a whole number, 0 or more.', pickType:'Choose at least one content type.', pickTemplate:'Choose a paywall template.', needIp:'Add at least one IP, or delete this rule.',
+    generalLimit:'General limit', generalLimitHint:'Total items a visitor can open, across all types', contentTypes:'Content types', contentTypesHint:'Pick the types to limit, then set a number for each',
+    perType:'Allowed', aboveLimit:'Higher than the general limit, so the general limit applies first',
+    template:'Paywall template', templateHint:'Only templates with status Active are listed', chooseTemplate:'Choose a template', inactiveHidden:function(n){return n+' inactive template'+(n>1?'s':'')+' hidden';},
+    generalTemplate:'General paywall template', generalTemplateHint:'Shown to everyone who has no IP rule',
+    ips:'IPs', ipsHint:'Type or paste IPs or ranges (e.g. 185.12.44.0/24), then press Enter',
+    ipPlaceholder:'Add IP and press Enter', ipInvalid:function(l){return 'Not a valid IP: '+l;}, ipDup:function(ip,r){return ip+' is already in Rule '+r+'. Each IP can only have one rule.';}, ipDupSame:function(ip){return ip+' is already in this rule.';},
+    rule:function(n){return 'Rule '+n;}, ruleMeta:function(r){ var n=r.ips.length; return (n? n+' IP'+(n>1?'s':''):'No IPs yet') + (r.limit!==''? ' · limit '+r.limit:'');},
+    selectTypes:'Select content types', addRule:'Add IP rule', removeRule:'Delete rule', fillFrom:'Copy values from the general settings', noRules:'No IP rules yet. Everyone gets the general settings above.',
+    sumAll:function(lim,parts,tpl){return 'Visitors can open up to '+lim+' items in total'+(parts?': '+parts:'')+'. After that they see '+tpl+'.';},
+    sumIp:function(n,lim,parts,tpl){return 'Visitors from '+(n===1?'this IP':'these '+n+' IPs')+' can open up to '+lim+' items in total'+(parts?': '+parts:'')+'. After that they see '+tpl+'.';},
+    noTpl:'the paywall (no template chosen yet)', dash:'…',
+    pw:{ title:'Paywall settings', visitorTitle:'Manhom website visitors', visitorSub:'Limits for visitors who are not signed in to manhom.com.',
+      ipTitle:'Custom limits by IP', ipSub:'Give visitors from specific IPs or networks (a company, a university) their own limit and paywall. These rules replace the general settings for those IPs.' },
+    plans:{ title:'Subscription Plans', fCreated:'Filter by Creation Date', fExpiry:'Filter by Expiry Date', add:'Add Plan', filters:'Filters', search:'Search',
+      cols:['#','Title','Status','Creation Date','Members no.','Activation Method','Expiry','Actions'], status:{active:'Active',inactive:'Inactive'},
+      method:{payment:'payment',account:'account creation',guest:'guest'}, expiry:{'1month':'1month','1year':'1year',unlimited:'unlimited'},
+      createdFrom:'Created on or after', expiresBy:'Expires on or before', any:'Any', statusL:'Status', methodL:'Activation Method', clear:'Clear filters', none:'No plans match these filters.',
+      edit:'Edit', del:'Delete', info:'Details', delQ:function(t){return 'Delete “'+t+'”? Members keep their access until it expires.';}, delYes:'Delete plan', cancel:'Cancel', deleted:'Plan deleted',
+      slug:'Slug', pkg:'Package', paywall:'Paywall', ipRules:function(n){return n+' IP rule'+(n===1?'':'s');}, noPaywall:'Not used (payment plan)', pwTag:'IP rules' },
+    plan:{ newTitle:'New plan', basic:'Basic', titleL:'Title', titleP:'Enter Title', type:'Plan type', manhom:'ManHom plan', slug:'Slug', slugP:'Enter Slug', slugErr:'Use lowercase letters, numbers and hyphens.',
+      method:'Activation Method', methodInfo:'How a member gets this plan', methods:{payment:'Payment',account:'Account Creation',guest:'Guest'},
+      status:'Status', statuses:{active:'Active',inactive:'Inactive'}, expiry:'Expiry', expiries:{'1month':'1 month','1year':'1 year',unlimited:'Unlimited'},
+      pkg:'Package Name', pkgNone:'No package (free plan)', genTitle:'General Limit', genMax:'General Content Max limit', genMaxP:'Enter Max limit for each content type', ct:'Content Types',
+      views:'Views', follows:'Follows', viewsP:'Max views', followsP:'Max follows',
+      pwTitle:'Paywall', pwBadge:'Account Creation and Guest plans', pwSub:'Configure usage limits and paywall settings for users accessing the platform from specified IP addresses.',
+      pwHidden:'Paywall settings apply only to Account Creation and Guest plans. They are kept, and come back if you switch the activation method.',
+      ipSub:'Members of this plan who browse from these IPs get these limits and template instead of the plan defaults.', fill:'Copy values from the plan limits',
+      savePw:'Save paywall settings', pwSaved:'Paywall settings saved', pwDirty:'Unsaved paywall changes', pwClean:'Paywall settings are saved', pwNew:'Save the plan first, then you can save the paywall on its own.', pwOnly:'Saves only this section. Other changes on the page stay unsaved.' },
+    lw:{ title:'Login wall settings', cookies:'Coockies', hint:'Free views before a visitor is asked to sign in', err:'Enter a whole number from 0 to 100.',
+      fields:['Profiles Views','Companies Views','Awards Views','Conferences Views','Educational Institutions Views'], moved:'Looking for limits by IP or a paywall template? They are in', movedLink:'Paywall settings' },
+    empty:{ title:'This section is coming next', body:'It will be built from the same components as the other screens: cards, labelled rows and a save button.' }
+  },
+  ar: { dir:'rtl', lang:'English', collapse:'طي القائمة', menu:'فتح القائمة', home:'لوحة التحكم', isNew:'جديد',
+    save:'حفظ التغييرات', discard:'تجاهل', saved:'تم حفظ التغييرات', unsaved:'لديك تغييرات غير محفوظة', allSaved:'كل التغييرات محفوظة', fixN:function(n){return n===1?'صحّح حقلاً واحداً للحفظ':'صحّح '+n+' حقول للحفظ';},
+    types:{profiles:'شخصيات',companies:'شركات',awards:'جوائز',conferences:'مؤتمرات',education:'مؤسسات تعليمية'},
+    typesShort:{profiles:'شخصيات',companies:'شركات',awards:'جوائز',conferences:'مؤتمرات',education:'مؤسسات تعليمية'},
+    req:'هذا الحقل مطلوب.', int:'أدخل عدداً صحيحاً، صفراً أو أكثر.', pickType:'اختر نوع محتوى واحداً على الأقل.', pickTemplate:'اختر نموذج حائط الدفع.', needIp:'أضف عنوان IP واحداً على الأقل، أو احذف هذه القاعدة.',
+    generalLimit:'الحد العام للمحتوى', generalLimitHint:'إجمالي ما يمكن للزائر فتحه من كل الأنواع', contentTypes:'أنواع المحتوى', contentTypesHint:'اختر الأنواع ثم حدّد عدداً لكل نوع',
+    perType:'المسموح', aboveLimit:'أعلى من الحد العام، لذا يُطبّق الحد العام أولاً',
+    template:'نموذج حائط الدفع', templateHint:'تظهر فقط النماذج التي حالتها Active', chooseTemplate:'اختر نموذجاً', inactiveHidden:function(n){return 'أُخفي '+n+' نموذج غير فعّال';},
+    generalTemplate:'نموذج حائط الدفع العام', generalTemplateHint:'يظهر لكل من ليس له قاعدة IP',
+    ips:'عناوين IP', ipsHint:'اكتب أو الصق عناوين أو نطاقات (مثل 185.12.44.0/24) ثم اضغط Enter',
+    ipPlaceholder:'أضف IP واضغط Enter', ipInvalid:function(l){return 'عنوان IP غير صالح: '+l;}, ipDup:function(ip,r){return ip+' موجود في القاعدة '+r+'. لكل IP قاعدة واحدة فقط.';}, ipDupSame:function(ip){return ip+' موجود في هذه القاعدة.';},
+    rule:function(n){return 'القاعدة '+n;}, ruleMeta:function(r){ var n=r.ips.length; return (n? n+' IP':'لا عناوين بعد') + (r.limit!==''? ' · الحد '+r.limit:'');},
+    selectTypes:'اختر أنواع المحتوى', addRule:'إضافة قاعدة IP', removeRule:'حذف القاعدة', fillFrom:'نسخ القيم من الإعدادات العامة', noRules:'لا توجد قواعد IP بعد. الجميع يحصل على الإعدادات العامة أعلاه.',
+    sumAll:function(lim,parts,tpl){return 'يستطيع الزائر فتح '+lim+' عنصراً كحد أقصى'+(parts?': '+parts:'')+'. بعدها يظهر له '+tpl+'.';},
+    sumIp:function(n,lim,parts,tpl){return 'يستطيع الزوار من '+(n===1?'هذا العنوان':'هذه العناوين ('+n+')')+' فتح '+lim+' عنصراً كحد أقصى'+(parts?': '+parts:'')+'. بعدها يظهر لهم '+tpl+'.';},
+    noTpl:'حائط الدفع (لم يُختر نموذج بعد)', dash:'…',
+    pw:{ title:'إعدادات حائط الدفع', visitorTitle:'زوار موقع من هم', visitorSub:'حدود الزوار غير المسجلين في manhom.com.',
+      ipTitle:'حدود مخصصة حسب IP', ipSub:'امنح الزوار من عناوين أو شبكات محددة (شركة، جامعة) حداً ونموذج حائط دفع خاصاً بهم. هذه القواعد تحل محل الإعدادات العامة لتلك العناوين.' },
+    plans:{ title:'خطط الاشتراك', fCreated:'فلترة حسب تاريخ الإنشاء', fExpiry:'فلترة حسب تاريخ الانتهاء', add:'إضافة خطة', filters:'الفلاتر', search:'بحث',
+      cols:['#','العنوان','الحالة','تاريخ الإنشاء','عدد الأعضاء','طريقة التفعيل','المدة','الإجراءات'], status:{active:'فعّالة',inactive:'غير فعّالة'},
+      method:{payment:'دفع',account:'إنشاء حساب',guest:'زائر'}, expiry:{'1month':'شهر','1year':'سنة',unlimited:'غير محدودة'},
+      createdFrom:'أُنشئت في أو بعد', expiresBy:'تنتهي في أو قبل', any:'الكل', statusL:'الحالة', methodL:'طريقة التفعيل', clear:'مسح الفلاتر', none:'لا توجد خطط تطابق هذه الفلاتر.',
+      edit:'تعديل', del:'حذف', info:'التفاصيل', delQ:function(t){return 'حذف «'+t+'»؟ يحتفظ الأعضاء بوصولهم حتى انتهائه.';}, delYes:'حذف الخطة', cancel:'إلغاء', deleted:'تم حذف الخطة',
+      slug:'المعرّف', pkg:'الباقة', paywall:'حائط الدفع', ipRules:function(n){return n+' قاعدة IP';}, noPaywall:'غير مستخدم (خطة مدفوعة)', pwTag:'قواعد IP' },
+    plan:{ newTitle:'خطة جديدة', basic:'الأساسيات', titleL:'العنوان', titleP:'أدخل العنوان', type:'نوع الخطة', manhom:'خطة من هم', slug:'المعرّف (Slug)', slugP:'أدخل المعرّف', slugErr:'استخدم أحرفاً إنجليزية صغيرة وأرقاماً وشرطات.',
+      method:'طريقة التفعيل', methodInfo:'كيف يحصل العضو على هذه الخطة', methods:{payment:'دفع (Payment)',account:'إنشاء حساب (Account Creation)',guest:'زائر (Guest)'},
+      status:'الحالة', statuses:{active:'فعّالة',inactive:'غير فعّالة'}, expiry:'المدة', expiries:{'1month':'شهر','1year':'سنة',unlimited:'غير محدودة'},
+      pkg:'اسم الباقة', pkgNone:'بدون باقة (خطة مجانية)', genTitle:'الحد العام', genMax:'الحد الأقصى العام للمحتوى', genMaxP:'أدخل الحد الأقصى', ct:'أنواع المحتوى',
+      views:'المشاهدات', follows:'المتابعات', viewsP:'أقصى مشاهدات', followsP:'أقصى متابعات',
+      pwTitle:'حائط الدفع', pwBadge:'لخطط إنشاء الحساب والزائر', pwSub:'اضبط حدود الاستخدام وإعدادات حائط الدفع للمستخدمين الذين يصلون إلى المنصة من عناوين IP محددة.',
+      pwHidden:'إعدادات حائط الدفع تخص خطط إنشاء الحساب والزائر فقط. بياناتها محفوظة وتعود إذا غيّرت طريقة التفعيل.',
+      ipSub:'أعضاء هذه الخطة الذين يتصفحون من هذه العناوين يحصلون على هذه الحدود وهذا النموذج بدلاً من حدود الخطة.', fill:'نسخ القيم من حدود الخطة',
+      savePw:'حفظ إعدادات حائط الدفع', pwSaved:'تم حفظ إعدادات حائط الدفع', pwDirty:'تغييرات غير محفوظة في حائط الدفع', pwClean:'إعدادات حائط الدفع محفوظة', pwNew:'احفظ الخطة أولاً، بعدها يمكنك حفظ حائط الدفع وحده.', pwOnly:'يحفظ هذا القسم فقط. تبقى التغييرات الأخرى في الصفحة غير محفوظة.' },
+    lw:{ title:'إعدادات جدار الدخول', cookies:'ملفات تعريف الارتباط', hint:'عدد المشاهدات المجانية قبل أن يُطلب من الزائر تسجيل الدخول', err:'أدخل عدداً صحيحاً من 0 إلى 100.',
+      fields:['مشاهدات الملفات الشخصية','مشاهدات الشركات','مشاهدات الجوائز','مشاهدات المؤتمرات','مشاهدات المؤسسات التعليمية'], moved:'تبحث عن حدود حسب IP أو نموذج حائط الدفع؟ تجدها في', movedLink:'إعدادات حائط الدفع' },
+    empty:{ title:'هذا القسم هو التالي', body:'سيُبنى من نفس مكونات الشاشات الأخرى: بطاقات وصفوف بتسميات وزر حفظ.' }
+  }
+};
+var TEMPLATE_AR = { 'Default visitor paywall':'حائط الدفع الافتراضي للزوار', 'Open subscription request':'طلب اشتراك مفتوح', 'Corporate network offer':'عرض شبكات الشركات', 'University campus offer':'عرض الحرم الجامعي', 'Ramadan campaign 2026':'حملة رمضان 2026' };
+
+/* ---------- Data (sample) ---------- */
+var TYPES = ['profiles', 'companies', 'awards', 'conferences', 'education'];
+var TEMPLATES = [
+  { id: 't1', name: 'Default visitor paywall', status: 'active' },
+  { id: 't2', name: 'Open subscription request', status: 'active' },
+  { id: 't3', name: 'Corporate network offer', status: 'active' },
+  { id: 't4', name: 'University campus offer', status: 'active' },
+  { id: 't5', name: 'Ramadan campaign 2026', status: 'inactive' }
+];
+function blankTypes() { var o = {}; TYPES.forEach(function (k) { o[k] = { on: true, views: '', follows: '' }; }); return o; }
+function plan(id, title, created, members, method, expiry, slug, pkg, extra) {
+  var p = { id: id, title: title, status: 'active', created: created, members: members, method: method, expiry: expiry, slug: slug, pkg: pkg, planType: 'manhom',
+    limit: 30, types: blankTypes(), paywall: { template: '', rules: [] } };
+  TYPES.forEach(function (k) { p.types[k].views = 30; p.types[k].follows = 10; });
+  return Object.assign(p, extra || {});
+}
+var SEED_PLANS = [
+  plan(1, 'السمعة الرقمية', '2026-06-22', 1162, 'payment', '1year', 'digital-reputation', 'p1'),
+  plan(2, 'اشتراك الشركات', '2026-04-29', 31, 'payment', '1year', 'companies-subscription', 'p2'),
+  plan(3, 'الاشتراك الشخصي', '2026-04-29', 222, 'payment', '1year', 'personal-subscription', 'p3'),
+  plan(4, 'عضوية "منهم" المميزة السنوية - اشتراكات الموبايل', '2025-10-22', 0, 'payment', '1year', 'premium-yearly-mobile', 'p3'),
+  plan(5, 'عضوية "منهم" المميزة الشهرية - اشتراكات الموبايل', '2025-10-22', 1, 'payment', '1month', 'premium-monthly-mobile', 'p3'),
+  plan(6, 'خطة الزائر', '2025-10-08', 512, 'guest', 'unlimited', 'guest-plan', '', {
+    limit: 3, types: (function () { var t = blankTypes(); TYPES.forEach(function (k) { t[k].views = 3; t[k].follows = 0; }); return t; })(),
+    paywall: { template: 't1', rules: [
+      { ips: ['185.12.44.0/24', '185.12.45.10'], limit: 20, types: { profiles: { views: 10, follows: 5 }, companies: { views: 10, follows: 5 } }, template: 't4' }
+    ] } }),
+  plan(7, 'خطة الصدارة', '2025-09-22', 2, 'payment', '1year', 'leaders-plan', 'p2'),
+  plan(8, 'خطة النمو', '2025-09-22', 318, 'payment', '1year', 'growth-plan', 'p2')
+];
+var PACKAGES = { p1: 'السمعة الرقمية (149.00 $)', p2: 'باقة الشركات (499.00 $)', p3: 'العضوية المميزة (49.00 $)' };
+var SEED_VISITOR = { limit: 5, types: { profiles: { views: 3, follows: 1 }, companies: { views: 2, follows: 1 }, awards: { views: 2, follows: 0 }, conferences: { views: 1, follows: 0 }, education: { views: 1, follows: 0 } }, template: 't1', rules: [
+  { ips: ['196.200.12.0/22'], limit: 25, types: { profiles: { views: 10, follows: 5 }, companies: { views: 10, follows: 5 }, education: { views: 5, follows: 2 } }, template: 't4' },
+  { ips: ['82.114.160.18', '82.114.160.19'], limit: 15, types: { companies: { views: 15, follows: 5 } }, template: 't3' }
+] };
+
+/* ---------- State ---------- */
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function load(k, d) { try { var v = localStorage.getItem('mh2-' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+function store(k, v) { try { localStorage.setItem('mh2-' + k, JSON.stringify(v)); } catch (e) {} }
+var state = {
+  lang: load('lang', 'en'), collapsed: load('collapsed', false), view: '', open: {},
+  plans: load('plans', SEED_PLANS), visitor: load('visitor', SEED_VISITOR), lw: load('lw', { cookies: false, values: [3, 3, 3, 3, 3] }),
+  f: { q: '', created: '', expiry: '', status: '', method: '', panel: false }, infoOpen: null, confirmDel: null,
+  ruleOpen: {}, ipMsg: {}, showErrors: false, showPwErrors: false, msOpen: null
+};
+var draft = null, draftKey = '', saved = null;
+function normTypes(o) { Object.keys(o.types || {}).forEach(function (k) { var v = o.types[k]; if (v === null || typeof v !== 'object') o.types[k] = { views: v == null ? '' : v, follows: '' }; }); }
+normTypes(state.visitor); state.visitor.rules.forEach(normTypes);
+state.plans.forEach(function (p) { (p.paywall.rules || []).forEach(normTypes); });
+
+/* ---------- Helpers ---------- */
+var $ = function (id) { return document.getElementById(id); };
+function L() { return UI[state.lang]; }
+function tr(s) { return state.lang === 'ar' ? (AR[s] || s) : s; }
+function tplName(id) { var t = TEMPLATES.filter(function (x) { return x.id === id; })[0]; return t ? (state.lang === 'ar' ? TEMPLATE_AR[t.name] : t.name) : ''; }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function ln(n, cls) { return '<svg class="ln ' + (cls || '') + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; }
+function slugify(s) { return s.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+function isInt(v) { return /^\d{1,6}$/.test(String(v).trim()); }
+function fmtDate(iso) { var p = iso.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+var V4 = '(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)';
+var IPV4 = new RegExp('^' + V4 + '(\\.' + V4 + '){3}(\\/(3[0-2]|[12]?\\d))?$');
+function isIPv6(s) {
+  var parts = s.split('/'); if (parts.length > 2) return false;
+  if (parts[1] !== undefined && !/^(12[0-8]|1[01]\d|[1-9]?\d)$/.test(parts[1])) return false;
+  var a = parts[0]; if (!/^[0-9a-f:]+$/.test(a) || a.indexOf(':') < 0) return false;
+  var dbl = a.split('::').length - 1; if (dbl > 1) return false;
+  var groups = a.split(':'); if (groups.some(function (g) { return g.length > 4; })) return false;
+  return dbl ? groups.filter(Boolean).length < 8 : groups.length === 8 && groups.every(Boolean);
+}
+function validIp(s) { return IPV4.test(s) || isIPv6(s); }
+
+/* ---------- Navigation model ---------- */
+var SPECIAL = { 'Plans': 'plans', 'Login wall settings': 'loginwall', 'Dashboard': 'dashboard' };
+var NAV = [], PARENT = {}, TITLE = {};
+DATA.nav.forEach(function (n) {
+  if (n.section) { NAV.push({ section: n.section }); return; }
+  var id = SPECIAL[n.t] || slugify(n.t);
+  var item = { t: n.t, id: id, icon: DATA.icons[n.t] || '', c: n.c.map(function (c) { var cid = SPECIAL[c.t] || slugify(n.t + '-' + c.t); PARENT[cid] = id; TITLE[cid] = c.t; return { t: c.t, id: cid }; }) };
+  TITLE[id] = n.t; NAV.push(item);
+  if (n.t === 'Login wall settings') { NAV.push({ t: 'Paywall settings', id: 'paywall', icon: PAYWALL_ICON, isNew: true, c: [] }); TITLE.paywall = 'Paywall settings'; }
+});
+
+function navId(view) { if (/^plan-/.test(view)) return 'plans'; return view; }
+
+function renderNav() {
+  var cur = navId(state.view), par = PARENT[cur], html = '';
+  NAV.forEach(function (n) {
+    if (n.section) { html += '<div class="nav-section">' + esc(tr(n.section)) + '</div>'; return; }
+    var has = n.c.length > 0, isActive = cur === n.id, here = par === n.id;
+    var expanded = has && (state.open[n.id] !== undefined ? state.open[n.id] : here);
+    html += '<button type="button" class="nav-item' + (isActive ? ' active' : '') + (here ? ' here' : '') + '" data-nav="' + n.id + '"' +
+      (has ? ' aria-expanded="' + expanded + '"' : '') + (isActive ? ' aria-current="page"' : '') + ' title="' + esc(tr(n.t)) + '">' +
+      n.icon + '<span class="label">' + esc(tr(n.t)) + '</span>' + (n.isNew ? '<span class="new-tag">' + esc(L().isNew) + '</span>' : '') +
+      (has ? ln('chevron', 'chev flip') : '') + '</button>';
+    if (has && expanded) {
+      html += '<div class="subnav">' + n.c.map(function (c) {
+        var a = cur === c.id;
+        return '<button type="button" class="nav-item' + (a ? ' active' : '') + '" data-nav="' + c.id + '"' + (a ? ' aria-current="page"' : '') + '><span class="dot"></span><span class="label">' + esc(tr(c.t)) + '</span></button>';
+      }).join('') + '</div>';
+    }
+  });
+  $('nav').innerHTML = html;
+}
+
+/* ---------- Limit block (general limit + types + counts + template) ---------- */
+// target paths: "v" visitor general, "v.r.N" visitor rule, "p" plan paywall, "p.r.N" plan paywall rule, "pl" plan itself
+function resolve(t) {
+  var parts = t.split('.');
+  var base = parts[0] === 'pl' ? draft : parts[0] === 'v' ? draft : draft.paywall;
+  if (parts[1] === 'r') return base.rules[+parts[2]];
+  return base;
+}
+function rulesOf(t) { return t.charAt(0) === 'v' ? draft.rules : draft.paywall.rules; }
+
+function summaryText(o, ipCount) {
+  var l = L(), lim = isInt(o.limit) ? o.limit : l.dash;
+  var parts = TYPES.filter(function (k) { return o.types[k] !== undefined; }).map(function (k) { return (isInt(o.types[k].views) ? o.types[k].views : l.dash) + ' ' + l.typesShort[k]; }).join(state.lang === 'ar' ? '، ' : ', ');
+  var tpl = o.template ? '“' + tplName(o.template) + '”' : l.noTpl;
+  return ipCount == null ? l.sumAll(lim, parts, tpl) : l.sumIp(ipCount, lim, parts, tpl);
+}
+
+function quiet() { return /^plan-/.test(state.view) || state.view === 'paywall'; }
+function hintSpan(text) { return quiet() ? '' : '<span class="hint">' + esc(text) + '</span>'; }
+function multiSelect(t, act, isOn, label) {
+  var l = L(), open = state.msOpen === t, sel = TYPES.filter(isOn);
+  var val = sel.length ? '<span class="ms-val">' + esc(sel.map(function (k) { return l.types[k]; }).join(state.lang === 'ar' ? '، ' : ', ')) + '</span>' : '<span class="ms-val ms-ph">' + esc(l.selectTypes) + '</span>';
+  var id = 'ms-' + t.replace(/\./g, '-');
+  return '<div class="ms" data-ms="' + t + '"><button type="button" class="ctl ms-btn" id="' + id + '" data-act="ms-toggle" data-t="' + t + '" aria-haspopup="listbox" aria-expanded="' + open + '" aria-label="' + esc(label) + '">' + val + ln('chevron-down', 'ms-arrow') + '</button>' +
+    '<div class="ms-panel" role="listbox" aria-multiselectable="true"' + (open ? '' : ' hidden') + '>' + TYPES.map(function (k) {
+      var on = isOn(k);
+      return '<button type="button" class="ms-opt" role="option" aria-selected="' + on + '" data-act="' + act + '" data-t="' + t + '" data-type="' + k + '"><span class="cbx">' + (on ? ln('check') : '') + '</span>' + esc(l.types[k]) + '</button>';
+    }).join('') + '</div></div>';
+}
+function templateOptions(sel) {
+  var l = L(), act = TEMPLATES.filter(function (x) { return x.status === 'active'; });
+  return '<option value="">' + esc(l.chooseTemplate) + '</option>' + act.map(function (x) {
+    return '<option value="' + x.id + '"' + (sel === x.id ? ' selected' : '') + '>' + esc(tplName(x.id)) + '</option>';
+  }).join('');
+}
+function templateRow(t, label, hint, val) {
+  var l = L(), hidden = TEMPLATES.length - TEMPLATES.filter(function (x) { return x.status === 'active'; }).length;
+  var id = 'f-' + t.replace(/\./g, '-') + '-template';
+  return '<div class="row"><label class="lbl" for="' + id + '">' + esc(label) + '<span class="star">*</span>' + hintSpan(hint + (hidden ? ' · ' + l.inactiveHidden(hidden) : '')) + '</label>' +
+    '<div class="field" data-key="' + t + '|template"><select class="ctl" id="' + id + '" data-t="' + t + '" data-f="template">' + templateOptions(val) + '</select><div class="err" data-err="' + t + '|template"></div></div></div>';
+}
+var TYPE_TITLE = { profiles: 'Profile', companies: 'Companies', awards: 'Awards', conferences: 'Conferences', education: 'Educational Institutions' };
+var TYPE_PH = { profiles: ['Enter Max Character Views', 'Enter Max Characters Follow'], companies: ['Enter Max Companies Views', 'Enter Max Company Follow'],
+  awards: ['Enter Max Awards Views', 'Enter Max Award Follow'], conferences: ['Enter Max Conferences Views', 'Enter Max Conference Follow'],
+  education: ['Enter Max Educational Institutions Views', 'Enter Max Educational Institution Follow'] };
+function typeCards(t, keys, get, nested) {
+  if (!keys.length) return '';
+  var l = L(), lp = l.plan, ar = state.lang === 'ar';
+  return '<div class="grid3' + (nested ? ' nested' : '') + '">' + keys.map(function (k) {
+    var x = get(k);
+    function tf(f, label, ph) {
+      var id = 'tc-' + t.replace(/\./g, '-') + '-' + f + '-' + k;
+      return '<div class="row"><label class="lbl" for="' + id + '">' + esc(label) + '</label><div class="field with-check" data-key="' + t + '|' + f + '|' + k + '">' +
+        '<input class="ctl" id="' + id + '" inputmode="numeric" autocomplete="off" data-t="' + t + '" data-f="' + f + '" data-type="' + k + '" value="' + esc(x[f]) + '" placeholder="' + esc(ph) + '">' +
+        '<svg class="ln ok"' + (isInt(x[f]) ? '' : ' style="display:none"') + '><use href="#i-check"/></svg><div class="err" data-err="' + t + '|' + f + '|' + k + '"></div></div></div>';
+    }
+    return '<section class="card type-card"><div class="card-head"><h3 class="card-title">' + esc(ar ? l.types[k] : TYPE_TITLE[k]) + '</h3></div><div class="card-body">' +
+      tf('views', lp.views, ar ? lp.viewsP : TYPE_PH[k][0]) + tf('follows', lp.follows, ar ? lp.followsP : TYPE_PH[k][1]) + '</div></section>';
+  }).join('') + '</div>';
+}
+function limitBlock(t, o, opts) {
+  var l = L(), id = 'f-' + t.replace(/\./g, '-');
+  var chips = multiSelect(t, 'type', function (k) { return o.types[k] !== undefined; }, l.contentTypes);
+  return '<div class="row"><label class="lbl" for="' + id + '-limit">' + esc(l.generalLimit) + '<span class="star">*</span>' + hintSpan(l.generalLimitHint) + '</label>' +
+      '<div class="field" data-key="' + t + '|limit"><input class="ctl" id="' + id + '-limit" inputmode="numeric" autocomplete="off" value="' + esc(o.limit) + '" data-t="' + t + '" data-f="limit"><div class="err" data-err="' + t + '|limit"></div></div></div>' +
+    '<div class="row"><span class="lbl">' + esc(l.contentTypes) + '<span class="star">*</span>' + hintSpan(l.contentTypesHint) + '</span>' +
+      '<div class="field" data-key="' + t + '|types">' + chips +
+      '<div class="err" data-err="' + t + '|types"></div></div></div>' +
+    typeCards(t, TYPES.filter(function (k) { return o.types[k] !== undefined; }), function (k) { return o.types[k]; }, true) +
+    templateRow(t, opts.templateLabel || l.template, opts.templateHint || l.templateHint, o.template) +
+    (quiet() ? '' : '<p class="summary" data-summary="' + t + '">' + ln('bulb') + '<span>' + esc(summaryText(o, opts.ipCount)) + '</span></p>');
+}
+
+function rulesBlock(prefix, rules, fillLabel) {
+  var l = L();
+  var list = rules.map(function (r, i) {
+    var t = prefix + '.r.' + i, key = draftKey + '|' + t, open = state.ruleOpen[key] !== undefined ? state.ruleOpen[key] : true;
+    var tags = r.ips.map(function (ip) {
+      return '<span class="tag">' + esc(ip) + '<button type="button" data-act="ip-remove" data-t="' + t + '" data-ip="' + esc(ip) + '" aria-label="Remove ' + esc(ip) + '">' + ln('x') + '</button></span>';
+    }).join('');
+    var ipid = 'f-' + t.replace(/\./g, '-') + '-ips';
+    return '<div class="rule" data-rule="' + t + '">' +
+      '<div class="rule-head"><button type="button" class="rule-toggle" data-act="rule-toggle" data-t="' + t + '" aria-expanded="' + open + '">' + ln('chevron', 'chev flip') +
+        '<span class="rule-name">' + esc(l.rule(i + 1)) + '</span></button>' +
+        '<button type="button" class="icon-btn del-btn" data-act="rule-remove" data-t="' + t + '" aria-label="' + esc(l.removeRule) + '" title="' + esc(l.removeRule) + '">' + ln('trash-ln') + '</button></div>' +
+      (open ? '<div class="rule-body">' +
+        '<div class="row"><label class="lbl" for="' + ipid + '">' + esc(l.ips) + '<span class="star">*</span>' + hintSpan(l.ipsHint) + '</label>' +
+          '<div class="field" data-key="' + t + '|ips"><div class="tags" data-act="focus-ip">' + tags +
+          '<input id="' + ipid + '" data-t="' + t + '" data-f="ipinput" placeholder="' + esc(l.ipPlaceholder) + '" autocomplete="off" spellcheck="false" value="' + esc((state.ipMsg[key] || {}).rest || '') + '"></div>' +
+          '<div class="ip-msg">' + esc((state.ipMsg[key] || {}).msg || '') + '</div><div class="err" data-err="' + t + '|ips"></div></div></div>' +
+        limitBlock(t, r, { ipCount: r.ips.length }) +
+        (fillLabel ? '<div class="rule-tools"><button type="button" class="link-btn" data-act="rule-fill" data-t="' + t + '">' + ln('copy') + esc(fillLabel) + '</button></div>' : '') +
+      '</div>' : '') + '</div>';
+  }).join('');
+  return '<div class="rules">' + (rules.length ? list : '<p class="empty-rules">' + esc(l.noRules) + '</p>') +
+    '<button type="button" class="add-rule" data-act="rule-add" data-t="' + prefix + '">' + ln('plus') + esc(l.addRule) + '</button></div>';
+}
+
+/* ---------- Validation ---------- */
+function checkLimitBlock(t, o, errs, needTemplate) {
+  var l = L();
+  if (!isInt(o.limit)) errs[t + '|limit'] = String(o.limit).trim() === '' ? l.req : l.int;
+  var ks = TYPES.filter(function (k) { return o.types[k] !== undefined; });
+  if (!ks.length) errs[t + '|types'] = l.pickType;
+  ks.forEach(function (k) { ['views', 'follows'].forEach(function (f) { var v = o.types[k][f]; if (!isInt(v)) errs[t + '|' + f + '|' + k] = String(v).trim() === '' ? l.req : l.int; }); });
+  if (needTemplate !== false && !o.template) errs[t + '|template'] = l.pickTemplate;
+}
+function checkRules(prefix, rules, errs) {
+  rules.forEach(function (r, i) {
+    var t = prefix + '.r.' + i;
+    if (!r.ips.length) errs[t + '|ips'] = L().needIp;
+    checkLimitBlock(t, r, errs);
+  });
+}
+function validate() {
+  var errs = {}, l = L(), v = state.view;
+  if (v === 'paywall') { checkLimitBlock('v', draft, errs); checkRules('v', draft.rules, errs); }
+  else if (/^plan-/.test(v)) {
+    if (!String(draft.title).trim()) errs['pl|title'] = l.req;
+    if (!String(draft.slug).trim()) errs['pl|slug'] = l.req; else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(draft.slug)) errs['pl|slug'] = l.plan.slugErr;
+    if (!isInt(draft.limit)) errs['pl|limit'] = String(draft.limit).trim() === '' ? l.req : l.int;
+    TYPES.forEach(function (k) { var x = draft.types[k]; if (!x.on) return; ['views', 'follows'].forEach(function (f) { if (String(x[f]).trim() !== '' && !isInt(x[f])) errs['pl|' + f + '|' + k] = l.int; }); });
+    if (draft.method !== 'payment') { if (!draft.paywall.template) errs['p|template'] = l.pickTemplate; checkRules('p', draft.paywall.rules, errs); }
+  } else if (v === 'loginwall') {
+    draft.values.forEach(function (x, i) { if (!(isInt(x) && +x <= 100)) errs['lw|' + i] = l.lw.err; });
+  }
+  return errs;
+}
+function isPwKey(k) { return k.indexOf('p|') === 0 || k.indexOf('p.') === 0; }
+function dirty() { return draft && JSON.stringify(draft) !== JSON.stringify(saved); }
+function paint() {
+  if (!draft) return;
+  var errs = validate(), n = Object.keys(errs).length, show = state.showErrors;
+  function vis(k) { return show || (state.showPwErrors && isPwKey(k)); }
+  document.querySelectorAll('[data-err]').forEach(function (el) { var k = el.getAttribute('data-err'); el.textContent = vis(k) && errs[k] ? errs[k] : ''; });
+  document.querySelectorAll('[data-key]').forEach(function (el) { var k = el.getAttribute('data-key'); el.classList.toggle('invalid', !!(vis(k) && errs[k])); });
+  document.querySelectorAll('.rule').forEach(function (el) {
+    var t = el.getAttribute('data-rule'), bad = vis(t + '|') && Object.keys(errs).some(function (k) { return k.indexOf(t + '|') === 0; });
+    el.classList.toggle('has-error', bad);
+  });
+  var d = dirty(), l = L();
+  document.querySelectorAll('[data-status]').forEach(function (s) {
+    s.textContent = d ? l.unsaved : l.allSaved;
+  });
+  document.querySelectorAll('[data-act="save"]').forEach(function (b) { b.disabled = !d; });
+  var pwS = document.querySelector('[data-pwstatus]');
+  if (pwS) {
+    var isNewPlan = state.view === 'plan-new', pd = JSON.stringify(draft.paywall) !== JSON.stringify(saved.paywall);
+    var pn = Object.keys(errs).filter(isPwKey).length, showPw = (state.showPwErrors || show) && pn;
+    pwS.textContent = isNewPlan ? '' : pd ? l.plan.pwDirty : l.plan.pwClean;
+    document.querySelector('[data-act="save-pw"]').disabled = isNewPlan || !pd;
+  }
+  document.querySelectorAll('[data-act="discard"]').forEach(function (b) { b.disabled = !d && !/^plan-/.test(state.view); });
+  document.querySelectorAll('[data-summary]').forEach(function (el) {
+    var t = el.getAttribute('data-summary'), o = resolve(t), ipc = /\.r\./.test(t) ? o.ips.length : null;
+    el.querySelector('span').textContent = summaryText(o, ipc);
+  });
+  document.querySelectorAll('[data-over]').forEach(function (el) {
+    var p = el.getAttribute('data-over').split('|'), o = resolve(p[0]), v = o.types[p[1]];
+    el.hidden = !(isInt(v) && isInt(o.limit) && +v > +o.limit);
+  });
+  document.querySelectorAll('.rule').forEach(function (el) {
+    return;
+  });
+  document.querySelectorAll('.type-card .with-check').forEach(function (w) { var i = w.querySelector('input'), ok = w.querySelector('.ok'); if (i && ok) ok.style.display = isInt(i.value) ? '' : 'none'; });
+  var lwOk = document.querySelectorAll('[data-lwok]');
+  lwOk.forEach(function (el) { var i = +el.getAttribute('data-lwok'); el.style.display = isInt(draft.values[i]) && +draft.values[i] <= 100 ? '' : 'none'; });
+}
+
+/* ---------- Views ---------- */
+function actionsBar() {
+  var l = L();
+  return '<div class="actions-bar"><button type="button" class="btn secondary sm" data-act="discard">' + esc(l.discard) + '</button>' +
+    '<button type="button" class="btn sm" data-act="save">' + esc(l.save) + '</button><span class="status" data-status></span></div>';
+}
+
+function viewPaywall() {
+  var l = L();
+  return actionsBar() +
+    '<section class="card"><div class="card-head"><div><h1 class="card-title">' + esc(l.pw.visitorTitle) + '</h1></div></div>' +
+    '<div class="card-body tight">' + limitBlock('v', draft, { templateLabel: l.generalTemplate, templateHint: l.generalTemplateHint }) + '</div></section>' +
+    '<section class="card"><div class="card-head"><div><h2 class="card-title">' + esc(l.pw.ipTitle) + '</h2></div></div>' +
+    '<div class="card-body tight">' + rulesBlock('v', draft.rules, l.fillFrom) + '</div>' +
+    '<div class="card-foot"><span class="status" data-status></span><button type="button" class="btn" data-act="save">' + esc(l.save) + '</button></div></section>';
+}
+
+function viewLoginWall() {
+  var l = L();
+  var rows = l.lw.fields.map(function (f, i) {
+    return '<div class="row"><label class="lbl" for="lw-' + i + '">' + esc(f) + (i === 0 ? '<span class="hint">' + esc(l.lw.hint) + '</span>' : '') + '</label>' +
+      '<div class="field with-check" data-key="lw|' + i + '"><input class="ctl" id="lw-' + i + '" inputmode="numeric" autocomplete="off" value="' + esc(draft.values[i]) + '" data-lw="' + i + '">' +
+      '<svg class="ln ok" data-lwok="' + i + '"><use href="#i-check"/></svg><div class="err" data-err="lw|' + i + '"></div></div></div>';
+  }).join('');
+  return '<section class="card"><div class="card-head"><h1 class="card-title">' + esc(l.lw.title) + '</h1>' +
+    '<label class="switch"><input type="checkbox" id="lw-cookies" data-lwc' + (draft.cookies ? ' checked' : '') + '><span class="track"></span><span>' + esc(l.lw.cookies) + '</span></label></div>' +
+    '<div class="card-body">' + rows + '<div class="callout">' + ln('info') + '<span>' + esc(l.lw.moved) + ' <a href="#paywall">' + esc(l.lw.movedLink) + '</a>.</span></div></div>' +
+    '<div class="card-foot"><span class="status" data-status></span><button class="btn" type="button" data-act="save">' + esc(l.save) + '</button></div></section>';
+}
+
+function expiryDate(p) {
+  if (p.expiry === 'unlimited') return null;
+  var d = new Date(p.created + 'T00:00:00Z');
+  if (p.expiry === '1year') d.setUTCFullYear(d.getUTCFullYear() + 1); else d.setUTCMonth(d.getUTCMonth() + 1);
+  return d.toISOString().slice(0, 10);
+}
+function filteredPlans() {
+  var f = state.f, q = f.q.trim().toLowerCase();
+  return state.plans.filter(function (p) {
+    if (q && p.title.toLowerCase().indexOf(q) < 0 && p.slug.indexOf(q) < 0) return false;
+    if (f.created && p.created < f.created) return false;
+    if (f.expiry) { var e = expiryDate(p); if (!e || e > f.expiry) return false; }
+    if (f.status && p.status !== f.status) return false;
+    if (f.method && p.method !== f.method) return false;
+    return true;
+  });
+}
+function viewPlans() {
+  var l = L(), lp = l.plans, f = state.f;
+  var head = '<section class="card raised"><div class="list-head"><h1 class="list-title">' + ln('diamond') + esc(lp.title) + '</h1>' +
+    '<label class="date-filter' + (f.created ? ' set' : '') + '"><span>' + esc(f.created ? lp.createdFrom + ' ' + fmtDate(f.created) : lp.fCreated) + '</span>' + ln('calendar') + '<input type="date" id="f-created" data-filter="created" value="' + f.created + '" aria-label="' + esc(lp.fCreated) + '"></label>' +
+    '<label class="date-filter' + (f.expiry ? ' set' : '') + '"><span>' + esc(f.expiry ? lp.expiresBy + ' ' + fmtDate(f.expiry) : lp.fExpiry) + '</span>' + ln('calendar') + '<input type="date" id="f-expiry" data-filter="expiry" value="' + f.expiry + '" aria-label="' + esc(lp.fExpiry) + '"></label>' +
+    '<div class="head-btns"><a class="btn sm" href="#plan-new" style="text-decoration:none">' + esc(lp.add) + '</a><button type="button" class="btn sm" data-act="filters" aria-expanded="' + f.panel + '">' + ln('filter') + esc(lp.filters) + '</button></div></div>' +
+    (f.panel ? '<div class="filter-panel" style="border-top:1px solid var(--border)">' +
+      '<div class="fp"><label for="f-status">' + esc(lp.statusL) + '</label><select class="ctl" id="f-status" data-filter="status"><option value="">' + esc(lp.any) + '</option>' +
+        ['active', 'inactive'].map(function (s) { return '<option value="' + s + '"' + (f.status === s ? ' selected' : '') + '>' + esc(lp.status[s]) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="fp"><label for="f-method">' + esc(lp.methodL) + '</label><select class="ctl" id="f-method" data-filter="method"><option value="">' + esc(lp.any) + '</option>' +
+        ['payment', 'account', 'guest'].map(function (s) { return '<option value="' + s + '"' + (f.method === s ? ' selected' : '') + '>' + esc(lp.method[s]) + '</option>'; }).join('') + '</select></div>' +
+      '<button type="button" class="btn secondary sm" data-act="clear-filters">' + esc(lp.clear) + '</button></div>' : '') +
+    '</section>';
+  var search = '<div class="search"><label for="f-q">' + esc(lp.search) + '</label><input id="f-q" data-filter="q" value="' + esc(f.q) + '" autocomplete="off"></div>';
+  var rows = filteredPlans();
+  var body = rows.map(function (p, i) {
+    var pw = p.method !== 'payment' && p.paywall.rules.length;
+    var tr_ = '<tr><td>' + (i + 1) + '</td><td class="title-cell" title="' + esc(p.title) + '">' + esc(p.title) + '</td>' +
+      '<td><span class="badge ' + p.status + '">' + esc(lp.status[p.status]) + '</span></td><td>' + fmtDate(p.created) + '</td><td>' + p.members + '</td>' +
+      '<td><span class="method-chip">' + esc(lp.method[p.method]) + (pw ? '<span class="pw-flag" title="' + esc(lp.ipRules(p.paywall.rules.length)) + '">' + esc(lp.pwTag) + '</span>' : '') + '</span></td>' +
+      '<td>' + esc(lp.expiry[p.expiry]) + '</td>' +
+      '<td><div class="row-actions"><a class="icon-btn a-edit" href="#plan-' + p.id + '" aria-label="' + esc(lp.edit) + '" title="' + esc(lp.edit) + '">' + EDIT_ICON + '</a>' +
+      '<button type="button" class="icon-btn a-del" data-act="del" data-id="' + p.id + '" aria-label="' + esc(lp.del) + '" title="' + esc(lp.del) + '">' + DEL_ICON + '</button>' +
+      '<button type="button" class="icon-btn a-info" data-act="info" data-id="' + p.id + '" aria-expanded="' + (state.infoOpen === p.id) + '" aria-label="' + esc(lp.info) + '" title="' + esc(lp.info) + '">' + INFO_ICON + '</button></div></td></tr>';
+    if (state.confirmDel === p.id) tr_ += '<tr class="confirm"><td colspan="8"><div class="confirm-box"><span>' + esc(lp.delQ(p.title)) + '</span><button type="button" class="btn danger" data-act="del-yes" data-id="' + p.id + '">' + esc(lp.delYes) + '</button><button type="button" class="btn secondary" data-act="del-no">' + esc(lp.cancel) + '</button></div></td></tr>';
+    if (state.infoOpen === p.id) {
+      var pwText = p.method === 'payment' ? lp.noPaywall : (p.paywall.template ? tplName(p.paywall.template) : '—') + ' · ' + lp.ipRules(p.paywall.rules.length);
+      tr_ += '<tr class="detail"><td></td><td colspan="7"><div class="detail-grid"><div><b>' + esc(lp.slug) + '</b>' + esc(p.slug) + '</div><div><b>' + esc(lp.pkg) + '</b>' + esc(PACKAGES[p.pkg] || '—') + '</div><div><b>' + esc(lp.paywall) + '</b>' + esc(pwText) + '</div></div></td></tr>';
+    }
+    return tr_;
+  }).join('');
+  var table = '<section class="card raised"><div class="table-wrap"><table><thead><tr>' + lp.cols.map(function (c, i) { return '<th' + (i === 7 ? ' style="text-align:center"' : '') + '>' + esc(c) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    (body || '<tr><td colspan="8" class="no-rows">' + esc(lp.none) + '</td></tr>') + '</tbody></table></div></section>';
+  return head + search + table;
+}
+
+function viewPlan() {
+  var l = L(), lp = l.plan, d = draft, isNew = state.view === 'plan-new';
+  function sel(f, opts, val) { return '<select class="ctl" id="pl-' + f + '" data-t="pl" data-f="' + f + '">' + opts.map(function (o) { return '<option value="' + o[0] + '"' + (String(val) === String(o[0]) ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select>'; }
+  function row(f, label, ctl, req) {
+    return '<div class="row"><label class="lbl" for="pl-' + f + '">' + esc(label) + (req ? '<span class="star">*</span>' : '') + '</label><div class="field" data-key="pl|' + f + '">' + ctl + '<div class="err" data-err="pl|' + f + '"></div></div></div>';
+  }
+  var basic = '<section class="card"><div class="card-head"><h2 class="card-title primary">' + esc(lp.basic) + '</h2></div><div class="card-body tight">' +
+    row('title', lp.titleL, '<input class="ctl" id="pl-title" data-t="pl" data-f="title" value="' + esc(d.title) + '" placeholder="' + esc(lp.titleP) + '" autocomplete="off">', true) +
+    row('planType', lp.type, sel('planType', [['manhom', lp.manhom]], d.planType)) +
+    row('slug', lp.slug, '<input class="ctl" id="pl-slug" data-t="pl" data-f="slug" value="' + esc(d.slug) + '" placeholder="' + esc(lp.slugP) + '" autocomplete="off" dir="ltr">', true) +
+    row('method', lp.method, sel('method', [['payment', lp.methods.payment], ['account', lp.methods.account], ['guest', lp.methods.guest]], d.method)) +
+    row('status', lp.status, sel('status', [['active', lp.statuses.active], ['inactive', lp.statuses.inactive]], d.status)) +
+    row('expiry', lp.expiry, sel('expiry', [['1month', lp.expiries['1month']], ['1year', lp.expiries['1year']], ['unlimited', lp.expiries.unlimited]], d.expiry)) +
+    row('pkg', lp.pkg, sel('pkg', [['', lp.pkgNone]].concat(Object.keys(PACKAGES).map(function (k) { return [k, PACKAGES[k]]; })), d.pkg)) +
+    '</div></section>';
+  var pw = '';
+  if (d.method !== 'payment') {
+    pw = '<section class="card pw-card"><div class="card-head"><div><h2 class="card-title primary">' + esc(lp.pwTitle) + '</h2><p class="card-sub">' + esc(lp.pwSub) + '</p></div></div>' +
+      '<div class="card-body tight">' + templateRow('p', l.generalTemplate, l.generalTemplateHint, d.paywall.template) +
+      '<div class="divider"></div><div class="sub-head"><div><h3>' + esc(l.pw.ipTitle) + '</h3></div></div>' +
+      rulesBlock('p', d.paywall.rules, '') + '</div>' +
+      '<div class="card-foot"><span class="status" data-pwstatus></span><button type="button" class="btn" data-act="save-pw">' + esc(lp.savePw) + '</button></div></section>';
+  }
+  var chips = multiSelect('pl', 'pltype', function (k) { return d.types[k].on; }, lp.ct);
+  var gen = '<section class="card"><div class="card-head"><h2 class="card-title primary">' + esc(lp.genTitle) + '</h2></div><div class="card-body tight">' +
+    row('limit', lp.genMax, '<input class="ctl" id="pl-limit" data-t="pl" data-f="limit" inputmode="numeric" value="' + esc(d.limit) + '" placeholder="' + esc(lp.genMaxP) + '" autocomplete="off">', true) +
+    '<div class="row"><label class="lbl" for="ms-pl">' + esc(lp.ct) + '</label><div class="field">' + chips + '</div></div></div></section>';
+  var cards = typeCards('pl', TYPES.filter(function (k) { return d.types[k].on; }), function (k) { return d.types[k]; }, false);
+  return actionsBar() + basic + gen + cards + pw + actionsBar();
+}
+
+function viewEmpty() {
+  var l = L();
+  return '<section class="card"><div class="card-head"><h1 class="card-title">' + esc(tr(TITLE[state.view] || 'Dashboard')) + '</h1></div>' +
+    '<div class="empty"><div class="badge-ico">' + ln('build') + '</div><h3>' + esc(l.empty.title) + '</h3><p>' + esc(l.empty.body) + '</p></div></section>';
+}
+
+/* ---------- Draft lifecycle ---------- */
+function openDraft() {
+  var v = state.view, key = v;
+  if (draftKey === key && draft) return;
+  draftKey = key; state.showErrors = false; state.showPwErrors = false; state.msOpen = null; state.ipMsg = {};
+  if (v === 'paywall') saved = clone(state.visitor);
+  else if (v === 'loginwall') saved = clone(state.lw);
+  else if (v === 'plan-new') saved = plan(0, '', new Date().toISOString().slice(0, 10), 0, 'payment', '1year', '', '');
+  else if (/^plan-\d+$/.test(v)) { var p = state.plans.filter(function (x) { return 'plan-' + x.id === v; })[0]; saved = p ? clone(p) : null; }
+  else saved = null;
+  draft = saved ? clone(saved) : null;
+}
+
+function crumbText() {
+  var l = L(), v = state.view, parts = [l.home];
+  var id = navId(v), par = PARENT[id];
+  if (par) parts.push(tr(TITLE[par]));
+  parts.push(tr(TITLE[id] || 'Dashboard'));
+  if (/^plan-/.test(v)) parts.push(v === 'plan-new' ? l.plan.newTitle : (draft ? draft.title : ''));
+  return parts;
+}
+
+function renderMain() {
+  openDraft();
+  var v = state.view, html;
+  if (v === 'plans') html = viewPlans();
+  else if (v === 'paywall') html = viewPaywall();
+  else if (v === 'loginwall') html = viewLoginWall();
+  else if (/^plan-/.test(v) && draft) html = viewPlan();
+  else html = viewEmpty();
+  $('main').innerHTML = html;
+  var c = crumbText();
+  $('crumb').innerHTML = c.slice(0, -1).map(esc).join(' / ') + ' / <b>' + esc(c[c.length - 1]) + '</b>';
+  document.title = c[c.length - 1] + ' · Manhom Admin';
+  paint();
+}
+
+function applyLang() {
+  var l = L();
+  document.documentElement.dir = l.dir; document.documentElement.lang = state.lang;
+  $('langBtn').textContent = l.lang; $('collapseBtn').setAttribute('aria-label', l.collapse); $('menuBtn').setAttribute('aria-label', l.menu);
+}
+function render() { applyLang(); $('shell').classList.toggle('collapsed', state.collapsed); renderNav(); renderMain(); }
+
+var toastTimer;
+function toast(msg, bad) {
+  $('toastText').textContent = msg; $('toast').classList.toggle('bad', !!bad);
+  $('toastIco').innerHTML = '<use href="#i-' + (bad ? 'alert' : 'check') + '"/>';
+  $('toast').classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { $('toast').classList.remove('show'); }, 2600);
+}
+
+/* ---------- IP handling ---------- */
+function commitIps(t, text) {
+  var l = L(), rule = resolve(t), all = rulesOf(t), key = draftKey + '|' + t, idx = +t.split('.')[2];
+  var tokens = String(text).split(/[\s,;]+/).map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+  if (!tokens.length) { delete state.ipMsg[key]; return false; }
+  var bad = [], msgs = [];
+  tokens.forEach(function (ip) {
+    if (!validIp(ip)) { bad.push(ip); return; }
+    if (rule.ips.indexOf(ip) >= 0) { msgs.push(l.ipDupSame(ip)); return; }
+    var other = -1; all.forEach(function (r, j) { if (j !== idx && r.ips.indexOf(ip) >= 0) other = j; });
+    if (other >= 0) { msgs.push(l.ipDup(ip, other + 1)); return; }
+    rule.ips.push(ip);
+  });
+  if (bad.length) msgs.unshift(l.ipInvalid(bad.join(', ')));
+  state.ipMsg[key] = { msg: msgs.join(' '), rest: bad.join(' ') };
+  return true;
+}
+function refocus(sel) { var el = document.querySelector(sel); if (el) { el.focus(); if (el.setSelectionRange && el.value) el.setSelectionRange(el.value.length, el.value.length); } }
+
+/* ---------- Dropdown open/close without re-rendering ---------- */
+function setMs(t, open) {
+  var box = document.querySelector('[data-ms="' + t + '"]'); if (!box) return;
+  box.querySelector('.ms-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+  box.querySelector('.ms-panel').hidden = !open;
+}
+function closeMs(focusBtn) {
+  var t = state.msOpen; if (!t) return; state.msOpen = null; setMs(t, false);
+  if (focusBtn) refocus('[data-ms="' + t + '"] .ms-btn');
+}
+document.addEventListener('mousedown', function (e) { if (state.msOpen && !e.target.closest('[data-ms="' + state.msOpen + '"]')) closeMs(false); });
+document.addEventListener('keydown', function (e) {
+  if (!state.msOpen) return;
+  if (e.key === 'Escape') { e.preventDefault(); closeMs(true); return; }
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    var opts = Array.prototype.slice.call(document.querySelectorAll('[data-ms="' + state.msOpen + '"] .ms-opt')), i = opts.indexOf(document.activeElement);
+    if (!opts.length) return; e.preventDefault();
+    opts[(i + (e.key === 'ArrowDown' ? 1 : -1) + opts.length) % opts.length].focus();
+  }
+});
+
+/* ---------- Events ---------- */
+$('nav').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-nav]'); if (!b) return;
+  var id = b.getAttribute('data-nav'), n = NAV.filter(function (x) { return x.id === id; })[0];
+  if (n && n.c.length) {
+    if (state.collapsed && window.innerWidth > 960) { state.collapsed = false; store('collapsed', false); }
+    state.open[id] = b.getAttribute('aria-expanded') !== 'true'; renderNav(); $('shell').classList.toggle('collapsed', state.collapsed); return;
+  }
+  location.hash = id; $('shell').classList.remove('open');
+});
+function route() {
+  var h = (location.hash || '').slice(1) || 'paywall';
+  if (h !== state.view) { state.view = h; state.infoOpen = null; state.confirmDel = null; }
+  render(); window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', route);
+
+var main = $('main');
+main.addEventListener('click', function (e) {
+  var el = e.target.closest('[data-act]'); if (!el) return;
+  var act = el.getAttribute('data-act'), t = el.getAttribute('data-t'), l = L();
+  if (act === 'focus-ip') { if (e.target === el) { var inp = el.querySelector('input'); if (inp) inp.focus(); } return; }
+  if (act === 'type') {
+    var o = resolve(t), k = el.getAttribute('data-type');
+    if (o.types[k] !== undefined) delete o.types[k]; else o.types[k] = { views: '', follows: '' };
+    renderMain(); refocus('[data-act="type"][data-t="' + t + '"][data-type="' + k + '"]');
+    return;
+  }
+  if (act === 'pltype') { var x = draft.types[el.getAttribute('data-type')]; x.on = !x.on; renderMain(); refocus('[data-act="pltype"][data-type="' + el.getAttribute('data-type') + '"]'); return; }
+  if (act === 'ms-toggle') {
+    if (state.msOpen === t) { closeMs(true); return; }
+    closeMs(false); state.msOpen = t; setMs(t, true);
+    var firstOpt = el.parentNode.querySelector('.ms-opt'); if (firstOpt) firstOpt.focus();
+    return;
+  }
+  if (act === 'ip-remove') { var r = resolve(t); r.ips = r.ips.filter(function (ip) { return ip !== el.getAttribute('data-ip'); }); delete state.ipMsg[draftKey + '|' + t]; renderMain(); refocus('[data-t="' + t + '"][data-f="ipinput"]'); return; }
+  if (act === 'rule-toggle') { var key = draftKey + '|' + t; state.ruleOpen[key] = el.getAttribute('aria-expanded') !== 'true'; renderMain(); refocus('[data-act="rule-toggle"][data-t="' + t + '"]'); return; }
+  if (act === 'rule-add') {
+    var list = rulesOf(t); list.push({ ips: [], limit: '', types: {}, template: '' });
+    var nt = t + '.r.' + (list.length - 1); state.ruleOpen[draftKey + '|' + nt] = true; renderMain(); refocus('[data-t="' + nt + '"][data-f="ipinput"]'); return;
+  }
+  if (act === 'rule-remove') {
+    var lst = rulesOf(t), i = +t.split('.')[2]; lst.splice(i, 1);
+    Object.keys(state.ipMsg).forEach(function (k) { if (k.indexOf(draftKey + '|') === 0) delete state.ipMsg[k]; });
+    renderMain(); return;
+  }
+  if (act === 'rule-fill') {
+    var rr = resolve(t), src;
+    if (t.charAt(0) === 'v') src = { limit: draft.limit, types: clone(draft.types), template: draft.template };
+    else { var ty = {}; TYPES.forEach(function (k) { if (draft.types[k].on) ty[k] = draft.types[k].views === '' ? '' : draft.types[k].views; }); src = { limit: draft.limit, types: ty, template: draft.paywall.template }; }
+    rr.limit = src.limit; rr.types = src.types; rr.template = src.template; renderMain(); return;
+  }
+  if (act === 'save') {
+    var errs = validate(), n = Object.keys(errs).length;
+    state.showErrors = true;
+    if (n) {
+      Object.keys(errs).forEach(function (k) { var m = k.match(/^(v|p)\.r\.\d+/); if (m) state.ruleOpen[draftKey + '|' + m[0]] = true; });
+      renderMain();
+      var first = document.querySelector('.invalid'); if (first) { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); var f = first.querySelector('input,select,button'); if (f) f.focus({ preventScroll: true }); }
+      return;
+    }
+    var v = state.view;
+    if (v === 'paywall') { state.visitor = clone(draft); store('visitor', state.visitor); }
+    else if (v === 'loginwall') { draft.values = draft.values.map(Number); state.lw = clone(draft); store('lw', state.lw); }
+    else if (/^plan-/.test(v)) {
+      if (v === 'plan-new') { draft.id = state.plans.reduce(function (m, p) { return Math.max(m, p.id); }, 0) + 1; state.plans.unshift(clone(draft)); }
+      else state.plans = state.plans.map(function (p) { return p.id === draft.id ? clone(draft) : p; });
+      store('plans', state.plans);
+    }
+    saved = clone(draft); state.showErrors = false; toast(l.saved);
+    if (v === 'plan-new') { draftKey = 'plan-' + draft.id; history.replaceState(null, '', '#plan-' + draft.id); state.view = 'plan-' + draft.id; }
+    renderMain(); return;
+  }
+  if (act === 'save-pw') {
+    var pe = Object.keys(validate()).filter(isPwKey);
+    if (pe.length) {
+      state.showPwErrors = true;
+      pe.forEach(function (k) { var m = k.match(/^p\.r\.\d+/); if (m) state.ruleOpen[draftKey + '|' + m[0]] = true; });
+      renderMain();
+      var bad = document.querySelector('.pw-card .invalid'); if (bad) { bad.scrollIntoView({ behavior: 'smooth', block: 'center' }); var fe = bad.querySelector('input,select,button'); if (fe) fe.focus({ preventScroll: true }); }
+      return;
+    }
+    state.plans = state.plans.map(function (p) { if (p.id === draft.id) { p = clone(p); p.paywall = clone(draft.paywall); } return p; });
+    store('plans', state.plans);
+    saved.paywall = clone(draft.paywall); state.showPwErrors = false;
+    renderMain(); toast(l.plan.pwSaved); return;
+  }
+  if (act === 'discard') {
+    if (/^plan-/.test(state.view)) { draft = null; draftKey = ''; location.hash = 'plans'; return; }
+    draft = clone(saved); state.showErrors = false; state.ipMsg = {}; renderMain(); return;
+  }
+  if (act === 'filters') { state.f.panel = !state.f.panel; renderMain(); return; }
+  if (act === 'clear-filters') { state.f = { q: '', created: '', expiry: '', status: '', method: '', panel: true }; renderMain(); return; }
+  if (act === 'info') { var id = +el.getAttribute('data-id'); state.infoOpen = state.infoOpen === id ? null : id; state.confirmDel = null; renderMain(); return; }
+  if (act === 'del') { state.confirmDel = +el.getAttribute('data-id'); state.infoOpen = null; renderMain(); refocus('[data-act="del-no"]'); return; }
+  if (act === 'del-no') { state.confirmDel = null; renderMain(); return; }
+  if (act === 'del-yes') { var did = +el.getAttribute('data-id'); state.plans = state.plans.filter(function (p) { return p.id !== did; }); store('plans', state.plans); state.confirmDel = null; renderMain(); toast(l.plans.deleted); return; }
+});
+
+main.addEventListener('input', function (e) {
+  var el = e.target, t = el.getAttribute('data-t'), f = el.getAttribute('data-f');
+  var flt = el.getAttribute('data-filter');
+  if (flt === 'q') { state.f.q = el.value; var pos = el.selectionStart; renderMain(); var q = $('f-q'); q.focus(); q.setSelectionRange(pos, pos); return; }
+  if (el.hasAttribute('data-lw')) { draft.values[+el.getAttribute('data-lw')] = el.value; paint(); return; }
+  if (!t || !f || f === 'ipinput' || el.tagName === 'SELECT') return;
+  var o = resolve(t);
+  if (f === 'views' || f === 'follows') o.types[el.getAttribute('data-type')][f] = el.value;
+  else o[f] = el.value;
+  paint();
+});
+main.addEventListener('change', function (e) {
+  var el = e.target, t = el.getAttribute('data-t'), f = el.getAttribute('data-f'), flt = el.getAttribute('data-filter');
+  if (flt && flt !== 'q') { state.f[flt] = el.value; renderMain(); return; }
+  if (el.hasAttribute('data-lwc')) { draft.cookies = el.checked; paint(); return; }
+  if (el.tagName === 'SELECT' && t) {
+    resolve(t)[f] = el.value;
+    if (t === 'pl' && f === 'method') { renderMain(); refocus('#pl-method'); } else paint();
+  }
+});
+main.addEventListener('keydown', function (e) {
+  var el = e.target; if (el.getAttribute('data-f') !== 'ipinput') return;
+  var t = el.getAttribute('data-t');
+  if (e.key === 'Enter' || e.key === ',' || e.key === ' ' || e.key === ';') {
+    if (!el.value.trim()) { if (e.key === 'Enter') e.preventDefault(); return; }
+    e.preventDefault(); commitIps(t, el.value); renderMain(); refocus('[data-t="' + t + '"][data-f="ipinput"]');
+  } else if (e.key === 'Backspace' && !el.value) {
+    var r = resolve(t); if (r.ips.length) { r.ips.pop(); renderMain(); refocus('[data-t="' + t + '"][data-f="ipinput"]'); }
+  }
+});
+main.addEventListener('paste', function (e) {
+  var el = e.target; if (el.getAttribute('data-f') !== 'ipinput') return;
+  var text = (e.clipboardData || window.clipboardData).getData('text');
+  if (!/[\s,;]/.test(text.trim())) return;
+  e.preventDefault(); var t = el.getAttribute('data-t'); commitIps(t, el.value + ' ' + text); renderMain(); refocus('[data-t="' + t + '"][data-f="ipinput"]');
+});
+main.addEventListener('focusout', function (e) {
+  var el = e.target; if (el.getAttribute('data-f') !== 'ipinput' || !el.value.trim()) return;
+  var t = el.getAttribute('data-t'), next = e.relatedTarget;
+  commitIps(t, el.value);
+  // A button's own click handler re-renders; re-rendering here would swallow that click.
+  if (next && next.tagName === 'BUTTON') return;
+  renderMain();
+  if (next && next.id) refocus('#' + next.id);
+});
+
+$('collapseBtn').addEventListener('click', function () { state.collapsed = !state.collapsed; store('collapsed', state.collapsed); render(); });
+$('menuBtn').addEventListener('click', function () { $('shell').classList.add('open'); });
+$('scrim').addEventListener('click', function () { $('shell').classList.remove('open'); });
+$('langBtn').addEventListener('click', function () { state.lang = state.lang === 'en' ? 'ar' : 'en'; store('lang', state.lang); render(); });
+
+route();
+})();
+</script>
